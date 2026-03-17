@@ -9,6 +9,7 @@
  */
 
 const { getDb } = require('../db/index');
+const alpaca = require('../services/alpaca');
 
 /**
  * Write a decision to the agent_log table.
@@ -37,21 +38,52 @@ async function snapshotPortfolio(bookId, totalValue, cash, invested, startingCap
 }
 
 /**
- * Compute this book's remaining cash.
- * Since Alpaca is a single account, we track cash per book by summing our trade history.
- * Net = starting capital + all sell proceeds - all buy costs.
+ * Compute this book's real cash and total portfolio value using the Alpaca API.
+ *
+ * Since both books share a single Alpaca paper account, we can't ask Alpaca
+ * "how much cash does Book A have?" — it only knows the total account balance.
+ * We split cash 50/50 (both books started with equal capital), which is the
+ * fairest approximation. Invested value is precise: we filter Alpaca positions
+ * to only those this book has traded, via our internal trade records.
+ *
+ * Returns { cash, investedValue, totalValue, account }
+ *   - cash:          this book's share of real Alpaca cash (account.cash / 2)
+ *   - investedValue: real market value of positions attributed to this book
+ *   - totalValue:    cash + investedValue
+ *   - account:       raw Alpaca account object (equity, buying_power, etc.)
+ *
+ * @param {string} bookId         - 'index' or 'screener'
+ * @param {Array}  alpacaPositions - already-fetched Alpaca positions array
  */
-async function getBookCash(bookId, startingCapital) {
+async function getBookValue(bookId, alpacaPositions) {
   const db = getDb();
-  const result = db.prepare(`
-    SELECT
-      SUM(CASE WHEN side = 'buy'  THEN -total_value ELSE 0 END) +
-      SUM(CASE WHEN side = 'sell' THEN  total_value ELSE 0 END) as net
-    FROM trades WHERE book_id = ?
-  `).get(bookId);
 
-  const net = result?.net || 0;
-  return startingCapital + net;
+  // Fetch real account data from Alpaca — this is the authoritative cash number
+  const account = await alpaca.getAccount();
+  const totalAccountCash = parseFloat(account.cash);
+
+  // Split cash equally — both books started with the same capital
+  // and Alpaca doesn't track the per-book split
+  const cash = totalAccountCash / 2;
+
+  // Determine which tickers belong to this book from our internal trade records
+  const myTrades = db.prepare(`
+    SELECT ticker,
+           SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares
+    FROM trades WHERE book_id = ?
+    GROUP BY ticker HAVING net_shares > 0.001
+  `).all(bookId);
+  const myTickers = new Set(myTrades.map(t => t.ticker));
+
+  // Filter Alpaca positions to only this book's holdings, sum real market values
+  const myPositions = alpacaPositions.filter(p => myTickers.has(p.symbol));
+  const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value || 0), 0);
+
+  const totalValue = cash + investedValue;
+
+  console.log(`[book:${bookId}] Alpaca account cash: $${totalAccountCash.toFixed(0)} → book share: $${cash.toFixed(0)} | invested: $${investedValue.toFixed(0)} | total: $${totalValue.toFixed(0)}`);
+
+  return { cash, investedValue, totalValue, myPositions, account };
 }
 
 /**
@@ -145,4 +177,4 @@ function adjustWeights(bookId) {
   }
 }
 
-module.exports = { logDecision, snapshotPortfolio, getBookCash, adjustWeights };
+module.exports = { logDecision, snapshotPortfolio, getBookValue, adjustWeights };

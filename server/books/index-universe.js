@@ -23,7 +23,7 @@ const scoring = require('../services/scoring');
 const market = require('../services/market');
 const guardrails = require('../services/guardrails');
 const { getDb } = require('../db/index');
-const { logDecision, snapshotPortfolio, getBookCash, adjustWeights } = require('./shared');
+const { logDecision, snapshotPortfolio, getBookValue, adjustWeights } = require('./shared');
 
 const BOOK_ID = 'index';
 const TARGET_POSITIONS = 15;          // soft guide for position sizing (not a hard cap)
@@ -41,22 +41,12 @@ async function runCycle(cycleCount) {
   const financialWeight = book.financial_weight || 0.35;
   console.log(`[book:index] Current weights — woke: ${wokeWeight}, financial: ${financialWeight}`);
 
-  // 2. Get all Alpaca positions and filter to this book's holdings
+  // 2. Get all Alpaca positions, then compute real cash + invested value from the API.
+  // getBookValue calls alpaca.getAccount() for authoritative cash, splits 50/50 between books,
+  // and filters positions to only those this book has traded via internal trade records.
   const alpacaPositions = await alpaca.getPositions();
-
-  // Book A tracks its positions by trade history (net long shares per ticker)
-  const myTrades = db.prepare(`
-    SELECT ticker, SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares
-    FROM trades WHERE book_id = ? GROUP BY ticker HAVING net_shares > 0.001
-  `).all(BOOK_ID);
-  const myTickers = myTrades.map(t => t.ticker);
-  const myPositions = alpacaPositions.filter(p => myTickers.includes(p.symbol));
-
-  // 3. Compute cash and total portfolio value
-  const cash = await getBookCash(BOOK_ID, book.capital);
-  const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value), 0);
-  const totalValue = cash + investedValue;
-  console.log(`[book:index] Portfolio — cash: $${cash.toFixed(0)}, invested: $${investedValue.toFixed(0)}, total: $${totalValue.toFixed(0)}`);
+  const { cash, investedValue, totalValue, myPositions } = await getBookValue(BOOK_ID, alpacaPositions);
+  const myTickers = myPositions.map(p => p.symbol);
 
   // 4. Snapshot portfolio state for trend tracking and end-of-day reporting
   await snapshotPortfolio(BOOK_ID, totalValue, cash, investedValue, book.capital);
@@ -115,9 +105,9 @@ async function runCycle(cycleCount) {
   const universe = market.getSP500Tickers();
   const universeTickers = universe.map(u => u.ticker).filter(t => !currentHoldings.has(t));
 
-  // 7. Check cash before proceeding to buys
-  // We use a fresh cash value here since sells above may have freed up capital
-  const freshCash = await getBookCash(BOOK_ID, book.capital);
+  // 7. Check cash before proceeding to buys.
+  // Re-fetch from Alpaca since sells above may have freed up real capital.
+  const { cash: freshCash } = await getBookValue(BOOK_ID, await alpaca.getPositions());
   if (freshCash < 10) {
     console.log(`[book:index] Cash $${freshCash.toFixed(2)} < $10. Skipping buys.`);
     logDecision(BOOK_ID, cycleCount, 'skip', null, `Cash $${freshCash.toFixed(2)} below minimum. No buys.`);
@@ -167,8 +157,8 @@ async function runCycle(cycleCount) {
     const slotsForSizing = Math.max(TARGET_POSITIONS - currentHoldings.size, 1);
 
     for (const candidate of scoredCandidates) {
-      // Re-check available cash each iteration (may shrink as we buy)
-      const availableCash = await getBookCash(BOOK_ID, book.capital);
+      // Re-check available cash each iteration via Alpaca (may shrink as orders fill)
+      const { cash: availableCash } = await getBookValue(BOOK_ID, await alpaca.getPositions());
       if (availableCash < 10) {
         console.log(`[book:index] Cash exhausted ($${availableCash.toFixed(2)}). Stopping buys.`);
         break;
