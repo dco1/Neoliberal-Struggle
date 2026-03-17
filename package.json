@@ -19,5 +19,9 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
-  }
+  },
+  "server": {
+     "name": "Neoliberal Struggle",
+     "port": 3000, 
+  } 
 }
