@@ -93,24 +93,15 @@ function renderBookSummary(book) {
   const wokeEl = document.getElementById(`${id}-woke`);
   if (wokeEl) wokeEl.textContent = book.avg_woke_score_7d != null ? book.avg_woke_score_7d + '/100' : '—';
 
-  // Autonomous struggle dial — read-only, reflects the book's current self-determined weights.
-  // The book adjusts these each cycle based on its own performance philosophy.
-  const wokeW = book.woke_weight != null ? book.woke_weight : (id === 'index' ? 0.65 : 0.25);
-  const finW  = 1 - wokeW;
+  // Update subtitle weight breakdown — reflects each book's current autonomous balance.
+  const wokeW   = book.woke_weight != null ? book.woke_weight : (id === 'index' ? 0.65 : 0.25);
   const wokePct = Math.round(wokeW * 100);
-  const finPct  = Math.round(finW * 100);
+  const finPct  = 100 - wokePct;
 
   const wokeWeightEl = document.getElementById(`${id}-woke-weight`);
   const finWeightEl  = document.getElementById(`${id}-fin-weight`);
-  const wokeFill     = document.getElementById(`${id}-woke-fill`);
-  const greedFill    = document.getElementById(`${id}-greed-fill`);
-  const thumb        = document.getElementById(`${id}-thumb`);
-
   if (wokeWeightEl) wokeWeightEl.textContent = wokePct + '%';
   if (finWeightEl)  finWeightEl.textContent  = finPct + '%';
-  if (wokeFill)     wokeFill.style.width     = wokePct + '%';
-  if (greedFill)    greedFill.style.width    = finPct + '%';
-  if (thumb)        thumb.style.left         = wokePct + '%';
 }
 
 // --- Charts ---
