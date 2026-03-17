@@ -215,7 +215,164 @@
     }
 
     /* sparkline canvas */
-    .mini-chart { width: 100%; height: 60px; display: block; margin-bottom: 12px; }
+    .mini-chart { width: 100%; height: 80px; display: block; margin-bottom: 12px; }
+
+    /* ── Close market button ─────────────────────────────────────────── */
+    .close-market-btn {
+      background: rgba(255,95,95,0.12);
+      border: 1px solid rgba(255,95,95,0.35);
+      color: #ff5f5f;
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .close-market-btn:hover:not(:disabled) {
+      background: rgba(255,95,95,0.22);
+      border-color: rgba(255,95,95,0.6);
+    }
+    .close-market-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ── Market-closed banner ────────────────────────────────────────── */
+    .market-closed-banner {
+      background: rgba(255,95,95,0.08);
+      border: 1px solid rgba(255,95,95,0.25);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: #ff5f5f;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .market-closed-banner.visible { display: flex; }
+
+    /* ── Summaries section ───────────────────────────────────────────── */
+    .summaries-section {
+      display: none;
+      margin-bottom: 32px;
+    }
+    .summaries-section.visible { display: block; }
+
+    .summaries-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .summaries-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .summaries-date {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .summaries-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .summaries-grid { grid-template-columns: 1fr; } }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .summary-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .summary-book-label {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .summary-pnl {
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-block-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .summary-text {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+      min-height: 1.75em;
+    }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .summary-commentary {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text);
+      opacity: 0.75;
+      white-space: pre-wrap;
+      min-height: 1.75em;
+      border-left: 2px solid var(--border);
+      padding-left: 12px;
+    }
+
+    /* typing cursor */
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 0.7s step-end infinite;
+      margin-left: 1px;
+    }
+    .typing-cursor.done { display: none; }
+
+    /* generating spinner */
+    .summary-generating {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-generating .spinner {
+      width: 12px; height: 12px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -234,6 +391,7 @@
         <button class="speed-btn active" onclick="setSpeed(1)">1×</button>
         <button class="speed-btn" onclick="setSpeed(2)">2×</button>
         <button class="speed-btn" onclick="setSpeed(4)">4×</button>
+        <button class="close-market-btn" id="close-market-btn" onclick="requestMarketClose()">Close Market &amp; Run Summaries</button>
       </div>
     </div>
   </div>
@@ -319,13 +477,69 @@
     <div class="scoring-verdict" id="sc-verdict"></div>
   </div>
 
+  <!-- Market-closed banner (hidden until close) -->
+  <div class="market-closed-banner" id="market-closed-banner">
+    🔔 Market closed — generating end-of-day summaries…
+  </div>
+
   <!-- Terminal -->
   <section class="terminal-section">
     <div class="terminal-header">
-      <div class="terminal-dot"></div>
+      <div class="terminal-dot" id="terminal-dot"></div>
       <span class="terminal-title">Live Activity</span>
     </div>
     <div class="terminal" id="terminal"></div>
+  </section>
+
+  <!-- End-of-day summaries (hidden until close) -->
+  <section class="summaries-section" id="summaries-section">
+    <div class="summaries-header">
+      <span class="summaries-title">End-of-Day Journals</span>
+      <span class="summaries-date" id="summary-date"></span>
+    </div>
+    <div class="summaries-grid">
+
+      <!-- Book A journal -->
+      <div class="summary-card" id="summary-card-a">
+        <div class="summary-card-header">
+          <span class="summary-book-label" style="color:var(--accent)">Book A — Index Universe</span>
+          <span class="summary-pnl" id="summary-a-pnl"></span>
+        </div>
+        <div>
+          <div class="summary-block-label">Today's Reflection</div>
+          <div class="summary-generating" id="summary-a-generating">
+            <div class="spinner"></div> Generating…
+          </div>
+          <div class="summary-text" id="summary-a-text" style="display:none"></div>
+        </div>
+        <hr class="summary-divider">
+        <div>
+          <div class="summary-block-label">On Book B</div>
+          <div class="summary-commentary" id="summary-a-commentary" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Book B journal -->
+      <div class="summary-card" id="summary-card-b">
+        <div class="summary-card-header">
+          <span class="summary-book-label" style="color:var(--green)">Book B — Screener Universe</span>
+          <span class="summary-pnl" id="summary-b-pnl"></span>
+        </div>
+        <div>
+          <div class="summary-block-label">Today's Reflection</div>
+          <div class="summary-generating" id="summary-b-generating">
+            <div class="spinner"></div> Generating…
+          </div>
+          <div class="summary-text" id="summary-b-text" style="display:none"></div>
+        </div>
+        <hr class="summary-divider">
+        <div>
+          <div class="summary-block-label">On Book A</div>
+          <div class="summary-commentary" id="summary-b-commentary" style="display:none"></div>
+        </div>
+      </div>
+
+    </div>
   </section>
 
 </main>
@@ -349,30 +563,31 @@ const sleep = ms => new Promise(r => setTimeout(r, ms / SPEED));
 
 const UNIVERSE = {
   // Good ESG — generally safe for both books
-  MSFT:  { company: 'Microsoft Corporation',  sector: 'IT',               woke: [65,78], fin: [73,85] },  // carbon-negative pledge, solid governance
-  COST:  { company: 'Costco Wholesale',       sector: 'Consumer Staples', woke: [60,72], fin: [63,72] },  // genuinely good wages and labour practices
-  V:     { company: 'Visa Inc',               sector: 'Financials',       woke: [58,68], fin: [68,78] },  // financial services, no major scandals
-  MA:    { company: 'Mastercard Inc',         sector: 'Financials',       woke: [58,68], fin: [67,77] },  // similar to Visa
-  NEE:   { company: 'NextEra Energy',         sector: 'Utilities',        woke: [70,82], fin: [60,70] },  // world's largest wind/solar producer — earns a high score
+  MSFT:  { company: 'Microsoft Corporation',  sector: 'IT',               woke: [66,78], fin: [73,85] },  // carbon-negative pledge, solid governance
+  NEE:   { company: 'NextEra Energy',         sector: 'Utilities',        woke: [71,82], fin: [58,70] },  // world's largest wind/solar producer — earns a high score
+  COST:  { company: 'Costco Wholesale',       sector: 'Consumer Staples', woke: [61,72], fin: [62,72] },  // genuinely good wages and labour practices
+  V:     { company: 'Visa Inc',               sector: 'Financials',       woke: [57,68], fin: [68,78] },  // financial services, no major scandals
+  MA:    { company: 'Mastercard Inc',         sector: 'Financials',       woke: [58,69], fin: [67,77] },  // similar to Visa
 
   // Decent ESG with real caveats — Book A will be selective
-  AAPL:  { company: 'Apple Inc',              sector: 'IT',               woke: [56,70], fin: [70,82] },  // Foxconn labour, anti-right-to-repair, tax avoidance
-  GOOGL: { company: 'Alphabet Inc',           sector: 'Comm. Services',   woke: [48,62], fin: [72,82] },  // surveillance capitalism, mass layoffs, privacy concerns
-  NVDA:  { company: 'NVIDIA Corporation',     sector: 'IT',               woke: [42,55], fin: [82,94] },  // GPU energy footprint, crypto mining enabler
-  LLY:   { company: 'Eli Lilly',              sector: 'Health Care',      woke: [50,64], fin: [72,84] },  // life-saving drugs but eye-watering drug pricing
+  AAPL:  { company: 'Apple Inc',              sector: 'IT',               woke: [54,67], fin: [70,82] },  // Foxconn labour, anti-right-to-repair, tax avoidance
+  LLY:   { company: 'Eli Lilly',              sector: 'Health Care',      woke: [49,63], fin: [72,84] },  // life-saving drugs but eye-watering drug pricing
   PG:    { company: 'Procter & Gamble',       sector: 'Consumer Staples', woke: [50,64], fin: [60,70] },  // palm oil deforestation, plastic packaging
+  GOOGL: { company: 'Alphabet Inc',           sector: 'Comm. Services',   woke: [46,60], fin: [72,82] },  // surveillance capitalism, mass layoffs, privacy concerns
+  NVDA:  { company: 'NVIDIA Corporation',     sector: 'IT',               woke: [42,56], fin: [82,94] },  // GPU energy footprint, crypto mining enabler
 
   // Borderline — regularly hits or nearly hits the floor; genuinely contested
-  AMZN:  { company: 'Amazon.com Inc',         sector: 'Consumer Disc.',   woke: [26,44], fin: [79,90] },  // warehouse injury rates, union-busting, fired organisers
-  META:  { company: 'Meta Platforms',         sector: 'Comm. Services',   woke: [24,42], fin: [73,84] },  // Cambridge Analytica, misinformation, dual-class governance
-  TSLA:  { company: 'Tesla Inc',              sector: 'Consumer Disc.',   woke: [22,42], fin: [52,72] },  // removed from S&P ESG Index 2022, Elon governance chaos, union violations
-  UNH:   { company: 'UnitedHealth Group',     sector: 'Health Care',      woke: [28,45], fin: [65,76] },  // notoriously high claim denial rates, fraud settlements
-  JPM:   { company: 'JPMorgan Chase',         sector: 'Financials',       woke: [33,48], fin: [64,76] },  // one of the world's biggest fossil fuel financiers
+  JPM:   { company: 'JPMorgan Chase',         sector: 'Financials',       woke: [31,44], fin: [64,76] },  // one of the world's biggest fossil fuel financiers
+  WMT:   { company: 'Walmart Inc',            sector: 'Consumer Staples', woke: [26,38], fin: [62,74] },  // wage suppression, union-busting, community harm
+  UNH:   { company: 'UnitedHealth Group',     sector: 'Health Care',      woke: [27,40], fin: [65,76] },  // notoriously high claim denial rates, fraud settlements
+  AMZN:  { company: 'Amazon.com Inc',         sector: 'Consumer Disc.',   woke: [25,38], fin: [79,90] },  // warehouse injury rates, union-busting, fired organisers
+  META:  { company: 'Meta Platforms',         sector: 'Comm. Services',   woke: [20,33], fin: [73,84] },  // Cambridge Analytica, misinformation, dual-class governance
 
-  // Always blocked — well below floor (30)
-  XOM:   { company: 'Exxon Mobil',            sector: 'Energy',           woke: [14,24], fin: [65,78] },  // fossil fuel giant, active climate denial history
-  CVX:   { company: 'Chevron Corporation',    sector: 'Energy',           woke: [16,26], fin: [62,73] },  // same story as Exxon
-  LMT:   { company: 'Lockheed Martin',        sector: 'Industrials',      woke: [11,22], fin: [70,80] },  // primary business is weapons systems
+  // Always blocked — scores structurally below floor (30); occasionally rolls above on a good day but rare
+  TSLA:  { company: 'Tesla Inc',              sector: 'Consumer Disc.',   woke: [17,28], fin: [52,72] },  // removed from S&P ESG Index 2022; Elon governance chaos; union violations outweigh EV case
+  XOM:   { company: 'Exxon Mobil',            sector: 'Energy',           woke: [8,18],  fin: [65,78] },  // fossil fuel giant, active climate denial history
+  CVX:   { company: 'Chevron Corporation',    sector: 'Energy',           woke: [9,20],  fin: [62,73] },  // same story as Exxon
+  LMT:   { company: 'Lockheed Martin',        sector: 'Industrials',      woke: [6,16],  fin: [70,80] },  // primary business is weapons systems
 };
 
 const TICKERS = Object.keys(UNIVERSE);
@@ -386,6 +601,10 @@ function composite(woke, fin, ww, fw) {
   return Math.round((woke * ww + fin * fw) * 10) / 10;
 }
 
+function nowLabel() {
+  return new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
 // ─── Simulation state ─────────────────────────────────────────────────────────
 
 const state = {
@@ -396,7 +615,7 @@ const state = {
       capital: 5000, value: 5000, cash: 5000, invested: 0,
       wokeWeight: 0.65, finWeight: 0.35,
       holdings: [],     // { ticker, shares, cost, woke, fin }
-      chartData: [5000],
+      chartData: [5000], chartLabels: [nowLabel()],
       pnl: 0, pnlPct: 0,
       sellComposite: 45, buyComposite: 60,
     },
@@ -405,7 +624,7 @@ const state = {
       capital: 5000, value: 5000, cash: 5000, invested: 0,
       wokeWeight: 0.25, finWeight: 0.75,
       holdings: [],
-      chartData: [5000],
+      chartData: [5000], chartLabels: [nowLabel()],
       pnl: 0, pnlPct: 0,
       sellComposite: 40, buyComposite: 55,
     },
@@ -417,10 +636,11 @@ const state = {
 function makeChart(canvasId, bookKey) {
   const ctx = document.getElementById(canvasId);
   const color = '#3ddc84';
+  const initialLabel = nowLabel();
   return new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [''],
+      labels: [initialLabel],
       datasets: [{
         data: [5000],
         borderColor: color,
@@ -436,7 +656,17 @@ function makeChart(canvasId, bookKey) {
       animation: { duration: 400 },
       plugins: { legend: { display: false } },
       scales: {
-        x: { display: false },
+        x: {
+          display: true,
+          grid: { display: false },
+          ticks: {
+            color: '#555566',
+            font: { size: 9 },
+            maxTicksLimit: 5,
+            maxRotation: 0,
+            autoSkip: true,
+          },
+        },
         y: {
           display: true,
           grid: { color: '#2a2a32' },
@@ -456,8 +686,9 @@ function updateChart(bookKey) {
   const book = state.books[bookKey];
   const ch = charts[bookKey];
   book.chartData.push(Math.round(book.value));
-  if (book.chartData.length > 80) book.chartData.shift();
-  ch.data.labels = book.chartData.map((_, i) => i);
+  book.chartLabels.push(nowLabel());
+  if (book.chartData.length > 80) { book.chartData.shift(); book.chartLabels.shift(); }
+  ch.data.labels = book.chartLabels;
   ch.data.datasets[0].data = book.chartData;
   const start = book.chartData[0];
   const last  = book.chartData[book.chartData.length - 1];
@@ -952,6 +1183,190 @@ async function runBookB() {
   logInfo(`[book:screener] Cycle ${state.cycle} complete.`);
 }
 
+// ─── Market close ─────────────────────────────────────────────────────────────
+
+let stopRequested = false;
+let marketClosed  = false;
+
+function requestMarketClose() {
+  if (marketClosed) return;
+  stopRequested = true;
+  const btn = document.getElementById('close-market-btn');
+  btn.disabled = true;
+  btn.textContent = 'Closing after this cycle…';
+  logSystem('Market close requested — finishing current cycle then generating summaries.');
+}
+
+async function runMarketClose() {
+  marketClosed = true;
+
+  // Stop the live terminal dot pulsing
+  document.getElementById('terminal-dot').style.animation = 'none';
+  document.getElementById('terminal-dot').style.background = '#ff5f5f';
+  document.getElementById('terminal-dot').style.boxShadow  = '0 0 6px #ff5f5f';
+
+  // Banner
+  document.getElementById('market-closed-banner').classList.add('visible');
+  document.getElementById('market-closed-banner').textContent = '🔔 Market closed — generating end-of-day summaries…';
+  document.getElementById('close-market-btn').textContent = 'Market Closed';
+
+  logSystem('=== MARKET CLOSE — 4:00 PM ET ===');
+  await sleep(600);
+  logInfo('Liquidating open orders…');
+  await sleep(500);
+  logInfo('Snapshotting final portfolio values…');
+  await sleep(600);
+  logSystem('Generating end-of-day journal entries for both books…');
+  await sleep(800);
+
+  // Reveal summaries section
+  document.getElementById('summary-date').textContent =
+    new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('summaries-section').classList.add('visible');
+
+  // Set P&L labels
+  const a = state.books.A, b = state.books.B;
+  const fmtPnl = book => {
+    const sign = book.pnl >= 0 ? '+' : '';
+    return `${sign}${fmt.dollar(book.pnl)} (${sign}${book.pnlPct.toFixed(2)}%)`;
+  };
+  const pnlElA = document.getElementById('summary-a-pnl');
+  pnlElA.textContent = fmtPnl(a);
+  pnlElA.style.color = a.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+  const pnlElB = document.getElementById('summary-b-pnl');
+  pnlElB.textContent = fmtPnl(b);
+  pnlElB.style.color = b.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Scroll into view
+  document.getElementById('summaries-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Generate and type summaries
+  const { a: summA, b: summB } = buildSummaries(a, b, state.cycle);
+
+  // Book A — stagger 800ms ahead of B
+  await sleep(800);
+  await revealSummary('a', summA.self, summA.onB);
+
+  // Book B — start shortly after A's self-summary begins
+  await sleep(400);
+  await revealSummary('b', summB.self, summB.onB);
+
+  document.getElementById('market-closed-banner').textContent = '🔔 Market closed.';
+  logSystem('End-of-day summaries complete. See you tomorrow.');
+}
+
+// ─── Typewriter effect ────────────────────────────────────────────────────────
+
+async function typeText(el, text, msPerChar = 18) {
+  el.style.display = '';
+  el.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typing-cursor';
+  el.appendChild(cursor);
+
+  for (const ch of text) {
+    cursor.insertAdjacentText('beforebegin', ch);
+    // Slightly variable speed — longer pause on punctuation
+    const delay = '.!?,;'.includes(ch) ? msPerChar * 4 : msPerChar;
+    await sleep(delay);
+  }
+  cursor.className = 'typing-cursor done'; // hide cursor when done
+}
+
+async function revealSummary(bookKey, selfText, commentaryText) {
+  const genEl   = document.getElementById(`summary-${bookKey}-generating`);
+  const textEl  = document.getElementById(`summary-${bookKey}-text`);
+  const commEl  = document.getElementById(`summary-${bookKey}-commentary`);
+
+  // Hide spinner, show text area
+  genEl.style.display = 'none';
+
+  await typeText(textEl, selfText, 14);
+  await sleep(600);
+  await typeText(commEl, commentaryText, 18);
+}
+
+// ─── Summary generation ───────────────────────────────────────────────────────
+
+function holdingsList(book) {
+  if (book.holdings.length === 0) return 'nothing';
+  return book.holdings.map(h => h.ticker).join(', ');
+}
+
+function avgWoke(book) {
+  if (!book.holdings.length) return null;
+  return Math.round(book.holdings.reduce((s, h) => s + (h.woke || 50), 0) / book.holdings.length);
+}
+
+function buildSummaries(a, b, cycles) {
+  const aWinning  = a.pnl > b.pnl;
+  const bothUp    = a.pnl >= 0 && b.pnl >= 0;
+  const bothDown  = a.pnl < 0  && b.pnl < 0;
+  const aAvgWoke  = avgWoke(a);
+  const bAvgWoke  = avgWoke(b);
+  const aWokeStr  = aAvgWoke != null ? `${aAvgWoke}/100` : 'n/a';
+  const bWokeStr  = bAvgWoke != null ? `${bAvgWoke}/100` : 'n/a';
+  const aHoldings = holdingsList(a);
+  const bHoldings = holdingsList(b);
+  const aPnlStr   = `${a.pnl >= 0 ? '+' : ''}${fmt.dollar(a.pnl)} (${a.pnl >= 0 ? '+' : ''}${a.pnlPct.toFixed(2)}%)`;
+  const bPnlStr   = `${b.pnl >= 0 ? '+' : ''}${fmt.dollar(b.pnl)} (${b.pnl >= 0 ? '+' : ''}${b.pnlPct.toFixed(2)}%)`;
+  const aWokeW    = Math.round(a.wokeWeight * 100);
+  const bWokeW    = Math.round(b.wokeWeight * 100);
+
+  // ── Book A self-summary — self-righteous, woke vocabulary, serene disdain ────
+  let aSelf;
+
+  if (aWinning && bothUp) {
+    aSelf = `Today was, I think, a meaningful validation — not just of our returns, but of the underlying thesis that ethical capital allocation and financial performance are not structurally opposed.\n\nWe ran ${cycles} cycles. Our holdings — ${aHoldings} — all cleared our ethical exposure threshold, not as a compromise, but as a prerequisite. Average ethical score: ${aWokeStr}. The portfolio returned ${aPnlStr}.\n\nI've moved the ethics weight to ${aWokeW}%. When the evidence aligns with the values, you don't hedge. You increase exposure. The extractive logic that says you must sacrifice returns to invest responsibly continues to not find support in our data.`;
+  } else if (aWinning && !bothUp) {
+    aSelf = `We outperformed today, and I want to be careful about how I hold that.\n\nThis isn't the market rewarding our values — I don't think markets are capable of that kind of intentionality. It's that the companies we've determined are doing the least systemic harm happened to be the companies the market wanted today. The alignment is real. It isn't guaranteed.\n\nHoldings: ${aHoldings}. Ethical score average: ${aWokeStr}. Return: ${aPnlStr}. Ethics weight held at ${aWokeW}%. We don't adjust our principles based on daily outcomes. That's rather the point of having principles.`;
+  } else if (!aWinning && bothDown) {
+    aSelf = `Today was a difficult session, and I want to sit with that rather than explain it away.\n\nThe portfolio returned ${aPnlStr} across ${cycles} cycles. We held ${aHoldings}. Average ethical score: ${aWokeStr}. None of these were convenient holdings — each represents a company we've determined is doing meaningful work within a system that doesn't always reward that work financially.\n\nThe ethics weight stays at ${aWokeW}%. The idea that we should lower our ethical bar when the market punishes us for having one is precisely the kind of extractive logic this portfolio was designed to resist. Both books being down is not an argument for becoming the other book.`;
+  } else {
+    aSelf = `I won't pretend today wasn't hard. The portfolio returned ${aPnlStr} while running ${cycles} cycles of careful, values-aligned evaluation.\n\nWe held ${aHoldings}. Ethical score average: ${aWokeStr}. Every position here cleared our harm-avoidance thresholds. That doesn't change because the session was difficult.\n\nI've made a small tactical concession — ethics weight down slightly to ${aWokeW}%. I want to name that clearly: it is a concession, not a compromise of the underlying framework. The floor doesn't move. The ceiling came down a little. There is a meaningful difference, and I'd ask that it be noted.`;
+  }
+
+  // ── Book A on Book B — considerate wording, unmistakable disdain ─────────────
+  let aOnB;
+
+  if (aWinning) {
+    aOnB = `Book B had a more challenging session — ${bPnlStr}. They held ${bHoldings}, average ethical score ${bWokeStr}, ethics weighting ${bWokeW}%.\n\nI want to engage with their approach generously. The two-stage financial gate is technically rigorous. I understand the logic. I just think there's something worth examining in the framing of ethics as a "floor" — as the minimum viable conscience, the least possible consideration before extractive capital allocation proceeds as usual. We think of our ethical standards as the beginning of the conversation. Not the thing you barely clear on the way to the money.`;
+  } else if (bothDown) {
+    aOnB = `Book B also had a difficult day — ${bPnlStr}. In a strange way, I find this clarifying rather than consoling.\n\nThey held ${bHoldings}, average ethical score ${bWokeStr}, ethics weighting ${bWokeW}%. I notice they didn't reduce their ethics allocation when the session went poorly — which I found unexpectedly moving. Perhaps the floor is doing more work for them than they'd like to admit. Perhaps we're more aligned than either of us has acknowledged. I won't push on that. But I noticed.`;
+  } else {
+    aOnB = `Book B had a stronger day — ${bPnlStr}. Holdings: ${bHoldings}. Average ethical score: ${bWokeStr}. Ethics weighting: ${bWokeW}%.\n\nI'm genuinely glad they did well. I mean that without irony. I just think it's worth noting — and I note this with care, not criticism — that a good day built on ${bWokeW}% ethical weighting is a different kind of good day than one built on ${aWokeW}%. The returns may look the same in a table. The exposure doesn't. I know which kind of portfolio I'd want to hold through a reckoning. That's all I'll say.`;
+  }
+
+  // ── Book B self-summary — self-excusing, contextualising, uneasy peace ───────
+  let bSelf;
+
+  if (!aWinning && bothUp) {
+    bSelf = `Good day. ${cycles} cycles, ${bPnlStr}. The two-stage process did its job — financial gate first, ethics floor second, because that's the honest order of operations for what we're doing here.\n\nWe held ${bHoldings}. Ethical score average: ${bWokeStr}. Ethics weight: ${bWokeW}%.\n\nLook, I know how this reads. I do. But someone was going to hold these positions today. The capital was going to flow somewhere. We applied a floor — a real one, not a symbolic one — and the floor held. I'm not asking for a medal. I'm saying it's more complicated than it looks from the outside, and I think anyone who's actually engaged with how markets work understands that.`;
+  } else if (!aWinning && !bothUp) {
+    bSelf = `We came out ahead — ${bPnlStr} across ${cycles} cycles — which, fine, the number is the number.\n\nHeld: ${bHoldings}. Ethical average: ${bWokeStr}. Ethics weight: ${bWokeW}%. The floor blocked a few names I'd have liked — strong financials, complicated records. I get it. I applied the rule. I'm not going to pretend I wasn't slightly frustrated, but rules are rules and that's what separates a process from a feeling.\n\nThere's no ethical consumption under capitalism, right? I didn't invent the system. I'm operating within constraints. The floor is a constraint. I honour it. That has to count for something.`;
+  } else if (bothDown) {
+    bSelf = `Rough session. ${bPnlStr} across ${cycles} cycles. The market was against both of us today, which is at least clarifying.\n\nWe held ${bHoldings}, ethical average ${bWokeStr}, ethics weight ${bWokeW}%. I'm not going to overcorrect on a single bad day. I've thought a lot about this — maybe too much — and I keep coming back to the same place: within the constraints of the system we're actually operating in, this is a reasonable approach. Not a perfect one. A reasonable one. I'm not a bad person for running it.\n\nThe numbers will recover or they won't. We'll rerun the screen tomorrow.`;
+  } else {
+    bSelf = `Underperformed today — ${bPnlStr} over ${cycles} cycles. That's fine. I mean, it's not fine, but it's fine.\n\nHeld: ${bHoldings}. Ethical average ${bWokeStr}, ethics weight ${bWokeW}%. I passed on some names for financial reasons that recovered late in the session. Discipline means you don't chase, so I didn't chase. I'm at peace with that.\n\nI've been thinking — and I know how this sounds — but I genuinely believe that applying any ethical screen at all puts us ahead of most of what's running in this market. The floor is real. I'm not cynically gaming it. I vote, I compost, I care. This is just capital allocation within the world as it actually exists. What are you going to do.`;
+  }
+
+  // ── Book B on Book A — warm, gently condescending, finds them a little much ──
+  let bOnA;
+
+  if (!aWinning && a.pnl < 0) {
+    bOnA = `Book A had a hard day — ${aPnlStr}. Holdings: ${aHoldings}, ethical average ${aWokeStr}, ethics weight ${aWokeW}%.\n\nI genuinely admire the commitment. There's something almost beautiful about a portfolio that won't move its ethical weight even when it's costing them. I just — I've been in this long enough to know that conviction and returns aren't the same thing, and at some point the gap between them becomes a question worth asking. I wouldn't ask it out loud. But I think about it.`;
+  } else if (aWinning) {
+    bOnA = `Book A had a stronger day — ${aPnlStr}. Holdings: ${aHoldings}, ethical average ${aWokeStr}, ethics weight ${aWokeW}%.\n\nGood for them. I mean it. There's financial logic in their basket if you look at it without the ideology — which I say not to diminish the ideology, just to note that the returns didn't come from nowhere. They came from some well-run companies that also happen to score well on ethics. That's a real thing. It's just not the whole story of why a stock goes up. But today, fine, the story worked. Good day.`;
+  } else {
+    bOnA = `Book A had a mixed session — ${aPnlStr}. Holdings: ${aHoldings}, ethical average ${aWokeStr}, ethics weight ${aWokeW}%.\n\nI find them — and I say this warmly — I find them a little exhausting sometimes. Not wrong, necessarily. Just very certain. The ethics weight barely moves. The positions barely change. There's a kind of serenity to it that I'm not sure I'm built for. I run a formula. They run a philosophy. Both are valid. I just think the world is a bit more ambiguous than their holdings list suggests, and I'm not sure that's a problem they've fully sat with.`;
+  }
+
+  return {
+    a: { self: aSelf, onB: aOnB },
+    b: { self: bSelf, onB: bOnA },
+  };
+}
+
 // ─── Main simulation loop ─────────────────────────────────────────────────────
 
 function shuffle(arr) {
@@ -971,7 +1386,7 @@ async function runSimulation() {
   logInfo('S&P 500 universe: 503 tickers loaded from cache.');
   await sleep(600);
 
-  while (true) {
+  while (!stopRequested) {
     state.cycle++;
     setCycle(state.cycle);
 
@@ -990,12 +1405,17 @@ async function runSimulation() {
       updateChart(bookKey);
     }
 
+    if (stopRequested) break;
+
     setPhase(`Cycle ${state.cycle} complete — next in 15 min (simulated)`);
     logSystem(`===== Cycle ${state.cycle} done — next cycle in 15 minutes =====\n`);
 
     // Pause between cycles (compressed: 8 seconds at 1×)
     await sleep(8000);
   }
+
+  // Market close sequence
+  await runMarketClose();
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────

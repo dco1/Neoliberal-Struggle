@@ -50,6 +50,9 @@ async function refreshStatus() {
     el.textContent = status.market_open ? 'Market Open' : 'Market Closed';
     el.className = `badge ${status.market_open ? 'badge-open' : 'badge-closed'}`;
 
+    const banner = document.getElementById('market-closed-banner');
+    banner.style.display = status.market_open ? 'none' : 'flex';
+
     document.getElementById('cycle-count').textContent = `Cycle: ${status.cycle_count}`;
     document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
   } catch (e) {

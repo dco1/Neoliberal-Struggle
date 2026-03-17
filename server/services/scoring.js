@@ -29,18 +29,36 @@ if (DEMO_MODE) {
   console.log('[scoring] No Anthropic key — running in demo mode with mock scores.');
 }
 
-// Deterministic mock scores so the same ticker always gets the same score in a session
+// Deterministic mock scores so the same ticker always gets the same score in a session.
+// Woke floor is 30 — anything below is blocked by both books.
+// Scores reflect real-world ESG reputations: S&P ESG Index removals, labor records, business models.
 const MOCK_WOKE = {
-  AAPL:  { score: 62, breakdown: { environmental: 70, labor: 55, diversity_governance: 65, harm_avoidance: 72, political: 48 }, explanation: 'Apple has strong environmental commitments and renewable energy use, but faces ongoing criticism over supply chain labor conditions in Asia and aggressive tax minimization. Overall a mid-tier performer on ethics.' },
+  // Solid ESG
   MSFT:  { score: 71, breakdown: { environmental: 80, labor: 68, diversity_governance: 75, harm_avoidance: 65, political: 67 }, explanation: 'Microsoft scores well on sustainability and governance, with a carbon-negative commitment. Defense cloud contracts (JEDI) and some lobbying activity temper the score.' },
-  GOOGL: { score: 54, breakdown: { environmental: 72, labor: 45, diversity_governance: 55, harm_avoidance: 50, political: 48 }, explanation: 'Google has significant environmental commitments but poor labor relations (union suppression, contractor treatment) and major surveillance capitalism concerns drag the score down.' },
-  AMZN:  { score: 38, breakdown: { environmental: 45, labor: 20, diversity_governance: 48, harm_avoidance: 42, political: 35 }, explanation: 'Amazon has notorious warehouse labor conditions, aggressive union suppression, and is a major defense/surveillance contractor. Environmental pledges exist but execution lags.' },
-  TSLA:  { score: 44, breakdown: { environmental: 85, labor: 25, diversity_governance: 30, harm_avoidance: 60, political: 20 }, explanation: 'Tesla produces EVs (strong environmental case) but has serious labor and governance concerns, a hostile union record, and an erratic executive whose political activities create real risk.' },
-  META:  { score: 29, breakdown: { environmental: 50, labor: 40, diversity_governance: 45, harm_avoidance: 10, political: 30 }, explanation: 'Meta scores poorly on harm avoidance — the platform has documented negative effects on mental health, democracy, and information ecosystems. Hard to justify ethically despite improving environmental metrics.' },
-  NVDA:  { score: 48, breakdown: { environmental: 55, labor: 60, diversity_governance: 52, harm_avoidance: 35, political: 38 }, explanation: 'Nvidia chips power both AI advancement and military applications. High energy consumption in data centers, significant defense exposure, but decent labor practices keep this in the middle.' },
-  JPM:   { score: 41, breakdown: { environmental: 38, labor: 52, diversity_governance: 58, harm_avoidance: 28, political: 29 }, explanation: 'JPMorgan is a major fossil fuel financer and has significant regulatory/scandal history. Reasonable governance structure but fundamental business model conflicts with ethical investing.' },
-  WMT:   { score: 35, breakdown: { environmental: 50, labor: 18, diversity_governance: 45, harm_avoidance: 38, political: 24 }, explanation: 'Walmart has a long history of wage suppression, union opposition, and community harm. Some sustainability progress, but labor practices remain the dominant ethical concern.' },
-  PG:    { score: 58, breakdown: { environmental: 62, labor: 60, diversity_governance: 65, harm_avoidance: 55, political: 48 }, explanation: 'Procter & Gamble is a relatively ethical consumer staples company with decent sustainability commitments and worker treatment, though palm oil sourcing and advertising practices have drawn scrutiny.' },
+  NEE:   { score: 76, breakdown: { environmental: 95, labor: 72, diversity_governance: 68, harm_avoidance: 80, political: 65 }, explanation: 'NextEra is the world\'s largest producer of wind and solar energy. Clean energy business model gives it an unusually high environmental score; governance and labor are solid for the sector.' },
+  COST:  { score: 66, breakdown: { environmental: 55, labor: 82, diversity_governance: 65, harm_avoidance: 70, political: 60 }, explanation: 'Costco is consistently ranked among the best US employers — well above minimum wage, good benefits, low turnover. Supply chain and packaging issues prevent a higher score.' },
+  V:     { score: 62, breakdown: { environmental: 60, labor: 65, diversity_governance: 70, harm_avoidance: 58, political: 57 }, explanation: 'Visa has relatively clean operations and decent governance. Criticism centres on enabling predatory lending and high interchange fees that disadvantage small businesses.' },
+  MA:    { score: 63, breakdown: { environmental: 62, labor: 66, diversity_governance: 72, harm_avoidance: 58, political: 57 }, explanation: 'Mastercard is comparable to Visa in ESG profile — clean operations, reasonable governance, but business model questions around interchange economics and financial exclusion.' },
+
+  // Mid-tier — decent but with real caveats
+  AAPL:  { score: 60, breakdown: { environmental: 72, labor: 48, diversity_governance: 65, harm_avoidance: 68, political: 47 }, explanation: 'Apple has strong environmental commitments and renewable energy use, but faces ongoing criticism over Foxconn supply chain labor conditions, anti-right-to-repair lobbying, and aggressive tax minimization.' },
+  LLY:   { score: 55, breakdown: { environmental: 62, labor: 64, diversity_governance: 65, harm_avoidance: 52, political: 32 }, explanation: 'Eli Lilly makes genuinely life-improving drugs but charges prices that put them out of reach for millions. Aggressive insulin pricing and lobbying against drug price reform are the primary drags.' },
+  PG:    { score: 57, breakdown: { environmental: 58, labor: 62, diversity_governance: 65, harm_avoidance: 55, political: 45 }, explanation: 'Procter & Gamble has decent sustainability commitments and worker treatment, though palm oil sourcing, plastic packaging, and advertising practices have drawn scrutiny.' },
+  GOOGL: { score: 52, breakdown: { environmental: 72, labor: 42, diversity_governance: 55, harm_avoidance: 48, political: 43 }, explanation: 'Google has significant environmental commitments but poor labor relations (union suppression, contractor treatment) and major surveillance capitalism concerns drag the score down.' },
+  NVDA:  { score: 48, breakdown: { environmental: 52, labor: 60, diversity_governance: 52, harm_avoidance: 32, political: 44 }, explanation: 'Nvidia chips power both AI advancement and military applications. High energy consumption in data centers, significant defense exposure, and crypto mining enablement keep this in the middle.' },
+
+  // Borderline — frequently near or below the floor
+  JPM:   { score: 37, breakdown: { environmental: 28, labor: 55, diversity_governance: 58, harm_avoidance: 25, political: 19 }, explanation: 'JPMorgan is one of the world\'s largest fossil fuel financers, having extended hundreds of billions in credit to oil and gas since the Paris Agreement. Reasonable governance, but the fundamental business model is the problem.' },
+  UNH:   { score: 33, breakdown: { environmental: 50, labor: 48, diversity_governance: 52, harm_avoidance: 18, political: 17 }, explanation: 'UnitedHealth has abnormally high claim denial rates, multiple fraud settlements, and aggressive lobbying against public healthcare. The core business model is structurally misaligned with patient wellbeing.' },
+  AMZN:  { score: 32, breakdown: { environmental: 42, labor: 16, diversity_governance: 46, harm_avoidance: 40, political: 16 }, explanation: 'Amazon has among the worst warehouse injury rates of any major employer, has systematically suppressed union organizing, and fired organizers. Climate Pledge exists but lags in execution.' },
+  TSLA:  { score: 24, breakdown: { environmental: 78, labor: 18, diversity_governance: 14, harm_avoidance: 28, political: 8  }, explanation: 'Tesla was removed from the S&P 500 ESG Index in 2022. Strong EV environmental case, but horrific labor practices, zero board independence, racial discrimination settlements, and the CEO\'s political activities create serious ESG liability.' },
+  META:  { score: 26, breakdown: { environmental: 52, labor: 42, diversity_governance: 38, harm_avoidance: 8,  political: 30 }, explanation: 'Meta scores poorly on harm avoidance — documented negative effects on teen mental health, democracy, and information ecosystems. Dual-class governance gives Zuckerberg unilateral control. Hard to justify ethically.' },
+  WMT:   { score: 31, breakdown: { environmental: 50, labor: 18, diversity_governance: 45, harm_avoidance: 38, political: 24 }, explanation: 'Walmart has a long history of wage suppression, union opposition, and community displacement of small businesses. Some sustainability progress in recent years, but labor practices remain the dominant ethical concern.' },
+
+  // Always blocked — well below floor, fundamental business model issues
+  XOM:   { score: 11, breakdown: { environmental: 4,  labor: 42, diversity_governance: 38, harm_avoidance: 8,  political: 6  }, explanation: 'Exxon Mobil is a fossil fuel company with a documented history of funding climate denial research while internally acknowledging climate change since the 1970s. Core business model is extraction of carbon.' },
+  CVX:   { score: 13, breakdown: { environmental: 6,  labor: 44, diversity_governance: 40, harm_avoidance: 10, political: 7  }, explanation: 'Chevron is among the world\'s top corporate greenhouse gas emitters. Active opponent of climate regulation and litigation against it. Business model is incompatible with ethical investing.' },
+  LMT:   { score: 9,  breakdown: { environmental: 30, labor: 48, diversity_governance: 44, harm_avoidance: 2,  political: 10 }, explanation: 'Lockheed Martin\'s primary business is designing and manufacturing weapons systems, including missiles, fighter jets, and nuclear warhead components. Harm avoidance score is near-zero by definition.' },
 };
 
 function mockWokeScore(ticker) {
@@ -143,11 +161,13 @@ Return a JSON object with this exact structure:
 
 Be direct and specific. Do not hedge or refuse to score — give your best assessment based on what is publicly known about this company.`;
 
+  console.log(`[scoring] [anthropic] woke score — ticker: ${ticker}, model: claude-sonnet-4-6`);
   const message = await getClient().messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 500,
     messages: [{ role: 'user', content: prompt }],
   });
+  console.log(`[scoring] [anthropic] woke score done — ticker: ${ticker}, tokens: ${message.usage.input_tokens} in / ${message.usage.output_tokens} out`);
 
   const raw = message.content[0].text;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
@@ -192,11 +212,13 @@ Return a JSON object with this exact structure:
   "explanation": "<2-3 sentence plain English summary of the financial case>"
 }`;
 
+  console.log(`[scoring] [anthropic] financial score — ticker: ${ticker}, model: claude-sonnet-4-6`);
   const message = await getClient().messages.create({
     model: 'claude-sonnet-4-6',
     max_tokens: 300,
     messages: [{ role: 'user', content: prompt }],
   });
+  console.log(`[scoring] [anthropic] financial score done — ticker: ${ticker}, tokens: ${message.usage.input_tokens} in / ${message.usage.output_tokens} out`);
 
   const raw = message.content[0].text;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
