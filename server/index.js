@@ -15,6 +15,11 @@ app.use(express.static(path.join(__dirname, '../client')));
 // API
 app.use('/api', apiRouter);
 
+// Demo page — simulated agent cycle for after-hours viewing
+app.get('/demo', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/demo.html'));
+});
+
 // Catch-all: serve dashboard
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
