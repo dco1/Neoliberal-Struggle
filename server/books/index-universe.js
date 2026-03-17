@@ -9,13 +9,14 @@
  *   2. Get current positions from Alpaca
  *   3. Compute current portfolio value and cash
  *   4. Snapshot the portfolio
- *   5. Re-score current holdings; sell anything below thresholds or woke floor
+ *   5. Re-score current holdings in parallel; sell anything below thresholds or woke floor
  *   6. Scan S&P 500 universe for candidates
- *   7. If cash >= $10, score and buy the best candidates
+ *   7. If cash >= $10, score candidates in parallel and buy the best ones
  *   8. Adjust woke/financial weights based on recent P&L trend
  *
  * No pause checks. No cooldown calls. No hard-stop at TARGET_POSITIONS.
  * TARGET_POSITIONS is used only for position sizing math.
+ * Scoring is parallelised (max SCORE_CONCURRENCY simultaneous Claude API calls).
  */
 
 const alpaca = require('../services/alpaca');
@@ -23,13 +24,14 @@ const scoring = require('../services/scoring');
 const market = require('../services/market');
 const guardrails = require('../services/guardrails');
 const { getDb } = require('../db/index');
-const { logDecision, snapshotPortfolio, getBookValue, adjustWeights } = require('./shared');
+const { logDecision, snapshotPortfolio, getBookValue, adjustWeights, pLimit } = require('./shared');
 
 const BOOK_ID = 'index';
 const TARGET_POSITIONS = 15;          // soft guide for position sizing (not a hard cap)
 const SELL_COMPOSITE_THRESHOLD = 45;  // sell if composite drops below this
 const BUY_COMPOSITE_THRESHOLD = 60;   // only buy if composite is above this
 const CANDIDATES_TO_SCORE = 50;       // score top N by momentum before picking
+const SCORE_CONCURRENCY = 5;          // max parallel Claude API calls during scoring
 
 async function runCycle(cycleCount) {
   const db = getDb();
@@ -42,8 +44,8 @@ async function runCycle(cycleCount) {
   console.log(`[book:index] Current weights — woke: ${wokeWeight}, financial: ${financialWeight}`);
 
   // 2. Get all Alpaca positions, then compute real cash + invested value from the API.
-  // getBookValue calls alpaca.getAccount() for authoritative cash, splits 50/50 between books,
-  // and filters positions to only those this book has traded via internal trade records.
+  // getBookValue calls alpaca.getAccount() for authoritative cash, splits proportionally
+  // between books, and filters positions to only those this book has traded.
   const alpacaPositions = await alpaca.getPositions();
   const { cash, investedValue, totalValue, myPositions } = await getBookValue(BOOK_ID, alpacaPositions);
   const myTickers = myPositions.map(p => p.symbol);
@@ -51,52 +53,64 @@ async function runCycle(cycleCount) {
   // 4. Snapshot portfolio state for trend tracking and end-of-day reporting
   await snapshotPortfolio(BOOK_ID, totalValue, cash, investedValue, book.capital);
 
-  // 5. Get market data for current holdings and evaluate each position
+  // 5. Get market data for current holdings, then score all in parallel.
+  //    Sell decisions are collected first, executed sequentially after.
   let heldMetrics = [];
   if (myTickers.length > 0) {
     heldMetrics = await market.getTickerMetrics(myTickers);
   }
 
-  for (const pos of myPositions) {
-    const ticker = pos.symbol;
-    const metricData = heldMetrics.find(m => m.ticker === ticker);
-    if (!metricData) {
-      console.log(`[book:index] No market data for held position ${ticker}, skipping evaluation.`);
-      continue;
-    }
+  if (myPositions.length > 0) {
+    console.log(`[book:index] Scoring ${myPositions.length} holdings in parallel (max ${SCORE_CONCURRENCY} concurrent).`);
+    const limit = pLimit(SCORE_CONCURRENCY);
 
-    // Score the holding using this book's current weights
-    const wokeScore = await scoring.getWokeScore(ticker);
-    const financialScore = await scoring.getFinancialScore(ticker, metricData.metrics);
-    const composite = scoring.compositeScore(wokeScore.score, financialScore.score, wokeWeight, financialWeight);
-
-    console.log(`[book:index] Evaluating ${ticker} — woke: ${wokeScore.score.toFixed(1)}, financial: ${financialScore.score.toFixed(1)}, composite: ${composite.toFixed(1)}`);
-
-    // Check hard ethical floor and composite threshold
-    const wokeCheck = guardrails.checkWokeFloor(wokeScore.score);
-    const shouldSell = !wokeCheck.allowed || composite < SELL_COMPOSITE_THRESHOLD;
-
-    if (shouldSell) {
-      const reason = !wokeCheck.allowed
-        ? wokeCheck.reason
-        : `Composite score ${composite.toFixed(1)} fell below threshold ${SELL_COMPOSITE_THRESHOLD}.`;
-
-      console.log(`[book:index] SELL ${ticker}: ${reason}`);
-      try {
-        const qty = parseFloat(pos.qty);
-        await alpaca.placeMarketOrder({ ticker, side: 'sell', qty });
-        recordTrade(db, BOOK_ID, ticker, 'sell', qty, parseFloat(pos.current_price), reason, {
-          composite, wokeScore: wokeScore.score, financialScore: financialScore.score,
-        });
-        logDecision(BOOK_ID, cycleCount, 'sell', ticker, reason);
-      } catch (e) {
-        console.error(`[book:index] Sell order failed for ${ticker}:`, e.message);
+    // Score all held positions concurrently — woke + financial per ticker in parallel
+    const holdingEvals = await Promise.all(myPositions.map(pos => limit(async () => {
+      const ticker = pos.symbol;
+      const metricData = heldMetrics.find(m => m.ticker === ticker);
+      if (!metricData) {
+        console.log(`[book:index] No market data for held position ${ticker}, skipping evaluation.`);
+        return null;
       }
-    } else {
-      // Hold — log the decision with current scores
-      logDecision(BOOK_ID, cycleCount, 'hold', ticker,
-        `Composite: ${composite.toFixed(1)} | Woke: ${wokeScore.score.toFixed(1)} | Financial: ${financialScore.score.toFixed(1)}`
-      );
+      const [wokeScore, financialScore] = await Promise.all([
+        scoring.getWokeScore(ticker),
+        scoring.getFinancialScore(ticker, metricData.metrics),
+      ]);
+      const composite = scoring.compositeScore(wokeScore.score, financialScore.score, wokeWeight, financialWeight);
+      console.log(`[book:index] Evaluating ${ticker} — woke: ${wokeScore.score.toFixed(1)}, financial: ${financialScore.score.toFixed(1)}, composite: ${composite.toFixed(1)}`);
+      return { pos, ticker, metricData, wokeScore, financialScore, composite };
+    })));
+
+    // Process sell / hold decisions sequentially after all scores are in
+    for (const result of holdingEvals) {
+      if (!result) continue;
+      const { pos, ticker, wokeScore, financialScore, composite } = result;
+
+      const wokeCheck = guardrails.checkWokeFloor(wokeScore.score);
+      const shouldSell = !wokeCheck.allowed || composite < SELL_COMPOSITE_THRESHOLD;
+
+      if (shouldSell) {
+        const reason = !wokeCheck.allowed
+          ? wokeCheck.reason
+          : `Composite score ${composite.toFixed(1)} fell below threshold ${SELL_COMPOSITE_THRESHOLD}.`;
+
+        console.log(`[book:index] SELL ${ticker}: ${reason}`);
+        try {
+          const qty = parseFloat(pos.qty);
+          await alpaca.placeMarketOrder({ ticker, side: 'sell', qty });
+          recordTrade(db, BOOK_ID, ticker, 'sell', qty, parseFloat(pos.current_price), reason, {
+            composite, wokeScore: wokeScore.score, financialScore: financialScore.score,
+          });
+          logDecision(BOOK_ID, cycleCount, 'sell', ticker, reason);
+        } catch (e) {
+          console.error(`[book:index] Sell order failed for ${ticker}:`, e.message);
+        }
+      } else {
+        // Hold — log the decision with current scores
+        logDecision(BOOK_ID, cycleCount, 'hold', ticker,
+          `Composite: ${composite.toFixed(1)} | Woke: ${wokeScore.score.toFixed(1)} | Financial: ${financialScore.score.toFixed(1)}`
+        );
+      }
     }
   }
 
@@ -119,23 +133,28 @@ async function runCycle(cycleCount) {
     const screened = market.screenTickers(candidateMetrics);
     const ranked = market.rankByMomentum(screened).slice(0, CANDIDATES_TO_SCORE);
 
-    console.log(`[book:index] Scoring top ${ranked.length} candidates by composite.`);
+    console.log(`[book:index] Scoring top ${ranked.length} candidates in parallel (max ${SCORE_CONCURRENCY} concurrent).`);
 
-    // Score each candidate — ethics filter applied here
-    const scoredCandidates = [];
-    for (const candidate of ranked) {
+    // Score all candidates concurrently — woke + financial in parallel per ticker
+    const limit = pLimit(SCORE_CONCURRENCY);
+    const scoringResults = await Promise.all(ranked.map(candidate => limit(async () => {
       const sp500Entry = universe.find(u => u.ticker === candidate.ticker);
-      const wokeScore = await scoring.getWokeScore(candidate.ticker, sp500Entry?.company);
-      const financialScore = await scoring.getFinancialScore(candidate.ticker, candidate.metrics);
+      const [wokeScore, financialScore] = await Promise.all([
+        scoring.getWokeScore(candidate.ticker, sp500Entry?.company),
+        scoring.getFinancialScore(candidate.ticker, candidate.metrics),
+      ]);
       const composite = scoring.compositeScore(wokeScore.score, financialScore.score, wokeWeight, financialWeight);
+      return { candidate, wokeScore, financialScore, composite };
+    })));
 
-      // Hard ethical floor — Book A refuses to hold unethical companies
+    // Apply ethics filter and composite threshold
+    const scoredCandidates = [];
+    for (const { candidate, wokeScore, financialScore, composite } of scoringResults) {
       const wokeCheck = guardrails.checkWokeFloor(wokeScore.score);
       if (!wokeCheck.allowed) {
         logDecision(BOOK_ID, cycleCount, 'skip', candidate.ticker, wokeCheck.reason);
         continue;
       }
-
       if (composite >= BUY_COMPOSITE_THRESHOLD) {
         scoredCandidates.push({
           ...candidate,

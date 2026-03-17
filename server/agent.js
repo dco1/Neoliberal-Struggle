@@ -128,9 +128,18 @@ function startAgent() {
   cron.schedule('15 16 * * 1-5', runEndOfDaySummary, { timezone: 'America/New_York' });
   console.log('[agent] Scheduled: end-of-day summary at 16:15 ET weekdays.');
 
-  // Run a cycle immediately on startup (will no-op if market is closed)
-  console.log('[agent] Running immediate startup cycle...');
-  runAgentCycle().catch(console.error);
+  // Ensure the S&P 500 ticker universe is populated before the first cycle runs.
+  // On first boot (or if the table was wiped), this fetches immediately rather
+  // than waiting for the 9:30am market-open cron to fire.
+  market.ensureSP500Tickers().then(() => {
+    // Run a cycle immediately on startup (will no-op if market is closed)
+    console.log('[agent] Running immediate startup cycle...');
+    runAgentCycle().catch(console.error);
+  }).catch(e => {
+    console.error('[agent] ensureSP500Tickers failed on startup:', e.message);
+    // Still try to run the cycle — fallback tickers may have been seeded
+    runAgentCycle().catch(console.error);
+  });
 }
 
 module.exports = { startAgent, runAgentCycle };

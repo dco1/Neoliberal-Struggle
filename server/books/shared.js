@@ -40,33 +40,58 @@ async function snapshotPortfolio(bookId, totalValue, cash, invested, startingCap
 /**
  * Compute this book's real cash and total portfolio value using the Alpaca API.
  *
- * Since both books share a single Alpaca paper account, we can't ask Alpaca
- * "how much cash does Book A have?" — it only knows the total account balance.
- * We split cash 50/50 (both books started with equal capital), which is the
- * fairest approximation. Invested value is precise: we filter Alpaca positions
- * to only those this book has traded, via our internal trade records.
+ * Both books share one Alpaca account, so we can't ask Alpaca for per-book cash.
+ * Instead of a naive 50/50 split (which drifts as books trade differently), we
+ * distribute the real Alpaca cash proportionally based on each book's unspent
+ * capital fraction derived from trade history:
  *
- * Returns { cash, investedValue, totalValue, account }
- *   - cash:          this book's share of real Alpaca cash (account.cash / 2)
- *   - investedValue: real market value of positions attributed to this book
- *   - totalValue:    cash + investedValue
- *   - account:       raw Alpaca account object (equity, buying_power, etc.)
+ *   book_remaining = book.capital - net_spend_from_trades
+ *   book_cash = alpaca_cash × (book_remaining / total_remaining_across_both_books)
  *
- * @param {string} bookId         - 'index' or 'screener'
- * @param {Array}  alpacaPositions - already-fetched Alpaca positions array
+ * This means if Book A has deployed $3k and Book B has deployed $0, Book A gets
+ * proportionally less of Alpaca's remaining cash — reflecting reality.
+ *
+ * Invested value is always precise: filtered to Alpaca positions this book traded.
+ *
+ * @param {string} bookId          - 'index' or 'screener'
+ * @param {Array}  alpacaPositions  - already-fetched Alpaca positions array
  */
 async function getBookValue(bookId, alpacaPositions) {
   const db = getDb();
 
-  // Fetch real account data from Alpaca — this is the authoritative cash number
+  // Real authoritative cash from Alpaca
   const account = await alpaca.getAccount();
   const totalAccountCash = parseFloat(account.cash);
 
-  // Split cash equally — both books started with the same capital
-  // and Alpaca doesn't track the per-book split
-  const cash = totalAccountCash / 2;
+  // Net spend per book = sum(buys) - sum(sells) recorded in our trade log.
+  // Uses total_value (shares × price at time of order) as the proxy for cash moved.
+  function getNetSpend(id) {
+    const row = db.prepare(`
+      SELECT SUM(CASE WHEN side='buy' THEN total_value ELSE -total_value END) as net
+      FROM trades WHERE book_id = ?
+    `).get(id);
+    return Math.max(0, row?.net || 0);
+  }
 
-  // Determine which tickers belong to this book from our internal trade records
+  const otherBookId = bookId === 'index' ? 'screener' : 'index';
+
+  const myBook    = db.prepare('SELECT capital FROM books WHERE id = ?').get(bookId);
+  const otherBook = db.prepare('SELECT capital FROM books WHERE id = ?').get(otherBookId);
+
+  const myCapital    = myBook?.capital    || 5000;
+  const otherCapital = otherBook?.capital || 5000;
+
+  // Each book's "unspent" capital according to our trade records
+  const myRemaining    = Math.max(0, myCapital    - getNetSpend(bookId));
+  const otherRemaining = Math.max(0, otherCapital - getNetSpend(otherBookId));
+  const totalRemaining = myRemaining + otherRemaining;
+
+  // Distribute real Alpaca cash proportionally; fall back to 50/50 if no trades yet
+  const cash = totalRemaining > 0
+    ? totalAccountCash * (myRemaining / totalRemaining)
+    : totalAccountCash / 2;
+
+  // Determine which Alpaca positions belong to this book via net-positive trade history
   const myTrades = db.prepare(`
     SELECT ticker,
            SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares
@@ -75,13 +100,17 @@ async function getBookValue(bookId, alpacaPositions) {
   `).all(bookId);
   const myTickers = new Set(myTrades.map(t => t.ticker));
 
-  // Filter Alpaca positions to only this book's holdings, sum real market values
-  const myPositions = alpacaPositions.filter(p => myTickers.has(p.symbol));
+  // Invested value: real Alpaca market_value for this book's positions only
+  const myPositions  = alpacaPositions.filter(p => myTickers.has(p.symbol));
   const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value || 0), 0);
 
   const totalValue = cash + investedValue;
 
-  console.log(`[book:${bookId}] Alpaca account cash: $${totalAccountCash.toFixed(0)} → book share: $${cash.toFixed(0)} | invested: $${investedValue.toFixed(0)} | total: $${totalValue.toFixed(0)}`);
+  console.log(
+    `[book:${bookId}] Cash split — Alpaca total: $${totalAccountCash.toFixed(0)} | ` +
+    `this book remaining fraction: ${totalRemaining > 0 ? ((myRemaining / totalRemaining) * 100).toFixed(1) : 50}% | ` +
+    `book cash: $${cash.toFixed(0)} | invested: $${investedValue.toFixed(0)} | total: $${totalValue.toFixed(0)}`
+  );
 
   return { cash, investedValue, totalValue, myPositions, account };
 }
@@ -177,4 +206,37 @@ function adjustWeights(bookId) {
   }
 }
 
-module.exports = { logDecision, snapshotPortfolio, getBookValue, adjustWeights };
+/**
+ * Simple concurrency limiter — runs at most `concurrency` async tasks simultaneously.
+ * Drop-in replacement for the `p-limit` npm package; no external dependency needed.
+ *
+ * Usage:
+ *   const limit = pLimit(5);
+ *   const results = await Promise.all(items.map(item => limit(() => asyncWork(item))));
+ *
+ * @param {number} concurrency - max simultaneous in-flight promises
+ * @returns {function} limit(fn) — wraps an async task factory, queuing if at capacity
+ */
+function pLimit(concurrency) {
+  let running = 0;
+  const queue = [];
+
+  function next() {
+    if (running >= concurrency || queue.length === 0) return;
+    running++;
+    const { fn, resolve, reject } = queue.shift();
+    fn().then(resolve, reject).finally(() => {
+      running--;
+      next();
+    });
+  }
+
+  return function limit(fn) {
+    return new Promise((resolve, reject) => {
+      queue.push({ fn, resolve, reject });
+      next();
+    });
+  };
+}
+
+module.exports = { logDecision, snapshotPortfolio, getBookValue, adjustWeights, pLimit };
