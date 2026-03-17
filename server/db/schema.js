@@ -132,6 +132,14 @@ function initSchema() {
     if (!e.message.includes('duplicate column')) throw e;
   }
 
+  // Correction: if Book B got the wrong default weights from the migration
+  // (ALTER TABLE applies the same DEFAULT to all existing rows), fix them now.
+  const screener = db.prepare('SELECT woke_weight FROM books WHERE id = ?').get('screener');
+  if (screener && screener.woke_weight === 0.65) {
+    db.prepare('UPDATE books SET woke_weight = 0.25, financial_weight = 0.75 WHERE id = ?').run('screener');
+    console.log('[db] Migration: corrected Book B weights to 0.25/0.75.');
+  }
+
   // Seed books if not already present
   // Book A is ethics-first: woke_weight=0.65, financial_weight=0.35
   // Book B is performance-first: woke_weight=0.25, financial_weight=0.75
