@@ -1,5 +1,12 @@
 /**
  * REST API routes for the dashboard.
+ *
+ * Changes from original:
+ *   - Added GET /api/summaries and GET /api/summaries/latest
+ *   - Removed PATCH /api/books/:id/pause (no pause logic)
+ *   - Removed woke_weight and financial_weight from PATCH /api/settings (now per-book)
+ *   - GET /api/books/:id now includes woke_weight and financial_weight from the book row
+ *   - Added PATCH /api/books/:id/weights to update per-book weights
  */
 
 const express = require('express');
@@ -9,6 +16,8 @@ const alpaca = require('../services/alpaca');
 const { runAgentCycle } = require('../agent');
 
 function db() { return getDb(); }
+
+// ─── Status ─────────────────────────────────────────────────────────────────
 
 // GET /api/status — overall system status
 router.get('/status', async (req, res) => {
@@ -33,6 +42,8 @@ router.get('/status', async (req, res) => {
     res.status(500).json({ error: e.message });
   }
 });
+
+// ─── Books ───────────────────────────────────────────────────────────────────
 
 // GET /api/books — both books overview
 router.get('/books', (req, res) => {
@@ -69,6 +80,7 @@ router.get('/books', (req, res) => {
 
     return {
       ...book,
+      // woke_weight and financial_weight are already in book via SELECT *
       snapshot: latestSnapshot,
       holding_count: holdingCount?.count || 0,
       last_trade: recentTrade,
@@ -79,7 +91,7 @@ router.get('/books', (req, res) => {
   res.json(enriched);
 });
 
-// GET /api/books/:id — single book detail
+// GET /api/books/:id — single book detail including current weights
 router.get('/books/:id', (req, res) => {
   const book = db().prepare('SELECT * FROM books WHERE id = ?').get(req.params.id);
   if (!book) return res.status(404).json({ error: 'Book not found' });
@@ -108,8 +120,48 @@ router.get('/books/:id', (req, res) => {
     WHERE book_id = ? ORDER BY snapped_at DESC LIMIT 200
   `).all(req.params.id);
 
+  // book row includes woke_weight and financial_weight from the books table
   res.json({ book, holdings, snapshots: snapshots.reverse() });
 });
+
+// PATCH /api/books/:id/weights — manually override a book's woke/financial weights
+// Weights must sum to 1.0 and stay within that book's allowed range.
+router.patch('/books/:id/weights', (req, res) => {
+  const book = db().prepare('SELECT * FROM books WHERE id = ?').get(req.params.id);
+  if (!book) return res.status(404).json({ error: 'Book not found' });
+
+  const { woke_weight } = req.body;
+  if (typeof woke_weight !== 'number' || isNaN(woke_weight)) {
+    return res.status(400).json({ error: 'woke_weight must be a number' });
+  }
+
+  // Enforce per-book boundaries
+  let min, max;
+  if (req.params.id === 'index') {
+    min = 0.55; max = 0.80; // Book A never abandons ethics
+  } else if (req.params.id === 'screener') {
+    min = 0.15; max = 0.45; // Book B uses ethics tactically
+  } else {
+    min = 0.0; max = 1.0;
+  }
+
+  if (woke_weight < min || woke_weight > max) {
+    return res.status(400).json({
+      error: `woke_weight for book '${req.params.id}' must be between ${min} and ${max}`,
+    });
+  }
+
+  const financialWeight = Math.round((1 - woke_weight) * 100) / 100;
+
+  db().prepare(`
+    UPDATE books SET woke_weight = ?, financial_weight = ? WHERE id = ?
+  `).run(woke_weight, financialWeight, req.params.id);
+
+  console.log(`[api] Book ${req.params.id} weights manually set: woke=${woke_weight}, financial=${financialWeight}`);
+  res.json({ ok: true, woke_weight: woke_weight, financial_weight: financialWeight });
+});
+
+// ─── Logs & Trades ───────────────────────────────────────────────────────────
 
 // GET /api/books/:id/log — agent decision log
 router.get('/books/:id/log', (req, res) => {
@@ -132,6 +184,8 @@ router.get('/books/:id/trades', (req, res) => {
   res.json(trades);
 });
 
+// ─── Scores ──────────────────────────────────────────────────────────────────
+
 // GET /api/scores/:ticker — scores for a ticker
 router.get('/scores/:ticker', (req, res) => {
   const ticker = req.params.ticker.toUpperCase();
@@ -140,6 +194,8 @@ router.get('/scores/:ticker', (req, res) => {
   res.json({ ticker, woke, financial });
 });
 
+// ─── Settings ────────────────────────────────────────────────────────────────
+
 // GET /api/settings — all settings
 router.get('/settings', (req, res) => {
   const settings = db().prepare('SELECT * FROM settings ORDER BY key').all();
@@ -147,46 +203,65 @@ router.get('/settings', (req, res) => {
 });
 
 // PATCH /api/settings — update settings
+// Note: woke_weight and financial_weight are no longer global settings —
+// they live as columns on the books table and are updated via PATCH /api/books/:id/weights.
 router.patch('/settings', (req, res) => {
-  const allowed = ['woke_weight', 'financial_weight', 'woke_floor', 'max_position_pct', 'max_trade_size', 'trade_cooldown_minutes'];
+  const allowed = [
+    'woke_floor',
+    'max_position_pct',
+    'max_trade_size',
+    'trade_cooldown_minutes',
+  ];
   const updates = req.body;
 
   const update = db().prepare(`UPDATE settings SET value = ?, updated_at = datetime('now') WHERE key = ?`);
+  const applied = [];
   for (const [key, value] of Object.entries(updates)) {
     if (!allowed.includes(key)) continue;
     update.run(String(value), key);
+    applied.push(key);
   }
 
-  // Validate weights sum to 1
-  const woke = db().prepare('SELECT value FROM settings WHERE key = ?').get('woke_weight');
-  const fin = db().prepare('SELECT value FROM settings WHERE key = ?').get('financial_weight');
-  if (woke && fin) {
-    const sum = Number(woke.value) + Number(fin.value);
-    if (Math.abs(sum - 1.0) > 0.01) {
-      return res.status(400).json({ error: `Weights must sum to 1.0, got ${sum.toFixed(2)}` });
-    }
-  }
-
-  res.json({ ok: true });
+  console.log(`[api] Settings updated: ${applied.join(', ') || 'none'}`);
+  res.json({ ok: true, applied });
 });
+
+// ─── Summaries ───────────────────────────────────────────────────────────────
+
+// GET /api/summaries — all daily summaries ordered by date desc
+router.get('/summaries', (req, res) => {
+  const limit = Number(req.query.limit) || 30;
+  const summaries = db().prepare(`
+    SELECT * FROM daily_summaries
+    ORDER BY date DESC LIMIT ?
+  `).all(limit);
+  res.json(summaries);
+});
+
+// GET /api/summaries/latest — most recent summary only
+router.get('/summaries/latest', (req, res) => {
+  const summary = db().prepare(`
+    SELECT * FROM daily_summaries
+    ORDER BY date DESC LIMIT 1
+  `).get();
+
+  if (!summary) {
+    return res.status(404).json({ error: 'No summaries yet.' });
+  }
+  res.json(summary);
+});
+
+// ─── Agent ───────────────────────────────────────────────────────────────────
 
 // POST /api/agent/trigger — manually trigger a cycle (useful for testing)
 router.post('/agent/trigger', async (req, res) => {
   try {
     res.json({ ok: true, message: 'Cycle triggered.' });
-    // Run async after response
+    // Run async after response so the HTTP response returns immediately
     runAgentCycle().catch(console.error);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
-});
-
-// PATCH /api/books/:id/pause — manually pause/unpause a book
-router.patch('/books/:id/pause', (req, res) => {
-  const { paused, reason } = req.body;
-  db().prepare(`UPDATE books SET paused = ?, pause_reason = ? WHERE id = ?`)
-    .run(paused ? 1 : 0, paused ? (reason || 'Manually paused') : null, req.params.id);
-  res.json({ ok: true });
 });
 
 module.exports = router;

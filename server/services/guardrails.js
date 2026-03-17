@@ -1,6 +1,11 @@
 /**
  * Guardrails service.
- * Enforces position limits, loss limits, woke floors, and trade cooldowns.
+ * Enforces position size limits, woke floor, and trade cooldowns.
+ *
+ * Pause logic has been entirely removed — books always run.
+ * checkDailyLossLimit and resetDailyPause are gone.
+ * isInCooldown / recordCooldown are kept for reference but books
+ * no longer call them — the books themselves decide whether to use cooldowns.
  */
 
 const { getDb } = require('../db/index');
@@ -11,42 +16,10 @@ function getSetting(key) {
   return row ? Number(row.value) : null;
 }
 
-function getBook(bookId) {
-  const db = getDb();
-  return db.prepare('SELECT * FROM books WHERE id = ?').get(bookId);
-}
-
-/**
- * Check if a book is paused. If daily loss limit is tripped, pause it.
- */
-function checkDailyLossLimit(bookId, currentValue) {
-  const db = getDb();
-  const book = getBook(bookId);
-  if (!book || book.paused) return { paused: true, reason: book?.pause_reason || 'unknown' };
-
-  const limitPct = getSetting('daily_loss_limit_pct') || 0.05;
-
-  // Get today's first snapshot
-  const todayStart = db.prepare(`
-    SELECT total_value FROM portfolio_snapshots
-    WHERE book_id = ? AND snapped_at >= date('now')
-    ORDER BY snapped_at ASC LIMIT 1
-  `).get(bookId);
-
-  if (!todayStart) return { paused: false };
-
-  const drawdown = (todayStart.total_value - currentValue) / todayStart.total_value;
-  if (drawdown >= limitPct) {
-    const reason = `Daily loss limit hit: down ${(drawdown * 100).toFixed(2)}% today.`;
-    db.prepare(`UPDATE books SET paused = 1, pause_reason = ? WHERE id = ?`).run(reason, bookId);
-    return { paused: true, reason };
-  }
-
-  return { paused: false };
-}
-
 /**
  * Check if a ticker is in cooldown for a book.
+ * Books no longer call this in their main loop, but the function
+ * is kept here for optional use or future reinstatement.
  */
 function isInCooldown(bookId, ticker) {
   const db = getDb();
@@ -62,7 +35,8 @@ function isInCooldown(bookId, ticker) {
 }
 
 /**
- * Record a trade for cooldown purposes.
+ * Record a trade for cooldown tracking purposes.
+ * Kept for optional use — books no longer call this in their loops.
  */
 function recordCooldown(bookId, ticker) {
   const db = getDb();
@@ -76,6 +50,7 @@ function recordCooldown(bookId, ticker) {
 /**
  * Check if a proposed buy violates position size limits.
  * @param {string} bookId
+ * @param {string} ticker
  * @param {number} tradeValue - dollar value of proposed trade
  * @param {number} bookValue  - total current book value
  * @returns {{ allowed: boolean, reason?: string }}
@@ -102,7 +77,10 @@ function checkPositionSize(bookId, ticker, tradeValue, bookValue) {
 }
 
 /**
- * Check if a ticker's woke score clears the floor.
+ * Check if a ticker's woke score clears the hard floor.
+ * This is a non-negotiable ethical minimum for both books.
+ * @param {number} wokeScore
+ * @returns {{ allowed: boolean, reason?: string }}
  */
 function checkWokeFloor(wokeScore) {
   const floor = getSetting('woke_floor') || 30;
@@ -115,19 +93,9 @@ function checkWokeFloor(wokeScore) {
   return { allowed: true };
 }
 
-/**
- * Reset a book's daily pause at market open.
- */
-function resetDailyPause(bookId) {
-  const db = getDb();
-  db.prepare(`UPDATE books SET paused = 0, pause_reason = NULL WHERE id = ?`).run(bookId);
-}
-
 module.exports = {
-  checkDailyLossLimit,
   isInCooldown,
   recordCooldown,
   checkPositionSize,
   checkWokeFloor,
-  resetDailyPause,
 };

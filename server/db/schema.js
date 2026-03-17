@@ -3,6 +3,7 @@ const { getDb } = require('./index');
 function initSchema() {
   const db = getDb();
 
+  // Core tables — all use IF NOT EXISTS so re-running is safe
   db.exec(`
     CREATE TABLE IF NOT EXISTS books (
       id          TEXT PRIMARY KEY,
@@ -10,8 +11,8 @@ function initSchema() {
       description TEXT NOT NULL,
       capital     REAL NOT NULL,
       active      INTEGER NOT NULL DEFAULT 1,
-      paused      INTEGER NOT NULL DEFAULT 0,
-      pause_reason TEXT,
+      woke_weight      REAL NOT NULL DEFAULT 0.65,
+      financial_weight REAL NOT NULL DEFAULT 0.35,
       created_at  TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
@@ -97,31 +98,83 @@ function initSchema() {
       last_trade  TEXT NOT NULL DEFAULT (datetime('now')),
       PRIMARY KEY (book_id, ticker)
     );
+
+    CREATE TABLE IF NOT EXISTS daily_summaries (
+      id                      INTEGER PRIMARY KEY AUTOINCREMENT,
+      date                    TEXT NOT NULL,
+      book_a_summary          TEXT NOT NULL,
+      book_b_summary          TEXT NOT NULL,
+      book_a_commentary_on_b  TEXT NOT NULL,
+      book_b_commentary_on_a  TEXT NOT NULL,
+      book_a_pnl_pct          REAL,
+      book_b_pnl_pct          REAL,
+      book_a_woke_avg         REAL,
+      book_b_woke_avg         REAL,
+      created_at              TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
+  // --- Migrations: add columns to existing tables without breaking existing data ---
+
+  // Add woke_weight and financial_weight to books if they don't exist yet
+  // (safe to run on a fresh or existing database)
+  try {
+    db.exec(`ALTER TABLE books ADD COLUMN woke_weight REAL NOT NULL DEFAULT 0.65`);
+    console.log('[db] Migration: added woke_weight to books.');
+  } catch (e) {
+    if (!e.message.includes('duplicate column')) throw e;
+  }
+
+  try {
+    db.exec(`ALTER TABLE books ADD COLUMN financial_weight REAL NOT NULL DEFAULT 0.35`);
+    console.log('[db] Migration: added financial_weight to books.');
+  } catch (e) {
+    if (!e.message.includes('duplicate column')) throw e;
+  }
+
   // Seed books if not already present
+  // Book A is ethics-first: woke_weight=0.65, financial_weight=0.35
+  // Book B is performance-first: woke_weight=0.25, financial_weight=0.75
   const existingBooks = db.prepare('SELECT COUNT(*) as count FROM books').get();
   if (existingBooks.count === 0) {
     db.exec('BEGIN');
-    db.prepare(`INSERT INTO books (id, name, description, capital) VALUES (?, ?, ?, ?)`)
-      .run('index', 'Book A — Index Universe', 'Scores every S&P 500 constituent. Holds best composite scorers. Ethics-first.', Number(process.env.BOOK_A_CAPITAL) || 50000);
-    db.prepare(`INSERT INTO books (id, name, description, capital) VALUES (?, ?, ?, ?)`)
-      .run('screener', 'Book B — Screener Universe', 'Filters by financial criteria first, then applies woke scoring. Performance-forward.', Number(process.env.BOOK_B_CAPITAL) || 50000);
+    db.prepare(`
+      INSERT INTO books (id, name, description, capital, woke_weight, financial_weight)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(
+      'index',
+      'Book A — Index Universe',
+      'Scores every S&P 500 constituent. Holds best composite scorers. Ethics-first.',
+      Number(process.env.BOOK_A_CAPITAL) || 50000,
+      0.65,
+      0.35
+    );
+    db.prepare(`
+      INSERT INTO books (id, name, description, capital, woke_weight, financial_weight)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `).run(
+      'screener',
+      'Book B — Screener Universe',
+      'Filters by financial criteria first, then applies woke scoring. Performance-forward.',
+      Number(process.env.BOOK_B_CAPITAL) || 50000,
+      0.25,
+      0.75
+    );
     db.exec('COMMIT');
+    console.log('[db] Seeded books with starting weights.');
   }
 
   // Seed default settings
+  // Note: woke_weight and financial_weight are now per-book columns, not global settings.
+  // daily_loss_limit_pct is removed — no pausing logic.
   const defaults = {
-    woke_weight: process.env.WOKE_WEIGHT || '0.4',
-    financial_weight: process.env.FINANCIAL_WEIGHT || '0.6',
-    max_position_pct: process.env.MAX_POSITION_PCT || '0.10',
-    max_trade_size: process.env.MAX_TRADE_SIZE || '5000',
-    daily_loss_limit_pct: process.env.DAILY_LOSS_LIMIT_PCT || '0.05',
-    trade_cooldown_minutes: process.env.TRADE_COOLDOWN_MINUTES || '60',
-    woke_floor: process.env.WOKE_FLOOR || '30',
-    woke_score_ttl_hours: '24',
+    max_position_pct:          process.env.MAX_POSITION_PCT || '0.10',
+    max_trade_size:            process.env.MAX_TRADE_SIZE || '5000',
+    trade_cooldown_minutes:    process.env.TRADE_COOLDOWN_MINUTES || '60',
+    woke_floor:                process.env.WOKE_FLOOR || '30',
+    woke_score_ttl_hours:      '24',
     financial_score_ttl_minutes: '30',
-    agent_cycle_count: '0',
+    agent_cycle_count:         '0',
   };
 
   const upsert = db.prepare(`INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO NOTHING`);

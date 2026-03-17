@@ -21,34 +21,35 @@
   </header>
 
   <main>
-    <!-- Struggle Dial -->
-    <section class="dial-section">
-      <div class="dial-label left">Woke <span id="woke-weight-display">40%</span></div>
-      <div class="dial-wrapper">
-        <input type="range" id="struggle-dial" min="0" max="100" value="40" step="5">
-        <div class="dial-ticks">
-          <span>Pure Ethics</span>
-          <span>The Struggle</span>
-          <span>Pure Greed</span>
-        </div>
-      </div>
-      <div class="dial-label right">Returns <span id="fin-weight-display">60%</span></div>
-      <button id="save-weights" class="btn-save">Save</button>
-    </section>
-
     <!-- Books Grid -->
     <section class="books-grid">
+
+      <!-- Book A -->
       <div class="book-card" id="book-index">
         <div class="book-header">
           <div>
             <h2>Book A</h2>
             <p class="book-subtitle">Index Universe — Ethics First</p>
           </div>
-          <div class="book-status" id="index-status">
+          <div class="book-status">
             <span class="badge badge-active">Active</span>
-            <button class="btn-pause" data-book="index">Pause</button>
           </div>
         </div>
+
+        <!-- Autonomous struggle dial (read-only) -->
+        <div class="struggle-display" id="index-struggle">
+          <div class="struggle-labels">
+            <span class="struggle-label-woke">Ethics <span id="index-woke-weight">—</span></span>
+            <span class="struggle-caption">The Struggle</span>
+            <span class="struggle-label-greed">Greed <span id="index-fin-weight">—</span></span>
+          </div>
+          <div class="struggle-track">
+            <div class="struggle-fill-woke" id="index-woke-fill" style="width:65%"></div>
+            <div class="struggle-thumb" id="index-thumb" style="left:65%"></div>
+            <div class="struggle-fill-greed" id="index-greed-fill" style="width:35%"></div>
+          </div>
+        </div>
+
         <div class="book-stats">
           <div class="stat">
             <label>Portfolio Value</label>
@@ -76,17 +77,32 @@
         <div class="tab-content" id="index-tab-content"></div>
       </div>
 
+      <!-- Book B -->
       <div class="book-card" id="book-screener">
         <div class="book-header">
           <div>
             <h2>Book B</h2>
             <p class="book-subtitle">Screener Universe — Financials First</p>
           </div>
-          <div class="book-status" id="screener-status">
+          <div class="book-status">
             <span class="badge badge-active">Active</span>
-            <button class="btn-pause" data-book="screener">Pause</button>
           </div>
         </div>
+
+        <!-- Autonomous struggle dial (read-only) -->
+        <div class="struggle-display" id="screener-struggle">
+          <div class="struggle-labels">
+            <span class="struggle-label-woke">Ethics <span id="screener-woke-weight">—</span></span>
+            <span class="struggle-caption">The Struggle</span>
+            <span class="struggle-label-greed">Greed <span id="screener-fin-weight">—</span></span>
+          </div>
+          <div class="struggle-track">
+            <div class="struggle-fill-woke" id="screener-woke-fill" style="width:25%"></div>
+            <div class="struggle-thumb" id="screener-thumb" style="left:25%"></div>
+            <div class="struggle-fill-greed" id="screener-greed-fill" style="width:75%"></div>
+          </div>
+        </div>
+
         <div class="book-stats">
           <div class="stat">
             <label>Portfolio Value</label>
@@ -113,9 +129,19 @@
         </div>
         <div class="tab-content" id="screener-tab-content"></div>
       </div>
+
     </section>
 
-    <!-- Manual trigger (dev) -->
+    <!-- Daily Summaries (blog-style, two columns) -->
+    <section class="summaries-section">
+      <h3 class="summaries-title">Daily Reflections</h3>
+      <p class="summaries-subtitle">Each book reflects on its own day — and has thoughts about the other.</p>
+      <div id="summaries-list">
+        <div class="summaries-empty">No summaries yet. Check back after market close.</div>
+      </div>
+    </section>
+
+    <!-- Manual trigger -->
     <section class="dev-controls">
       <button id="trigger-cycle" class="btn-trigger">Trigger Agent Cycle Now</button>
       <span id="trigger-status"></span>
