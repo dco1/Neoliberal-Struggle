@@ -17,6 +17,7 @@
         <span id="cycle-count">Cycle: —</span>
         <span id="last-updated">—</span>
       </div>
+      <button class="settings-btn" popovertarget="settings-popover" popovertargetaction="toggle">⚙</button>
     </div>
   </header>
 
@@ -124,6 +125,22 @@
       <span id="trigger-status"></span>
     </section>
   </main>
+
+  <div id="settings-popover" popover class="settings-popover">
+    <div class="settings-popover-header">
+      <span class="settings-popover-title">Settings</span>
+    </div>
+    <div class="settings-row">
+      <div class="settings-row-info">
+        <span class="settings-row-label">Allow news to influence trading</span>
+        <span class="settings-row-desc">Fetches recent Alpaca headlines for each ticker and injects them into scoring prompts. Woke and financial scores will reflect current news context.</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="setting-news-enabled">
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      </label>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
   <script src="app.js"></script>

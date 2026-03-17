@@ -259,6 +259,7 @@ router.patch('/settings', (req, res) => {
     'max_position_pct',
     'max_trade_size',
     'trade_cooldown_minutes',
+    'news_enabled',
   ];
   const updates = req.body;
 

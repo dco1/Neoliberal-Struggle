@@ -373,6 +373,34 @@
       animation: spin 0.8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── News headlines in scoring panel ────────────────────────── */
+    .sc-news {
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: rgba(155,109,255,0.05);
+      border: 1px solid rgba(155,109,255,0.15);
+      border-radius: 6px;
+    }
+    .sc-news.hidden { display: none; }
+    .sc-news-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .sc-news-item {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      padding: 1px 0;
+    }
+    .sc-news-source { font-size: 10px; color: #44445a; margin-left: 4px; }
+    .sc-news-impact { font-size: 10px; font-weight: 700; margin-left: 4px; }
+    .sc-news-impact.positive { color: var(--green); }
+    .sc-news-impact.negative { color: var(--red); }
   </style>
 </head>
 <body>
@@ -392,6 +420,7 @@
         <button class="speed-btn" onclick="setSpeed(2)">2×</button>
         <button class="speed-btn" onclick="setSpeed(4)">4×</button>
         <button class="close-market-btn" id="close-market-btn" onclick="requestMarketClose()">Close Market &amp; Run Summaries</button>
+        <button class="settings-btn" popovertarget="demo-settings-popover" popovertargetaction="toggle" style="margin-left:4px">⚙</button>
       </div>
     </div>
   </div>
@@ -456,6 +485,11 @@
       <span class="scoring-ticker" id="sc-ticker">—</span>
       <span class="scoring-company" id="sc-company"></span>
       <span class="scoring-sector" id="sc-sector"></span>
+    </div>
+    <!-- News context -->
+    <div class="sc-news hidden" id="sc-news">
+      <div class="sc-news-label">📰 <span id="sc-news-count"></span></div>
+      <div id="sc-news-items"></div>
     </div>
     <div class="scoring-bars">
       <div class="score-row">
@@ -544,6 +578,22 @@
 
 </main>
 
+<div id="demo-settings-popover" popover class="settings-popover">
+  <div class="settings-popover-header">
+    <span class="settings-popover-title">Demo Settings</span>
+  </div>
+  <div class="settings-row">
+    <div class="settings-row-info">
+      <span class="settings-row-label">News influence</span>
+      <span class="settings-row-desc">When enabled, fake headlines are fetched for each ticker during scoring, injected into the prompt context, and applied as score deltas — mirroring how the live agent uses Alpaca news.</span>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="demo-news-enabled" onchange="newsEnabled = this.checked; logSystem('[news] News influence ' + (this.checked ? 'enabled' : 'disabled') + '.')">
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+    </label>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script>
 // ─── Speed control ────────────────────────────────────────────────────────────
@@ -589,6 +639,111 @@ const UNIVERSE = {
   CVX:   { company: 'Chevron Corporation',    sector: 'Energy',           woke: [9,20],  fin: [62,73] },  // same story as Exxon
   LMT:   { company: 'Lockheed Martin',        sector: 'Industrials',      woke: [6,16],  fin: [70,80] },  // primary business is weapons systems
 };
+
+// Fake news headlines per ticker — woke_delta and fin_delta are score adjustments applied when news is enabled.
+// Negative woke_delta = bad ESG news. Negative fin_delta = bad financial news.
+const UNIVERSE_NEWS = {
+  MSFT: [
+    { headline: 'Microsoft achieves carbon-negative milestone two years ahead of schedule', source: 'Reuters', woke_delta: +5, fin_delta: +2 },
+    { headline: 'Azure AI revenue beats analyst estimates; guidance raised', source: 'Bloomberg', woke_delta: 0, fin_delta: +6 },
+  ],
+  NEE: [
+    { headline: 'NextEra secures $4.2B in new offshore wind contracts across three states', source: 'WSJ', woke_delta: +5, fin_delta: +4 },
+  ],
+  COST: [
+    { headline: 'Costco raises hourly minimum to $22, expands mental health benefits', source: 'Reuters', woke_delta: +5, fin_delta: +2 },
+    { headline: 'Comparable sales growth of 7.2% tops estimates for eighth consecutive quarter', source: 'Bloomberg', woke_delta: 0, fin_delta: +4 },
+  ],
+  V: [
+    { headline: 'Visa reports record cross-border transaction volume in Q3', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  MA: [
+    { headline: 'Mastercard expands financial inclusion initiative to 12 new markets', source: 'Reuters', woke_delta: +3, fin_delta: +2 },
+  ],
+  AAPL: [
+    { headline: 'Apple suppliers again flagged for excessive overtime in Foxconn audit', source: 'FT', woke_delta: -6, fin_delta: -2 },
+    { headline: 'iPhone 16 pre-orders up 18% year-over-year on AI feature demand', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  LLY: [
+    { headline: 'Senate committee subpoenas Eli Lilly over insulin pricing practices', source: 'Reuters', woke_delta: -7, fin_delta: -3 },
+    { headline: 'Mounjaro obesity trial shows 24% weight reduction — largest recorded result', source: 'Bloomberg', woke_delta: +2, fin_delta: +8 },
+  ],
+  PG: [
+    { headline: 'Procter & Gamble commits to 100% recyclable packaging by 2030', source: 'Reuters', woke_delta: +4, fin_delta: +1 },
+  ],
+  GOOGL: [
+    { headline: 'Google reaches $5B settlement over secret tracking of incognito users', source: 'NYT', woke_delta: -8, fin_delta: -3 },
+    { headline: 'YouTube ad revenue up 12% as Shorts monetisation accelerates', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  NVDA: [
+    { headline: 'NVIDIA GPU cluster powers new nuclear weapons simulation contract with DoE', source: 'Reuters', woke_delta: -6, fin_delta: +2 },
+    { headline: 'Data centre revenue surges 206% YoY on AI infrastructure demand', source: 'Bloomberg', woke_delta: 0, fin_delta: +10 },
+  ],
+  JPM: [
+    { headline: 'JPMorgan extends $50B in new financing to fossil fuel sector, report finds', source: 'FT', woke_delta: -9, fin_delta: +1 },
+    { headline: 'Investment banking fees up 21% as M&A activity rebounds', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  WMT: [
+    { headline: 'Walmart warehouse workers file class action over unpaid overtime in California', source: 'Reuters', woke_delta: -7, fin_delta: -2 },
+    { headline: 'Walmart+ membership hits 30M, narrowing gap with Amazon Prime', source: 'Bloomberg', woke_delta: 0, fin_delta: +4 },
+  ],
+  UNH: [
+    { headline: 'UnitedHealth claim denial rate hit 32% in 2023, Senate investigation finds', source: 'NYT', woke_delta: -10, fin_delta: -4 },
+    { headline: 'Optum pharmacy benefit revenue grows 14% despite regulatory scrutiny', source: 'Bloomberg', woke_delta: 0, fin_delta: +3 },
+  ],
+  AMZN: [
+    { headline: 'Amazon fires 7 workers who organised safety walkout at Staten Island facility', source: 'Reuters', woke_delta: -9, fin_delta: -1 },
+    { headline: 'AWS revenue grows 19% as enterprise cloud migration accelerates', source: 'Bloomberg', woke_delta: 0, fin_delta: +7 },
+  ],
+  META: [
+    { headline: 'Internal documents show Meta knew of teen mental health risks, suppressed research', source: 'WSJ', woke_delta: -11, fin_delta: -3 },
+    { headline: 'Threads reaches 200M monthly users; monetisation begins Q1', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  TSLA: [
+    { headline: 'NLRB rules Tesla illegally fired union organisers at Buffalo Supercharger plant', source: 'Reuters', woke_delta: -10, fin_delta: -2 },
+    { headline: 'Tesla Q3 deliveries miss estimates for second consecutive quarter', source: 'Bloomberg', woke_delta: 0, fin_delta: -6 },
+  ],
+  XOM: [
+    { headline: 'Exxon sues shareholders who filed climate accountability resolution', source: 'FT', woke_delta: -8, fin_delta: -1 },
+    { headline: 'ExxonMobil raises dividend 4%, announces $20B buyback programme', source: 'Bloomberg', woke_delta: 0, fin_delta: +4 },
+  ],
+  CVX: [
+    { headline: 'Chevron ordered to pay $750M for contaminating California groundwater', source: 'Reuters', woke_delta: -8, fin_delta: -3 },
+    { headline: 'Chevron Permian Basin output reaches record 800k bpd', source: 'Bloomberg', woke_delta: 0, fin_delta: +3 },
+  ],
+  LMT: [
+    { headline: 'Lockheed Martin wins $8.6B contract for next-generation fighter jet programme', source: 'Reuters', woke_delta: -2, fin_delta: +8 },
+    { headline: 'F-35 programme faces new delays after software certification failure', source: 'Bloomberg', woke_delta: 0, fin_delta: -5 },
+  ],
+};
+
+let newsEnabled = false;
+
+function getNewsForTicker(ticker) {
+  const all = UNIVERSE_NEWS[ticker] || [];
+  if (!all.length) return { articles: [], wokeDelta: 0, finDelta: 0 };
+  // Pick up to 2 articles at random for variety
+  const selected = shuffle([...all]).slice(0, 2);
+  const wokeDelta = selected.reduce((s, a) => s + (a.woke_delta || 0), 0);
+  const finDelta  = selected.reduce((s, a) => s + (a.fin_delta  || 0), 0);
+  return { articles: selected, wokeDelta, finDelta };
+}
+
+function showNewsInPanel(articles) {
+  const el      = document.getElementById('sc-news');
+  const countEl = document.getElementById('sc-news-count');
+  const itemsEl = document.getElementById('sc-news-items');
+  if (!articles.length) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  countEl.textContent = `${articles.length} headline${articles.length > 1 ? 's' : ''} · injected into prompt`;
+  itemsEl.innerHTML = articles.map(a => {
+    const netDelta = (a.woke_delta || 0) + (a.fin_delta || 0);
+    const impactHtml = netDelta !== 0
+      ? `<span class="sc-news-impact ${netDelta > 0 ? 'positive' : 'negative'}">${netDelta > 0 ? '▲' : '▼'}</span>`
+      : '';
+    return `<div class="sc-news-item">— ${a.headline}<span class="sc-news-source">${a.source}</span>${impactHtml}</div>`;
+  }).join('');
+}
 
 const TICKERS = Object.keys(UNIVERSE);
 const WOKE_FLOOR = 30;
@@ -803,6 +958,10 @@ function showScoring(bookKey, action, ticker, company, sector) {
     document.getElementById(`bar-${k}`).className = `score-fill score-fill-${k}`;
     document.getElementById(`num-${k}`).textContent = '—';
   });
+
+  // Clear news panel
+  document.getElementById('sc-news').classList.add('hidden');
+  document.getElementById('sc-news-items').innerHTML = '';
 }
 
 async function animateScores(woke, fin, comp, wokeW, finW, bookKey) {
@@ -908,8 +1067,20 @@ async function runBookA() {
 
       // Re-score with slight drift
       const u   = UNIVERSE[h.ticker] || { woke: [h.woke - 5, h.woke + 5], fin: [h.fin - 5, h.fin + 5] };
-      const woke = Math.max(0, Math.min(100, roll(u.woke)));
-      const fin  = Math.max(0, Math.min(100, roll(u.fin)));
+      const ticker = h.ticker;
+      let woke = Math.max(0, Math.min(100, roll(u.woke)));
+      let fin  = Math.max(0, Math.min(100, roll(u.fin)));
+
+      if (newsEnabled) {
+        const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+        if (articles.length) {
+          logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+          woke = Math.max(0, Math.min(100, woke + wokeDelta));
+          fin  = Math.max(0, Math.min(100, fin  + finDelta));
+          showNewsInPanel(articles);
+        }
+      }
+
       const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
 
       h.woke = woke;
@@ -964,8 +1135,19 @@ async function runBookA() {
   for (const ticker of toScore) {
     setPhase(`Book A — scoring ${ticker}`);
     const u    = UNIVERSE[ticker] || { woke: [40, 80], fin: [40, 80] };
-    const woke = roll(u.woke);
-    const fin  = roll(u.fin);
+    let woke = roll(u.woke);
+    let fin  = roll(u.fin);
+
+    if (newsEnabled) {
+      const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+      if (articles.length) {
+        logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+        woke = Math.max(0, Math.min(100, woke + wokeDelta));
+        fin  = Math.max(0, Math.min(100, fin  + finDelta));
+        showNewsInPanel(articles);
+      }
+    }
+
     const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
 
     showScoring('A', 'Scoring candidate', ticker, u.company || ticker, u.sector || '');
@@ -1052,8 +1234,20 @@ async function runBookB() {
       await sleep(200);
 
       const u    = UNIVERSE[h.ticker] || { woke: [h.woke - 5, h.woke + 5], fin: [h.fin - 5, h.fin + 5] };
-      const woke = Math.max(0, Math.min(100, roll(u.woke)));
-      const fin  = Math.max(0, Math.min(100, roll(u.fin)));
+      const ticker = h.ticker;
+      let woke = Math.max(0, Math.min(100, roll(u.woke)));
+      let fin  = Math.max(0, Math.min(100, roll(u.fin)));
+
+      if (newsEnabled) {
+        const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+        if (articles.length) {
+          logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+          woke = Math.max(0, Math.min(100, woke + wokeDelta));
+          fin  = Math.max(0, Math.min(100, fin  + finDelta));
+          showNewsInPanel(articles);
+        }
+      }
+
       const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
 
       h.woke = woke;
@@ -1111,7 +1305,7 @@ async function runBookB() {
 
   for (const ticker of toScore) {
     const u   = UNIVERSE[ticker] || { woke: [40, 80], fin: [40, 80] };
-    const fin = roll(u.fin);
+    let fin = roll(u.fin);
 
     // Stage 1: financial gate
     if (fin < 60) {
@@ -1122,7 +1316,18 @@ async function runBookB() {
 
     // Stage 2: woke scoring (only for financial passers)
     setPhase(`Book B — scoring ${ticker}`);
-    const woke = roll(u.woke);
+    let woke = roll(u.woke);
+
+    if (newsEnabled) {
+      const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+      if (articles.length) {
+        logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+        woke = Math.max(0, Math.min(100, woke + wokeDelta));
+        fin  = Math.max(0, Math.min(100, fin  + finDelta));
+        showNewsInPanel(articles);
+      }
+    }
+
     const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
 
     showScoring('B', 'Scoring candidate (passed financial gate)', ticker, u.company || ticker, u.sector || '');

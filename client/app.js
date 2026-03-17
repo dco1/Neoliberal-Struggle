@@ -334,6 +334,31 @@ function initTabs() {
   });
 }
 
+// --- Settings ---
+
+async function initSettings() {
+  try {
+    const settings = await apiFetch('/settings');
+    const checkbox = document.getElementById('setting-news-enabled');
+    if (!checkbox) return;
+    checkbox.checked = settings.news_enabled === 'true';
+    checkbox.addEventListener('change', async () => {
+      try {
+        await fetch('/api/settings', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ news_enabled: checkbox.checked ? 'true' : 'false' }),
+        });
+        console.log('[settings] news_enabled set to', checkbox.checked);
+      } catch (e) {
+        console.warn('[settings] Failed to save setting:', e.message);
+      }
+    });
+  } catch (e) {
+    console.warn('[settings] Failed to load settings:', e.message);
+  }
+}
+
 // --- Agent trigger ---
 
 function initTrigger() {
@@ -369,6 +394,7 @@ async function refresh() {
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initTrigger();
+  initSettings();
 
   refresh();
   setInterval(refresh, REFRESH_INTERVAL);

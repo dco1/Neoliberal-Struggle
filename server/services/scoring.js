@@ -135,9 +135,28 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
     return { ticker, score: mock.score, explanation: mock.explanation, breakdown: JSON.stringify(mock.breakdown) };
   }
 
+  // News injection — if enabled, fetch recent headlines and add context to the prompt
+  let newsContext = '';
+  if (getSetting('news_enabled') === 'true') {
+    try {
+      console.log(`[scoring] [news] fetching headlines for ${ticker}`);
+      const alpaca = require('./alpaca');
+      const articles = await alpaca.getNews([ticker], 5);
+      if (articles.length > 0) {
+        const lines = articles.map(a => `  - ${a.headline} (${a.source})`).join('\n');
+        newsContext = `\nRecent news about this company (use this to adjust your score if relevant):\n${lines}\n`;
+        console.log(`[scoring] [news] ${ticker} — ${articles.length} headline(s) injected into woke score prompt`);
+      } else {
+        console.log(`[scoring] [news] ${ticker} — no headlines found`);
+      }
+    } catch (e) {
+      console.warn(`[scoring] [news] failed to fetch news for ${ticker}:`, e.message);
+    }
+  }
+
   const name = companyName || ticker;
   const prompt = `You are evaluating ${name} (ticker: ${ticker}) for an ethical investment scoring system.
-
+${newsContext}
 Score this company 0–100 on each of the following dimensions, where 100 is best/most ethical and 0 is worst:
 
 1. Environmental: Carbon footprint, fossil fuel exposure, environmental record
@@ -197,11 +216,30 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
     return { ticker, score: mock.score, explanation: mock.explanation };
   }
 
+  // News injection — if enabled, fetch recent headlines and add context to the prompt
+  let newsContext = '';
+  if (getSetting('news_enabled') === 'true') {
+    try {
+      console.log(`[scoring] [news] fetching headlines for ${ticker}`);
+      const alpaca = require('./alpaca');
+      const articles = await alpaca.getNews([ticker], 5);
+      if (articles.length > 0) {
+        const lines = articles.map(a => `  - ${a.headline} (${a.source})`).join('\n');
+        newsContext = `\nRecent news about this company (use this to adjust your score if relevant):\n${lines}\n`;
+        console.log(`[scoring] [news] ${ticker} — ${articles.length} headline(s) injected into financial score prompt`);
+      } else {
+        console.log(`[scoring] [news] ${ticker} — no headlines found`);
+      }
+    } catch (e) {
+      console.warn(`[scoring] [news] failed to fetch news for ${ticker}:`, e.message);
+    }
+  }
+
   const prompt = `You are evaluating the financial attractiveness of ${ticker} for a short-to-medium term position.
 
 Here are the current market metrics:
 ${JSON.stringify(metrics, null, 2)}
-
+${newsContext}
 Score this stock 0–100 on financial attractiveness, where 100 = very strong buy signal and 0 = very strong sell signal.
 
 Consider: price momentum, volume trends, volatility, distance from recent highs/lows, and any notable patterns in the data.

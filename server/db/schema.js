@@ -183,6 +183,7 @@ function initSchema() {
     woke_score_ttl_hours:      '24',
     financial_score_ttl_minutes: '30',
     agent_cycle_count:         '0',
+    news_enabled:              'false',
   };
 
   const upsert = db.prepare(`INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO NOTHING`);

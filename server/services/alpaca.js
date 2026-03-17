@@ -205,6 +205,26 @@ async function getSnapshots(tickers) {
   return get(`/v2/stocks/snapshots?symbols=${symbols}`, DATA_URL);
 }
 
+// --- News ---
+
+async function getNews(tickers, limit = 5) {
+  if (DEMO_MODE) {
+    return tickers.flatMap(t => [
+      { headline: `${t} Q4 earnings beat estimates on strong demand`, source: 'Reuters', created_at: new Date().toISOString() },
+      { headline: `Analysts raise ${t} price target amid sector momentum`, source: 'Bloomberg', created_at: new Date().toISOString() },
+    ]);
+  }
+  const symbols = tickers.join(',');
+  const response = await get(`/v1beta1/news?symbols=${symbols}&limit=${limit}&sort=desc`, DATA_URL);
+  return (response.news || []).map(a => ({
+    headline: a.headline,
+    summary: a.summary,
+    url: a.url,
+    source: a.source,
+    created_at: a.created_at,
+  }));
+}
+
 module.exports = {
   DEMO_MODE,
   getAccount,
@@ -221,4 +241,5 @@ module.exports = {
   getBars,
   getSnapshot,
   getSnapshots,
+  getNews,
 };
