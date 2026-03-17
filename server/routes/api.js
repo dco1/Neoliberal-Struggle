@@ -46,49 +46,97 @@ router.get('/status', async (req, res) => {
 // ─── Books ───────────────────────────────────────────────────────────────────
 
 // GET /api/books — both books overview
-router.get('/books', (req, res) => {
-  const books = db().prepare('SELECT * FROM books').all();
+// Fetches live values from Alpaca on every request so the dashboard always
+// reflects reality, not stored estimates. Cash is split 50/50 between books
+// (both started with equal capital; Alpaca has no concept of our book split).
+// P&L is computed relative to the live account equity split, not the seeded
+// book.capital value, so it stays grounded in what Alpaca actually reports.
+router.get('/books', async (req, res) => {
+  try {
+    const books = db().prepare('SELECT * FROM books').all();
 
-  const enriched = books.map(book => {
-    const latestSnapshot = db().prepare(`
-      SELECT * FROM portfolio_snapshots
-      WHERE book_id = ? ORDER BY snapped_at DESC LIMIT 1
-    `).get(book.id);
+    // Fetch live Alpaca data once and share across both books
+    const [account, alpacaPositions] = await Promise.all([
+      alpaca.getAccount(),
+      alpaca.getPositions(),
+    ]);
 
-    const holdingCount = db().prepare(`
-      SELECT COUNT(DISTINCT ticker) as count FROM trades
-      WHERE book_id = ?
-      AND ticker NOT IN (
-        SELECT ticker FROM trades t2
-        WHERE t2.book_id = ? AND t2.side = 'sell'
-        AND t2.created_at > (
-          SELECT MAX(created_at) FROM trades t3
-          WHERE t3.book_id = ? AND t3.ticker = t2.ticker AND t3.side = 'buy'
+    const totalAccountCash  = parseFloat(account.cash);
+    const totalAccountEquity = parseFloat(account.equity);
+
+    // Each book's live cash = half the real Alpaca cash balance
+    const cashPerBook = totalAccountCash / 2;
+
+    const enriched = books.map(book => {
+      // Determine which Alpaca positions belong to this book via trade history
+      const myTrades = db().prepare(`
+        SELECT ticker,
+               SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares
+        FROM trades WHERE book_id = ?
+        GROUP BY ticker HAVING net_shares > 0.001
+      `).all(book.id);
+      const myTickers = new Set(myTrades.map(t => t.ticker));
+
+      // Live invested value: sum real Alpaca market_value for this book's positions
+      const myPositions = alpacaPositions.filter(p => myTickers.has(p.symbol));
+      const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value || 0), 0);
+
+      // Live total value and P&L — grounded entirely in Alpaca numbers
+      const totalValue  = cashPerBook + investedValue;
+      const startingValue = totalAccountEquity / 2; // baseline = half of current equity (best available proxy)
+      const pnl    = totalValue - startingValue;
+      const pnlPct = startingValue > 0 ? (pnl / startingValue) * 100 : 0;
+
+      // Build a live snapshot object in the same shape as portfolio_snapshots rows
+      // so the frontend doesn't need to change
+      const liveSnapshot = {
+        book_id:     book.id,
+        total_value: totalValue,
+        cash:        cashPerBook,
+        invested:    investedValue,
+        pnl,
+        pnl_pct:     pnlPct,
+        snapped_at:  new Date().toISOString(),
+        live:        true, // flag so the frontend can tell this is real-time
+      };
+
+      const holdingCount = db().prepare(`
+        SELECT COUNT(DISTINCT ticker) as count FROM trades
+        WHERE book_id = ?
+        AND ticker NOT IN (
+          SELECT ticker FROM trades t2
+          WHERE t2.book_id = ? AND t2.side = 'sell'
+          AND t2.created_at > (
+            SELECT MAX(created_at) FROM trades t3
+            WHERE t3.book_id = ? AND t3.ticker = t2.ticker AND t3.side = 'buy'
+          )
         )
-      )
-    `).get(book.id, book.id, book.id);
+      `).get(book.id, book.id, book.id);
 
-    const recentTrade = db().prepare(`
-      SELECT * FROM trades WHERE book_id = ? ORDER BY created_at DESC LIMIT 1
-    `).get(book.id);
+      const recentTrade = db().prepare(`
+        SELECT * FROM trades WHERE book_id = ? ORDER BY created_at DESC LIMIT 1
+      `).get(book.id);
 
-    const avgWoke = db().prepare(`
-      SELECT AVG(woke_score) as avg FROM trades
-      WHERE book_id = ? AND woke_score IS NOT NULL
-      AND created_at >= date('now', '-7 days')
-    `).get(book.id);
+      const avgWoke = db().prepare(`
+        SELECT AVG(woke_score) as avg FROM trades
+        WHERE book_id = ? AND woke_score IS NOT NULL
+        AND created_at >= date('now', '-7 days')
+      `).get(book.id);
 
-    return {
-      ...book,
-      // woke_weight and financial_weight are already in book via SELECT *
-      snapshot: latestSnapshot,
-      holding_count: holdingCount?.count || 0,
-      last_trade: recentTrade,
-      avg_woke_score_7d: avgWoke?.avg ? Math.round(avgWoke.avg) : null,
-    };
-  });
+      return {
+        ...book,
+        snapshot:          liveSnapshot,    // always live from Alpaca, never stale
+        holding_count:     holdingCount?.count || 0,
+        last_trade:        recentTrade,
+        avg_woke_score_7d: avgWoke?.avg ? Math.round(avgWoke.avg) : null,
+      };
+    });
 
-  res.json(enriched);
+    res.json(enriched);
+  } catch (e) {
+    console.error('[api] /books failed:', e.message);
+    res.status(500).json({ error: e.message });
+  }
 });
 
 // GET /api/books/:id — single book detail including current weights
