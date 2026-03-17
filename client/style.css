@@ -85,7 +85,7 @@ main {
 }
 
 
-/* Books grid */
+/* Books grid — side by side on wide screens, stacked on narrow */
 .books-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -93,8 +93,15 @@ main {
   margin-bottom: 24px;
 }
 
-@media (max-width: 900px) {
+/* Tablet: still two columns but tighter */
+@media (max-width: 1024px) {
+  .books-grid { gap: 14px; }
+}
+
+/* Small tablet / large phone: single column */
+@media (max-width: 768px) {
   .books-grid { grid-template-columns: 1fr; }
+  main { padding: 16px; }
 }
 
 .book-card {
@@ -102,6 +109,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 20px;
+  min-width: 0; /* prevent grid blowout */
 }
 
 .book-header {
@@ -109,10 +117,17 @@ main {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 16px;
+  gap: 12px;
 }
 
 .book-header h2 { font-size: 16px; font-weight: 700; }
-.book-subtitle { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+.book-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  /* allow the weight breakdown to wrap gracefully on narrow cards */
+  line-height: 1.6;
+}
 
 .book-status {
   display: flex;
@@ -244,12 +259,24 @@ main {
   font-style: italic;
 }
 
-/* Stats row */
+/* Stats row — 4 columns normally, 2x2 when cards get narrow */
 .book-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
   margin-bottom: 16px;
+}
+
+@media (max-width: 1100px) {
+  .book-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .book-stats { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 480px) {
+  .book-stats { grid-template-columns: repeat(2, 1fr); }
 }
 
 .stat label {
