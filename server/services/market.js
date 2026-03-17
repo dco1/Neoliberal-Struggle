@@ -26,14 +26,12 @@ async function refreshSP500Tickers() {
         updated_at = excluded.updated_at
     `);
 
-    const insertMany = db.transaction((rows) => {
-      for (const row of rows) {
-        const [ticker, company, sector] = row.split(',').map(s => s.replace(/"/g, '').trim());
-        if (ticker) upsert.run(ticker, company || '', sector || '');
-      }
-    });
-
-    insertMany(lines);
+    db.exec('BEGIN');
+    for (const row of lines) {
+      const [ticker, company, sector] = row.split(',').map(s => s.replace(/"/g, '').trim());
+      if (ticker) upsert.run(ticker, company || '', sector || '');
+    }
+    db.exec('COMMIT');
     console.log(`[market] Refreshed S&P 500 tickers (${lines.length} companies).`);
   } catch (e) {
     console.error('[market] Failed to refresh S&P 500 tickers:', e.message);
