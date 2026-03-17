@@ -6,12 +6,16 @@
  * Cache TTLs:
  *   - Woke scores: 24 hours
  *   - Financial scores: 30 minutes
+ *
+ * compositeScore() now accepts per-book weights as arguments rather than
+ * reading global settings — each book passes its own woke_weight/financial_weight.
  */
 
 const { getDb } = require('../db/index');
 
 const DEMO_MODE = !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here';
 
+// Lazy-init Anthropic client — only instantiated when a real API call is needed
 let anthropicClient = null;
 function getClient() {
   if (!anthropicClient) {
@@ -205,10 +209,22 @@ Return a JSON object with this exact structure:
 
 // --- Composite Score ---
 
-function compositeScore(wokeScore, financialScore) {
-  const wokeWeight = Number(getSetting('woke_weight') || 0.4);
-  const financialWeight = Number(getSetting('financial_weight') || 0.6);
-  return (wokeScore * wokeWeight) + (financialScore * financialWeight);
+/**
+ * Compute a weighted composite of woke and financial scores.
+ * Weights are now passed explicitly by each book from its own stored values,
+ * rather than being read from a global setting.
+ *
+ * @param {number} wokeScore      - 0–100
+ * @param {number} financialScore - 0–100
+ * @param {number} wokeWeight     - e.g. 0.65 for Book A, 0.25 for Book B
+ * @param {number} financialWeight - e.g. 0.35 for Book A, 0.75 for Book B
+ * @returns {number}
+ */
+function compositeScore(wokeScore, financialScore, wokeWeight, financialWeight) {
+  // Validate that weights are sensible; fall back to equal weighting if missing
+  const ww = typeof wokeWeight === 'number' && isFinite(wokeWeight) ? wokeWeight : 0.5;
+  const fw = typeof financialWeight === 'number' && isFinite(financialWeight) ? financialWeight : 0.5;
+  return (wokeScore * ww) + (financialScore * fw);
 }
 
 module.exports = { getWokeScore, getFinancialScore, compositeScore, DEMO_MODE };

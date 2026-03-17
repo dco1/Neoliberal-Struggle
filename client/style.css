@@ -84,69 +84,78 @@ main {
   padding: 24px;
 }
 
-/* Struggle dial */
-.dial-section {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px 24px;
-  margin-bottom: 24px;
+/* Autonomous struggle display (read-only — each book controls its own weights) */
+.struggle-display {
+  margin-bottom: 16px;
+  padding: 12px 0 10px;
+  border-bottom: 1px solid var(--border);
 }
 
-.dial-label {
-  font-weight: 600;
-  min-width: 80px;
-  font-size: 13px;
-}
-.dial-label.left { text-align: right; }
-.dial-label.right { text-align: left; }
-.dial-label span { display: block; font-size: 18px; color: var(--accent); }
-
-.dial-wrapper {
-  flex: 1;
-}
-
-#struggle-dial {
-  width: 100%;
-  height: 6px;
-  appearance: none;
-  background: linear-gradient(to right, var(--accent), var(--green));
-  border-radius: 3px;
-  outline: none;
-  cursor: pointer;
-}
-#struggle-dial::-webkit-slider-thumb {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: white;
-  border: 3px solid var(--accent);
-  cursor: pointer;
-}
-
-.dial-ticks {
+.struggle-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
-  color: var(--text-dim);
-  margin-top: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 11px;
 }
 
-.btn-save {
-  background: var(--accent);
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 13px;
+.struggle-label-woke {
+  color: var(--accent);
   font-weight: 600;
-  cursor: pointer;
 }
-.btn-save:hover { opacity: 0.85; }
+.struggle-label-woke span { font-size: 14px; margin-left: 4px; }
+
+.struggle-caption {
+  color: var(--text-dim);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.struggle-label-greed {
+  color: var(--green);
+  font-weight: 600;
+  text-align: right;
+}
+.struggle-label-greed span { font-size: 14px; margin-right: 4px; }
+
+/* Track: purple (woke) fills left, green (greed) fills right */
+.struggle-track {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--surface2);
+  display: flex;
+  overflow: visible;
+}
+
+.struggle-fill-woke {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px 0 0 3px;
+  transition: width 0.6s ease;
+}
+
+.struggle-fill-greed {
+  height: 100%;
+  background: var(--green);
+  border-radius: 0 3px 3px 0;
+  transition: width 0.6s ease;
+}
+
+/* Thumb marker — shows where the book's current balance sits */
+.struggle-thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--text);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
 
 /* Books grid */
 .books-grid {
@@ -183,16 +192,129 @@ main {
   gap: 8px;
 }
 
-.btn-pause {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  border-radius: 5px;
-  padding: 3px 10px;
-  font-size: 11px;
-  cursor: pointer;
+/* Daily Summaries — blog-style two-column feed */
+.summaries-section {
+  margin-bottom: 24px;
 }
-.btn-pause:hover { border-color: var(--yellow); color: var(--yellow); }
+
+.summaries-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.summaries-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+.summaries-empty {
+  color: var(--text-dim);
+  font-size: 13px;
+  padding: 24px 0;
+}
+
+.summary-day {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+
+.summary-date {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.summary-perf {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.summary-perf-sep { color: var(--border); }
+
+.summary-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .summary-columns { grid-template-columns: 1fr; }
+}
+
+.summary-col {
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.summary-col-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.summary-book-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.summary-col-a .summary-book-tag {
+  background: rgba(155,109,255,0.15);
+  color: var(--accent);
+}
+
+.summary-col-b .summary-book-tag {
+  background: rgba(61,220,132,0.15);
+  color: var(--green);
+}
+
+.summary-book-label {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.summary-self {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.summary-commentary-header {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.summary-commentary {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-dim);
+  font-style: italic;
+}
 
 /* Stats row */
 .book-stats {

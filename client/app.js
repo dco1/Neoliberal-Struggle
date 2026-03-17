@@ -1,6 +1,8 @@
 // Neoliberal Struggle — Dashboard
+// Each book controls its own woke/greed balance autonomously.
+// The struggle dial is read-only — the books decide for themselves.
 
-const REFRESH_INTERVAL = 30000; // 30s
+const REFRESH_INTERVAL = 30000; // 30 seconds
 const charts = {};
 const activeTab = { index: 'holdings', screener: 'holdings' };
 
@@ -8,16 +10,6 @@ const activeTab = { index: 'holdings', screener: 'holdings' };
 
 async function apiFetch(path) {
   const res = await fetch(`/api${path}`);
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return res.json();
-}
-
-async function apiPatch(path, body) {
-  const res = await fetch(`/api${path}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
 }
@@ -35,6 +27,7 @@ const fmt = {
   pct:    v => v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%',
   score:  v => v == null ? '—' : Number(v).toFixed(1),
   date:   s => s ? new Date(s + 'Z').toLocaleString() : '—',
+  dateShort: s => s ? new Date(s).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '—',
 };
 
 function pnlClass(v) {
@@ -81,7 +74,7 @@ function renderBookSummary(book) {
   const id = book.id;
   const snap = book.snapshot;
 
-  // Value
+  // Portfolio value
   const valEl = document.getElementById(`${id}-value`);
   if (valEl) valEl.textContent = snap ? fmt.dollar(snap.total_value) : fmt.dollar(book.capital);
 
@@ -92,26 +85,32 @@ function renderBookSummary(book) {
     pnlEl.className = pnlClass(snap.pnl);
   }
 
-  // Positions
+  // Position count
   const posEl = document.getElementById(`${id}-positions`);
   if (posEl) posEl.textContent = book.holding_count ?? '—';
 
-  // Woke
+  // Average woke score (7-day)
   const wokeEl = document.getElementById(`${id}-woke`);
   if (wokeEl) wokeEl.textContent = book.avg_woke_score_7d != null ? book.avg_woke_score_7d + '/100' : '—';
 
-  // Pause button
-  const pauseBtn = document.querySelector(`.btn-pause[data-book="${id}"]`);
-  const statusBadge = document.querySelector(`#${id}-status .badge`);
-  if (book.paused) {
-    pauseBtn.textContent = 'Unpause';
-    statusBadge.textContent = 'Paused';
-    statusBadge.className = 'badge badge-paused';
-  } else {
-    pauseBtn.textContent = 'Pause';
-    statusBadge.textContent = 'Active';
-    statusBadge.className = 'badge badge-active';
-  }
+  // Autonomous struggle dial — read-only, reflects the book's current self-determined weights.
+  // The book adjusts these each cycle based on its own performance philosophy.
+  const wokeW = book.woke_weight != null ? book.woke_weight : (id === 'index' ? 0.65 : 0.25);
+  const finW  = 1 - wokeW;
+  const wokePct = Math.round(wokeW * 100);
+  const finPct  = Math.round(finW * 100);
+
+  const wokeWeightEl = document.getElementById(`${id}-woke-weight`);
+  const finWeightEl  = document.getElementById(`${id}-fin-weight`);
+  const wokeFill     = document.getElementById(`${id}-woke-fill`);
+  const greedFill    = document.getElementById(`${id}-greed-fill`);
+  const thumb        = document.getElementById(`${id}-thumb`);
+
+  if (wokeWeightEl) wokeWeightEl.textContent = wokePct + '%';
+  if (finWeightEl)  finWeightEl.textContent  = finPct + '%';
+  if (wokeFill)     wokeFill.style.width     = wokePct + '%';
+  if (greedFill)    greedFill.style.width    = finPct + '%';
+  if (thumb)        thumb.style.left         = wokePct + '%';
 }
 
 // --- Charts ---
@@ -121,15 +120,16 @@ async function refreshChart(bookId) {
     const { snapshots } = await apiFetch(`/books/${bookId}`);
     if (!snapshots.length) return;
 
-    const labels = snapshots.map(s => new Date(s.snapped_at + 'Z').toLocaleTimeString());
-    const data = snapshots.map(s => s.total_value);
+    const labels  = snapshots.map(s => new Date(s.snapped_at + 'Z').toLocaleTimeString());
+    const data    = snapshots.map(s => s.total_value);
     const startVal = data[0];
-    const color = data[data.length - 1] >= startVal ? '#3ddc84' : '#ff5f5f';
+    const color   = data[data.length - 1] >= startVal ? '#3ddc84' : '#ff5f5f';
 
     const ctx = document.getElementById(`${bookId}-chart`);
     if (!ctx) return;
 
     if (charts[bookId]) {
+      // Update existing chart in-place to avoid flicker
       charts[bookId].data.labels = labels;
       charts[bookId].data.datasets[0].data = data;
       charts[bookId].data.datasets[0].borderColor = color;
@@ -261,55 +261,65 @@ function renderLog(log) {
   `).join('');
 }
 
-// --- Struggle Dial ---
+// --- Daily Summaries ---
+// Fetches end-of-day summaries and renders them as a blog-style two-column feed.
+// Book A reflects earnestly on its own ethics; Book B gives the numbers-first take.
+// Each writes a passive-aggressive-but-kind commentary on the other.
 
-function initDial() {
-  const dial = document.getElementById('struggle-dial');
-  const wokeDisplay = document.getElementById('woke-weight-display');
-  const finDisplay = document.getElementById('fin-weight-display');
+async function refreshSummaries() {
+  try {
+    const summaries = await apiFetch('/summaries');
+    const container = document.getElementById('summaries-list');
 
-  apiFetch('/settings').then(settings => {
-    const wokeW = Math.round(Number(settings.woke_weight || 0.4) * 100);
-    dial.value = wokeW;
-    wokeDisplay.textContent = wokeW + '%';
-    finDisplay.textContent = (100 - wokeW) + '%';
-  });
-
-  dial.addEventListener('input', () => {
-    const wokeW = Number(dial.value);
-    wokeDisplay.textContent = wokeW + '%';
-    finDisplay.textContent = (100 - wokeW) + '%';
-  });
-
-  document.getElementById('save-weights').addEventListener('click', async () => {
-    const wokeW = Number(dial.value) / 100;
-    const finW = 1 - wokeW;
-    try {
-      await apiPatch('/settings', { woke_weight: wokeW.toFixed(2), financial_weight: finW.toFixed(2) });
-      const btn = document.getElementById('save-weights');
-      btn.textContent = 'Saved!';
-      setTimeout(() => { btn.textContent = 'Save'; }, 2000);
-    } catch (e) {
-      alert('Failed to save: ' + e.message);
+    if (!summaries.length) {
+      container.innerHTML = '<div class="summaries-empty">No summaries yet. Check back after market close.</div>';
+      return;
     }
-  });
-}
 
-// --- Pause buttons ---
+    container.innerHTML = summaries.map(s => `
+      <div class="summary-day">
+        <div class="summary-date">${fmt.dateShort(s.date)}</div>
+        <div class="summary-perf">
+          <span class="summary-perf-item">Book A P&amp;L: <strong class="${s.book_a_pnl_pct >= 0 ? 'positive' : 'negative'}">${fmt.pct(s.book_a_pnl_pct)}</strong></span>
+          <span class="summary-perf-sep">·</span>
+          <span class="summary-perf-item">Book B P&amp;L: <strong class="${s.book_b_pnl_pct >= 0 ? 'positive' : 'negative'}">${fmt.pct(s.book_b_pnl_pct)}</strong></span>
+          ${s.book_a_woke_avg != null ? `<span class="summary-perf-sep">·</span><span class="summary-perf-item">Avg Woke A: <strong>${Math.round(s.book_a_woke_avg)}</strong></span>` : ''}
+          ${s.book_b_woke_avg != null ? `<span class="summary-perf-sep">·</span><span class="summary-perf-item">Avg Woke B: <strong>${Math.round(s.book_b_woke_avg)}</strong></span>` : ''}
+        </div>
+        <div class="summary-columns">
 
-function initPauseButtons() {
-  document.querySelectorAll('.btn-pause').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const bookId = btn.dataset.book;
-      const isPaused = btn.textContent === 'Pause';
-      try {
-        await apiPatch(`/books/${bookId}/pause`, { paused: isPaused, reason: 'Manually paused via dashboard' });
-        await refreshBooks();
-      } catch (e) {
-        alert('Failed: ' + e.message);
-      }
-    });
-  });
+          <!-- Book A column -->
+          <div class="summary-col summary-col-a">
+            <div class="summary-col-header">
+              <span class="summary-book-tag">Book A</span>
+              <span class="summary-book-label">Index Universe — Ethics First</span>
+            </div>
+            <div class="summary-body">
+              <div class="summary-self">${s.book_a_summary}</div>
+              <div class="summary-commentary-header">On Book B…</div>
+              <div class="summary-commentary">${s.book_a_commentary_on_b}</div>
+            </div>
+          </div>
+
+          <!-- Book B column -->
+          <div class="summary-col summary-col-b">
+            <div class="summary-col-header">
+              <span class="summary-book-tag">Book B</span>
+              <span class="summary-book-label">Screener Universe — Financials First</span>
+            </div>
+            <div class="summary-body">
+              <div class="summary-self">${s.book_b_summary}</div>
+              <div class="summary-commentary-header">On Book A…</div>
+              <div class="summary-commentary">${s.book_b_commentary_on_a}</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.warn('Summaries fetch failed:', e.message);
+  }
 }
 
 // --- Tabs ---
@@ -317,9 +327,10 @@ function initPauseButtons() {
 function initTabs() {
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      const bookId = tab.dataset.book;
+      const bookId  = tab.dataset.book;
       const tabName = tab.dataset.tab;
 
+      // Deactivate sibling tabs, activate this one
       document.querySelectorAll(`.tab[data-book="${bookId}"]`).forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
 
@@ -353,6 +364,7 @@ async function refresh() {
     refreshBooks(),
     refreshChart('index'),
     refreshChart('screener'),
+    refreshSummaries(),
     loadTab('index', activeTab.index),
     loadTab('screener', activeTab.screener),
   ]);
@@ -361,8 +373,6 @@ async function refresh() {
 // --- Init ---
 
 document.addEventListener('DOMContentLoaded', () => {
-  initDial();
-  initPauseButtons();
   initTabs();
   initTrigger();
 
