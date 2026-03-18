@@ -170,9 +170,6 @@ main {
 
   & thead {
     background: var(--surface);
-    position: sticky;
-    top: 57px;  /* below header */
-    z-index: 5;
   }
 
   & th {
