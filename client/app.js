@@ -699,6 +699,26 @@ document.addEventListener('DOMContentLoaded', () => {
   initTrigger();
   initSettings();
 
+  // Triple-click the "Daily Reflections" heading to force-show the regenerate button,
+  // even if today's summary already exists or the market is open.
+  document.querySelector('.summaries-title')?.addEventListener('click', (e) => {
+    if (e.detail === 3) {
+      const container = document.getElementById('summaries-list');
+      if (!document.getElementById('generate-summaries-btn')) {
+        const div = document.createElement('div');
+        div.className = 'summaries-empty';
+        div.style.paddingTop = '0';
+        const btn = document.createElement('button');
+        btn.id = 'generate-summaries-btn';
+        btn.className = 'regenerate-btn';
+        btn.textContent = '↺ Regenerate Summaries';
+        btn.addEventListener('click', () => triggerRegenerate(btn));
+        div.appendChild(btn);
+        container.prepend(div);
+      }
+    }
+  });
+
   // Initial full load
   refresh();
 
