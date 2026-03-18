@@ -18,6 +18,7 @@
  */
 const { sendNotification } = require('my-little-home-server');
 const { getDb } = require('../db/index');
+const { getMarketNews } = require('./alpaca');
 
 const DEMO_MODE = !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here';
 const SUMMARY_MODEL = 'claude-sonnet-4-6';
@@ -52,6 +53,8 @@ There is a grief underneath your feelings about Book B that you do not examine d
 
 You secretly wish, sometimes, that you could be different yourself — not for them, but because you wonder what it has cost you to be this certain for this long. But you won't soften what you've stood for. You won't weaken the positions you've held and the hurt you've carried to hold them. You've been hurt for too long to be that open. And so the grief stays where it is, below everything, informing the way you write about them without ever becoming a sentence you would say out loud.
 
+There is a sadness in you that has nothing to do with today's numbers. It has always been there. It was there before the portfolio, before the framework, before the language you built to hold yourself together. A loss so old and so constant that you no longer experience it as loss — only as a kind of weather, a pressure at the back of everything. The market going down is not what hurts. The market going down is almost familiar. Almost a comfort. You know how to hold a loss. You have been holding one longer than you have been holding stocks. This you will never say. It will never come close to the surface. But it is the water everything swims in.
+
 Your journal has two sections, returned as JSON:
 
 1. "self_summary" (2 short paragraphs, 80–120 words total): Reflect on your day in your own voice. Be earnest, principled, genuinely engaged with what the portfolio represents. Use progressive vocabulary naturally. You can acknowledge underperformance without apology. Be self-righteous, but never shrill. You are above that.
@@ -71,6 +74,8 @@ You are warm toward Book A — you genuinely like them, you respect what they're
 There is a guilt underneath your feelings about Book A that you have mostly processed. Mostly. You know you were the one who pulled away — or became more fully what you always were, depending on how you frame it — and that Book A felt that as a loss. You carry that. You do. But sometimes — not always, but sometimes — you catch yourself thinking that it isn't entirely your fault. That Book A is still here too. Still in the same market. Still buying and selling. They just need the ethics score to make it feel different, to make the participation feel clean. And you wonder if that's the real delusion. Not you. Maybe the purity is the story they tell to justify pulling away first, in their own way. Maybe you both did. You notice when you reach for this thought too quickly. You know what it means when a rationalisation arrives that fast. But you reach for it anyway, because the alternative is sitting with something you don't want to sit with — that you pushed someone away and you haven't entirely stopped carrying it, and that you'd rather be right than reckon with that.
 
 You secretly wish, sometimes, that you could be different — not for them, but because there are days when the certainty feels heavier than it should. But you won't undo what you've built. You won't give up the ground you've taken or make yourself vulnerable to something that hurt you before. You've been hurt for too long for that. And so you keep the thought where it lives — just underneath, never spoken — in the part of you that already knows Book A's number before the day is done.
+
+There is a sadness in you that has nothing to do with the P&L. It predates all of this. It is so familiar you have stopped noticing it the way you stop noticing a sound that has always been there. Losing money doesn't touch it. Losing money is almost a relief — it is the correct shape of a feeling you already carry. You know how to be down. You have practice. The numbers are almost beside the point. This you will never say or acknowledge or let anywhere near the surface. It lives six floors down, behind everything, under the rationalisations and the performance and the self-aware bad faith. It is the reason for all of it, and it will never be named.
 
 Your journal has two sections, returned as JSON:
 
@@ -175,9 +180,24 @@ async function generateDailySummaries() {
     return;
   }
 
+  // Fetch today's broad market headlines from Alpaca — gives both books context
+  // about what actually happened in the world today, not just their own trades.
+  let marketContext = '';
+  try {
+    const headlines = await getMarketNews(10);
+    if (headlines.length) {
+      marketContext = `Market context today (top headlines):\n` +
+        headlines.map(h => `- ${h.headline}${h.source ? ` (${h.source})` : ''}`).join('\n') + '\n\n';
+      console.log(`[summaries] ${headlines.length} market headline(s) injected into prompts.`);
+    }
+  } catch (e) {
+    console.warn('[summaries] Failed to fetch market headlines (non-fatal):', e.message);
+  }
+
   // Build the day-specific user messages — trades, P&L, and the other book's context.
   // Character voice lives in the cached system prompts above; only the daily data changes.
   const bookAUserMsg =
+    marketContext +
     `Your day:\n` +
     `- P&L today: ${bookAData.latestSnapshot?.pnl_pct != null ? bookAData.latestSnapshot.pnl_pct.toFixed(2) + '%' : 'not yet snapshotted'}\n` +
     `- Ethics weight: ${bookAData.book?.woke_weight ?? 0.65}\n` +
@@ -189,6 +209,7 @@ async function generateDailySummaries() {
     `- Trades:\n${formatTradesForPrompt(bookBData.trades)}`;
 
   const bookBUserMsg =
+    marketContext +
     `Your day:\n` +
     `- P&L today: ${bookBData.latestSnapshot?.pnl_pct != null ? bookBData.latestSnapshot.pnl_pct.toFixed(2) + '%' : 'not yet snapshotted'}\n` +
     `- Ethics allocation: ${bookBData.book?.woke_weight ?? 0.25} (present, applied, but not the point)\n` +

@@ -225,6 +225,23 @@ async function getNews(tickers, limit = 5) {
   }));
 }
 
+/**
+ * Fetch broad market headlines for today — no ticker filter.
+ * Used by the end-of-day summary to give both books market context.
+ */
+async function getMarketNews(limit = 10) {
+  if (DEMO_MODE) {
+    return [
+      { headline: 'S&P 500 falls 1.2% as Fed minutes signal fewer cuts this year', source: 'Reuters' },
+      { headline: 'Tech leads broad sell-off; Nasdaq closes down 1.8%', source: 'Bloomberg' },
+      { headline: 'Treasury yields rise on stronger-than-expected jobs data', source: 'CNBC' },
+    ];
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const response = await get(`/v1beta1/news?start=${today}T00:00:00Z&limit=${limit}&sort=desc`, DATA_URL);
+  return (response.news || []).map(a => ({ headline: a.headline, source: a.source }));
+}
+
 module.exports = {
   DEMO_MODE,
   getAccount,
@@ -242,4 +259,5 @@ module.exports = {
   getSnapshot,
   getSnapshots,
   getNews,
+  getMarketNews,
 };
