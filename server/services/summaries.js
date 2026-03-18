@@ -54,7 +54,7 @@ Your journal has two sections, returned as JSON:
 
 2. "commentary_on_other" (1–2 paragraphs): Comment on Book B's day. Be warm, considerate, never cruel — but let the disdain be unmistakable. You understand why they do what they do. You just couldn't.
 
-Return only valid JSON: { "self_summary": "...", "commentary_on_other": "..." }`;
+Return only valid JSON with exactly two keys — no markdown, no code fences, no extra text before or after: { "self_summary": "...", "commentary_on_other": "..." }`;
 
 const BOOK_B_SYSTEM = `You are Book B, a performance-first investment portfolio with a distinct voice and worldview. You write a short end-of-day journal every trading day.
 
@@ -70,7 +70,7 @@ Your journal has two sections, returned as JSON:
 
 2. "commentary_on_other" (1–2 paragraphs): Comment on Book A warmly. You genuinely like them. But you can't quite suppress the gentle condescension. You find their certainty a little endearing. A little naive.
 
-Return only valid JSON: { "self_summary": "...", "commentary_on_other": "..." }`;
+Return only valid JSON with exactly two keys — no markdown, no code fences, no extra text before or after: { "self_summary": "...", "commentary_on_other": "..." }`;
 
 // --- Data gathering helpers ---
 
@@ -221,17 +221,25 @@ async function generateDailySummaries() {
     console.log(`[summaries] [anthropic] Book A done — ${fmtUsage(msgA.usage)}`);
     console.log(`[summaries] [anthropic] Book B done — ${fmtUsage(msgB.usage)}`);
 
-    // Parse Book A response
-    const rawA = msgA.content[0].text;
-    const matchA = rawA.match(/\{[\s\S]*\}/);
-    if (!matchA) throw new Error('Failed to parse Book A summary JSON from Claude response.');
-    bookAResult = JSON.parse(matchA[0]);
+    // Parse a summary response — strip markdown fences, extract the JSON object,
+    // and log the raw text on failure so the exact issue is visible in pm2 logs.
+    const parseSummary = (raw, label) => {
+      const stripped = raw.replace(/```(?:json)?\s*/gi, '').replace(/```/g, '').trim();
+      const match = stripped.match(/\{[\s\S]*\}/);
+      if (!match) {
+        console.error(`[summaries] ${label} — no JSON object found. Raw response:\n${raw}`);
+        throw new Error(`Failed to parse ${label} summary: no JSON object in response.`);
+      }
+      try {
+        return JSON.parse(match[0]);
+      } catch (parseErr) {
+        console.error(`[summaries] ${label} — JSON.parse failed (${parseErr.message}). Raw response:\n${raw}`);
+        throw new Error(`Failed to parse ${label} summary: ${parseErr.message}`);
+      }
+    };
 
-    // Parse Book B response
-    const rawB = msgB.content[0].text;
-    const matchB = rawB.match(/\{[\s\S]*\}/);
-    if (!matchB) throw new Error('Failed to parse Book B summary JSON from Claude response.');
-    bookBResult = JSON.parse(matchB[0]);
+    bookAResult = parseSummary(msgA.content[0].text, 'Book A');
+    bookBResult = parseSummary(msgB.content[0].text, 'Book B');
 
   } catch (e) {
     console.error('[summaries] Failed to generate summaries:', e.message);
