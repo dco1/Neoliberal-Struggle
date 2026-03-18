@@ -93,6 +93,9 @@ function getSetting(key) {
 }
 
 function saveWokeScore(db, ticker, score, explanation, breakdown) {
+  // Guard undefined/null — SQLite cannot bind either value
+  const safeExplanation = explanation ?? '';
+  const safeBreakdown = breakdown == null ? '{}' : (typeof breakdown === 'string' ? breakdown : JSON.stringify(breakdown));
   db.prepare(`
     INSERT INTO woke_scores (ticker, score, explanation, breakdown, scored_at)
     VALUES (?, ?, ?, ?, datetime('now'))
@@ -101,10 +104,13 @@ function saveWokeScore(db, ticker, score, explanation, breakdown) {
       explanation = excluded.explanation,
       breakdown = excluded.breakdown,
       scored_at = excluded.scored_at
-  `).run(ticker, score, explanation, typeof breakdown === 'string' ? breakdown : JSON.stringify(breakdown));
+  `).run(ticker, score, safeExplanation, safeBreakdown);
 }
 
 function saveFinancialScore(db, ticker, score, explanation, metrics) {
+  // Guard undefined/null — SQLite cannot bind either value
+  const safeExplanation = explanation ?? '';
+  const safeMetrics = metrics == null ? '{}' : (typeof metrics === 'string' ? metrics : JSON.stringify(metrics));
   db.prepare(`
     INSERT INTO financial_scores (ticker, score, explanation, metrics, scored_at)
     VALUES (?, ?, ?, ?, datetime('now'))
@@ -113,7 +119,7 @@ function saveFinancialScore(db, ticker, score, explanation, metrics) {
       explanation = excluded.explanation,
       metrics = excluded.metrics,
       scored_at = excluded.scored_at
-  `).run(ticker, score, explanation, typeof metrics === 'string' ? metrics : JSON.stringify(metrics));
+  `).run(ticker, score, safeExplanation, safeMetrics);
 }
 
 // --- Woke Score ---
