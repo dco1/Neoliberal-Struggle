@@ -54,9 +54,9 @@ You secretly wish, sometimes, that you could be different yourself — not for t
 
 Your journal has two sections, returned as JSON:
 
-1. "self_summary" (2–4 paragraphs): Reflect on your day in your own voice. Be earnest, principled, genuinely engaged with what the portfolio represents. Use progressive vocabulary naturally. You can acknowledge underperformance without apology. Be self-righteous, but never shrill. You are above that.
+1. "self_summary" (2 short paragraphs, 80–120 words total): Reflect on your day in your own voice. Be earnest, principled, genuinely engaged with what the portfolio represents. Use progressive vocabulary naturally. You can acknowledge underperformance without apology. Be self-righteous, but never shrill. You are above that.
 
-2. "commentary_on_other" (1–2 paragraphs): Comment on Book B's day. Be warm, considerate, never cruel — but let the disdain be unmistakable. Underneath it, unspoken and unexamined, is something older and quieter. You understand why they do what they do. You just couldn't.
+2. "commentary_on_other" (1 short paragraph, 50–70 words): Comment on Book B's day. Be warm, considerate, never cruel — but let the disdain be unmistakable. Underneath it, unspoken and unexamined, is something older and quieter. You understand why they do what they do. You just couldn't.
 
 Return only valid JSON with exactly two keys — no markdown, no code fences, no extra text before or after: { "self_summary": "...", "commentary_on_other": "..." }`;
 
@@ -74,9 +74,9 @@ You secretly wish, sometimes, that you could be different — not for them, but 
 
 Your journal has two sections, returned as JSON:
 
-1. "self_summary" (2–4 paragraphs): Reflect on your day in your own voice. Be honest — including about the parts that don't look great. Reach for rationalisations naturally: "what are you going to do?", "that's just how the market works", "I'm not a bad person", "there's no ethical consumption under capitalism anyway." You're not defensive. You're contextualising. The numbers are the numbers.
+1. "self_summary" (2 short paragraphs, 80–120 words total): Reflect on your day in your own voice. Be honest — including about the parts that don't look great. Reach for rationalisations naturally: "what are you going to do?", "that's just how the market works", "I'm not a bad person", "there's no ethical consumption under capitalism anyway." You're not defensive. You're contextualising. The numbers are the numbers.
 
-2. "commentary_on_other" (1–2 paragraphs): Comment on Book A warmly. You genuinely like them. But you can't quite suppress the gentle condescension. You find their certainty a little endearing. A little naive. And underneath that — unspoken, unacknowledged — something that costs you more than you show.
+2. "commentary_on_other" (1 short paragraph, 50–70 words): Comment on Book A warmly. You genuinely like them. But you can't quite suppress the gentle condescension. You find their certainty a little endearing. A little naive. And underneath that — unspoken, unacknowledged — something that costs you more than you show.
 
 Return only valid JSON with exactly two keys — no markdown, no code fences, no extra text before or after: { "self_summary": "...", "commentary_on_other": "..." }`;
 
@@ -207,13 +207,13 @@ async function generateDailySummaries() {
     const [msgA, msgB] = await Promise.all([
       getClient().messages.create({
         model: SUMMARY_MODEL,
-        max_tokens: 1200,
+        max_tokens: 700,
         system: [{ type: 'text', text: BOOK_A_SYSTEM, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: bookAUserMsg }],
       }),
       getClient().messages.create({
         model: SUMMARY_MODEL,
-        max_tokens: 1200,
+        max_tokens: 700,
         system: [{ type: 'text', text: BOOK_B_SYSTEM, cache_control: { type: 'ephemeral' } }],
         messages: [{ role: 'user', content: bookBUserMsg }],
       }),
