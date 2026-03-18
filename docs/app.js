@@ -24,7 +24,8 @@ const fmt = {
   score: v => v == null ? '—' : Number(v).toFixed(0),
   price: v => v == null ? '—' : '$' + Number(v).toFixed(2),
   pct:   v => v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%',
-  date:  s => s ? new Date(s.replace(' ', 'T') + 'Z').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
+  // Handles both SQLite timestamps ("2026-03-18 21:15:26") and ISO strings ("2026-03-18T21:15:26.948Z")
+  date:  s => { if (!s) return '—'; const iso = s.includes('T') ? s : s.replace(' ', 'T') + 'Z'; return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); },
 };
 
 function scoreBar(score, cls, maxWidth = 60) {
@@ -232,10 +233,40 @@ function initEvents() {
 
 // ── Boot ──────────────────────────────────────────────────────────────────────
 
+async function loadReflections() {
+  try {
+    const res = await fetch('reflections/data.json');
+    if (!res.ok) return; // not yet exported — silently skip
+    const reflections = await res.json();
+    if (!reflections.length) return;
+
+    const section = document.getElementById('reflections-preview');
+    const list    = document.getElementById('reflections-preview-list');
+
+    const recent = reflections.slice(0, 10);
+    list.innerHTML = recent.map(r => {
+      const [y, m, d] = r.date.split('-');
+      const aClass = r.book_a_pnl_pct >= 0 ? 'pos' : 'neg';
+      const bClass = r.book_b_pnl_pct >= 0 ? 'pos' : 'neg';
+      const aPnl   = r.book_a_pnl_pct != null ? `<strong class="${aClass}">${(r.book_a_pnl_pct >= 0 ? '+' : '') + r.book_a_pnl_pct.toFixed(2)}%</strong>` : '';
+      const bPnl   = r.book_b_pnl_pct != null ? `<strong class="${bClass}">${(r.book_b_pnl_pct >= 0 ? '+' : '') + r.book_b_pnl_pct.toFixed(2)}%</strong>` : '';
+      return `<li class="rp-item">
+        <a href="reflections/${y}/${m}/${d}/index.html">
+          <span class="rp-date">${fmt.date(r.date + ' 12:00:00')}</span>
+          <span class="rp-pnl">Book A ${aPnl} · Book B ${bPnl}</span>
+        </a>
+      </li>`;
+    }).join('');
+
+    section.style.display = '';
+  } catch (_) { /* reflections not available yet */ }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   initEvents();
   try {
     await loadScores();
+    await loadReflections();
   } catch (e) {
     document.getElementById('scores-body').innerHTML =
       `<tr><td colspan="6" class="empty">Failed to load scores: ${e.message}</td></tr>`;

@@ -337,7 +337,7 @@ async function exportReflections() {
     }
   }
 
-  // Always regenerate the index
+  // Always regenerate the index page
   const indexHtml = buildIndexPageHtml(summaries);
   try {
     const status = await putFile('docs/reflections/index.html', indexHtml, `chore: reflections index — ${today}`);
@@ -345,6 +345,20 @@ async function exportReflections() {
     pushed++;
   } catch (e) {
     console.error('[export] Failed to push reflections index:', e.message);
+  }
+
+  // Push a lightweight data.json so the main scores page can list recent reflections
+  const dataJson = JSON.stringify(summaries.map(s => ({
+    date: s.date,
+    book_a_pnl_pct: s.book_a_pnl_pct,
+    book_b_pnl_pct: s.book_b_pnl_pct,
+  })), null, 2);
+  try {
+    const status = await putFile('docs/reflections/data.json', dataJson, `chore: reflections data — ${today}`);
+    console.log(`[export] reflections/data.json ${status}.`);
+    pushed++;
+  } catch (e) {
+    console.error('[export] Failed to push reflections data.json:', e.message);
   }
 
   console.log(`[export] Reflections export done (${pushed} file(s) pushed).`);
