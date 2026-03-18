@@ -65,6 +65,9 @@ async function refreshStatus() {
 
     document.getElementById('cycle-count').textContent = `Cycle: ${status.cycle_count}`;
     document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+
+    // Expose market state so refreshSummaries can decide whether to show the regenerate button
+    window._marketOpen = status.market_open;
   } catch (e) {
     console.warn('Status fetch failed:', e.message);
   }
@@ -298,6 +301,16 @@ async function refreshSummaries() {
   try {
     const summaries = await apiFetch('/summaries');
     const container = document.getElementById('summaries-list');
+
+    const btn = document.getElementById('regenerate-summaries-btn');
+    const today = new Date().toISOString().slice(0, 10);
+    const hasTodaySummary = summaries.some(s => s.date === today);
+
+    // Show the regenerate button only when market is closed and no summary exists for today
+    if (btn) {
+      const shouldShow = !window._marketOpen && !hasTodaySummary;
+      btn.hidden = !shouldShow;
+    }
 
     if (!summaries.length) {
       container.innerHTML = '<div class="summaries-empty">No summaries yet. Check back after market close.</div>';
@@ -661,6 +674,25 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initTrigger();
   initSettings();
+
+  // Regenerate summaries button — visible only when market is closed and no summary for today
+  const regenBtn = document.getElementById('regenerate-summaries-btn');
+  if (regenBtn) {
+    regenBtn.addEventListener('click', async () => {
+      regenBtn.disabled = true;
+      regenBtn.textContent = '↺ Generating…';
+      try {
+        await apiFetch('/admin/regenerate-summaries', { method: 'POST' });
+        regenBtn.textContent = '✓ Done';
+        setTimeout(() => refreshSummaries(), 1000);
+      } catch (e) {
+        regenBtn.textContent = '✗ Failed';
+        console.error('Regenerate failed:', e.message);
+      } finally {
+        setTimeout(() => { regenBtn.disabled = false; regenBtn.textContent = '↺ Regenerate'; }, 4000);
+      }
+    });
+  }
 
   // Initial full load
   refresh();

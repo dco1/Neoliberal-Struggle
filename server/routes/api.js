@@ -382,4 +382,19 @@ router.post('/admin/export-scores', async (req, res) => {
   }
 });
 
+// POST /api/admin/regenerate-summaries — delete today's summary and re-run generation.
+// Intended for manual use when the market is closed and a re-run is needed.
+router.post('/admin/regenerate-summaries', async (req, res) => {
+  try {
+    const { generateDailySummaries } = require('../services/summaries');
+    const today = new Date().toISOString().split('T')[0];
+    // Remove today's record so generateDailySummaries() doesn't skip it as a duplicate
+    db().prepare('DELETE FROM daily_summaries WHERE date = ?').run(today);
+    await generateDailySummaries();
+    res.json({ ok: true, message: 'Summaries regenerated — check server logs for details.' });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 module.exports = router;
