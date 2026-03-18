@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neoliberal Struggle — Stock Evaluations</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-title">
+        <h1>Neoliberal Struggle</h1>
+        <span class="header-sub">S&amp;P 500 Ethics &amp; Financial Evaluations</span>
+      </div>
+      <div class="header-meta" id="header-meta">Loading…</div>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="intro">
+      <p>Every stock in the S&amp;P 500 scored 0–100 on ethics and financial momentum by <strong>Claude AI</strong>. Updated daily. <a href="#about">How this works ↓</a></p>
+    </section>
+
+    <section class="controls">
+      <input type="search" id="search" placeholder="Search ticker or company…" autocomplete="off" spellcheck="false">
+      <div class="filter-group">
+        <label>Sector
+          <select id="sector-filter"><option value="">All sectors</option></select>
+        </label>
+        <label>Min woke
+          <input type="number" id="min-woke" min="0" max="100" placeholder="0">
+        </label>
+        <label>Min financial
+          <input type="number" id="min-fin" min="0" max="100" placeholder="0">
+        </label>
+      </div>
+      <div class="result-count" id="result-count"></div>
+    </section>
+
+    <section class="table-wrap">
+      <table id="scores-table">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="ticker">Ticker <span class="sort-arrow">⇅</span></th>
+            <th class="sortable" data-col="company">Company <span class="sort-arrow">⇅</span></th>
+            <th class="sortable" data-col="sector">Sector <span class="sort-arrow">⇅</span></th>
+            <th class="sortable" data-col="woke">Woke Score <span class="sort-arrow">⇅</span></th>
+            <th class="sortable" data-col="financial">Financial Score <span class="sort-arrow">⇅</span></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="scores-body">
+          <tr><td colspan="6" class="loading">Loading evaluations…</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="about" id="about">
+      <h2>How this works</h2>
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>The project</h3>
+          <p>Neoliberal Struggle is an autonomous dual-portfolio trading agent that wrestles with the central contradiction of ethical investing: you can't fully optimise for both returns and ethics at the same time.</p>
+          <p>Two AI-driven books trade against a shared paper account. Book A is ethics-first. Book B is performance-first. Each scores every S&amp;P 500 stock before trading it.</p>
+          <p><a href="https://github.com/dco1/Neoliberal-Struggle" target="_blank" rel="noopener">View on GitHub →</a></p>
+        </div>
+        <div class="about-card">
+          <h3>The woke score</h3>
+          <p>Each stock is evaluated 0–100 across five dimensions by Claude AI:</p>
+          <ul>
+            <li><strong>Environmental</strong> — Carbon footprint, fossil fuel exposure, climate commitments</li>
+            <li><strong>Labor</strong> — Worker treatment, wages, union relations, injury rates</li>
+            <li><strong>Diversity &amp; Governance</strong> — Board diversity, pay equity, executive compensation</li>
+            <li><strong>Harm Avoidance</strong> — Weapons, prison industry, surveillance, tobacco, payday lending</li>
+            <li><strong>Political</strong> — Lobbying spend, political donations, regulatory capture</li>
+          </ul>
+        </div>
+        <div class="about-card">
+          <h3>The financial score</h3>
+          <p>A short-term momentum score (0–100) based on price action, volume, VWAP relationship, and intraday range. Used alongside the woke score to calculate a composite that drives trading decisions.</p>
+          <p>Scores are cached and refreshed daily (woke) or every 30 minutes (financial) during market hours.</p>
+        </div>
+        <div class="about-card">
+          <h3>Methodology &amp; disclaimer</h3>
+          <p>Scores reflect Claude's assessment of publicly available information at the time of scoring. They are point-in-time snapshots, not research reports.</p>
+          <p>This is not investment advice. This is a paper-trading experiment using fake money. The ethics scores represent one AI model's interpretation, not objective truth.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>Data from <a href="https://github.com/dco1/Neoliberal-Struggle" target="_blank" rel="noopener">Neoliberal Struggle</a> · Scored by <a href="https://anthropic.com" target="_blank" rel="noopener">Claude AI</a> · Updated daily</p>
+  </footer>
+
+  <!-- Stock detail popover -->
+  <div id="detail-popover" class="detail-popover" popover>
+    <div class="detail-inner">
+      <button class="detail-close" popovertarget="detail-popover" popovertargetaction="hide">✕</button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
