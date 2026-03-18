@@ -118,6 +118,45 @@ Key tables: `books` · `trades` · `woke_scores` · `financial_scores` · `portf
 
 ---
 
+## How P&L is calculated
+
+Both books share a single Alpaca paper-trading account. Alpaca has no concept of two separate sub-accounts, so all book-level bookkeeping is internal.
+
+**Cash split**
+At each cycle, the real Alpaca cash balance is divided proportionally between the two books based on each book's remaining undeployed capital, derived from trade history:
+
+```
+book_remaining   = book.capital − net_spend_from_trades
+book_cash        = alpaca_cash × (book_remaining / total_remaining_across_both_books)
+```
+
+If no trades have been made yet, the split is 50/50.
+
+**Invested value**
+Each book's invested value is the sum of live Alpaca `market_value` for tickers where that book holds a net-positive position (tracked via the internal `trades` table).
+
+**Total value**
+```
+total_value = book_cash + invested_value
+```
+
+**P&L baseline**
+On the very first successful Alpaca API call, the server records `account.equity / 2` as `initial_equity_per_book` in the `settings` table. This value is **fixed for the lifetime of the account** and used as each book's starting value:
+
+```
+pnl     = total_value − initial_equity_per_book
+pnl_pct = pnl / initial_equity_per_book × 100
+```
+
+This means gains compound correctly from deposit day. The baseline does not drift as the account grows. If you reset the account or deposit more funds, update `initial_equity_per_book` in the `settings` table manually.
+
+**Why your dashboard P&L might not match Alpaca's**
+Alpaca shows portfolio-level P&L for the whole account. The dashboard shows per-book P&L based on the internal cash split and position attribution. If the cash split has drifted from 50/50 (because one book has deployed more capital), the two numbers will legitimately differ. They should converge at end-of-day when positions are valued at close.
+
+The demo page (`/demo`) uses simulated trade data and fake price movement — its P&L numbers are not derived from Alpaca and are purely illustrative.
+
+---
+
 ## The woke score
 
 Each stock is scored 0–100 on five dimensions via Claude:

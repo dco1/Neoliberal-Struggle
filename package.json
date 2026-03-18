@@ -15,13 +15,14 @@
     "@anthropic-ai/sdk": "^0.40.0",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "ws": "^8.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
   },
   "server": {
-     "name": "Neoliberal Struggle",
-     "port": 3000, 
-  } 
+    "name": "Neoliberal Struggle",
+    "port": 3000
+  }
 }

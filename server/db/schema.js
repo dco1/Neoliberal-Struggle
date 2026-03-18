@@ -176,14 +176,18 @@ function initSchema() {
   // Note: woke_weight and financial_weight are now per-book columns, not global settings.
   // daily_loss_limit_pct is removed — no pausing logic.
   const defaults = {
-    max_position_pct:          process.env.MAX_POSITION_PCT || '0.10',
-    max_trade_size:            process.env.MAX_TRADE_SIZE || '5000',
-    trade_cooldown_minutes:    process.env.TRADE_COOLDOWN_MINUTES || '60',
-    woke_floor:                process.env.WOKE_FLOOR || '30',
-    woke_score_ttl_hours:      '24',
+    max_position_pct:           process.env.MAX_POSITION_PCT || '0.10',
+    max_trade_size:             process.env.MAX_TRADE_SIZE || '5000',
+    trade_cooldown_minutes:     process.env.TRADE_COOLDOWN_MINUTES || '60',
+    woke_floor:                 process.env.WOKE_FLOOR || '30',
+    woke_score_ttl_hours:       '24',
     financial_score_ttl_minutes: '30',
-    agent_cycle_count:         '0',
-    news_enabled:              'false',
+    agent_cycle_count:          '0',
+    news_enabled:               'false',
+    // Stored once on first successful Alpaca connection — half of account equity
+    // at that moment. Used as the permanent per-book P&L baseline so gains are
+    // measured from deposit day, not from "right now". '0' = not yet recorded.
+    initial_equity_per_book:    '0',
   };
 
   const upsert = db.prepare(`INSERT INTO settings (key, value) VALUES (?, ?) ON CONFLICT(key) DO NOTHING`);

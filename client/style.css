@@ -59,9 +59,33 @@ h1 {
 
 .header-meta {
   display: flex;
+  align-items: center;
   gap: 16px;
   color: var(--text-dim);
   font-size: 12px;
+}
+
+/* ── WebSocket live indicator ────────────────────────────────────── */
+
+.ws-indicator {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-dim);
+  flex-shrink: 0;
+  transition: background 0.3s;
+
+  &[data-connected="true"] {
+    background: var(--green);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 30%, transparent);
+    animation: ws-pulse 2.5s ease-in-out infinite;
+  }
+}
+
+@keyframes ws-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--green) 30%, transparent); }
+  50%       { box-shadow: 0 0 0 5px color-mix(in srgb, var(--green) 0%,  transparent); }
 }
 
 /* ── Badges ──────────────────────────────────────────────────────── */
@@ -268,6 +292,16 @@ canvas { margin-bottom: 16px; }
   font-size: 12px;
 
   &:last-child { border-bottom: none; }
+
+  /* New entries pushed via WebSocket fade in from a highlight */
+  &.log-entry-new {
+    animation: log-entry-flash 1.2s ease-out forwards;
+  }
+}
+
+@keyframes log-entry-flash {
+  0%   { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+  100% { background: transparent; }
 }
 
 .log-action {
