@@ -239,7 +239,10 @@ async function generateDailySummaries() {
         throw new Error(`Failed to parse ${label} summary: no JSON object in response.`);
       }
       try {
-        return JSON.parse(match[0]);
+        // Strip trailing commas before } or ] — JSON.parse rejects them,
+        // but the model occasionally adds one after the last property.
+        const clean = match[0].replace(/,(\s*[}\]])/g, '$1');
+        return JSON.parse(clean);
       } catch (parseErr) {
         console.error(`[summaries] ${label} — JSON.parse failed (${parseErr.message}). Raw response:\n${raw}`);
         throw new Error(`Failed to parse ${label} summary: ${parseErr.message}`);
