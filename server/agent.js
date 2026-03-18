@@ -14,7 +14,7 @@ const cron = require('node-cron');
 const alpaca = require('./services/alpaca');
 const market = require('./services/market');
 const { generateDailySummaries } = require('./services/summaries');
-const { exportScores }          = require('./services/export');
+const { exportScores, exportReflections } = require('./services/export');
 const { getDb } = require('./db/index');
 const ws     = require('./services/ws');
 
@@ -114,12 +114,18 @@ async function runEndOfDaySummary() {
     console.error('[agent] Failed to generate end-of-day summaries:', e.message);
   }
 
-  // Export scores.json to GitHub for the public Pages site.
-  // Runs after summaries — failure here is non-fatal.
+  // Export scores.json and reflections HTML to GitHub Pages.
+  // Both are non-fatal — a push failure doesn't affect the next cycle.
   try {
     await exportScores();
   } catch (e) {
     console.error('[agent] Score export failed:', e.message);
+  }
+
+  try {
+    await exportReflections();
+  } catch (e) {
+    console.error('[agent] Reflections export failed:', e.message);
   }
 }
 

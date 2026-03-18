@@ -391,7 +391,10 @@ router.post('/admin/regenerate-summaries', async (req, res) => {
     // Remove today's record so generateDailySummaries() doesn't skip it as a duplicate
     db().prepare('DELETE FROM daily_summaries WHERE date = ?').run(today);
     await generateDailySummaries();
-    res.json({ ok: true, message: 'Summaries regenerated — check server logs for details.' });
+    // Also push the fresh reflection to GitHub Pages
+    const { exportReflections } = require('../services/export');
+    await exportReflections();
+    res.json({ ok: true, message: 'Summaries regenerated and pushed to GitHub Pages.' });
   } catch (e) {
     res.status(500).json({ ok: false, error: e.message });
   }
