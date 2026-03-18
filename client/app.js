@@ -336,24 +336,106 @@ function initTabs() {
 
 // --- Settings ---
 
+// Maps setting key → { el id, serialise fn, deserialise fn }
+const SETTING_FIELDS = [
+  {
+    key: 'news_enabled',
+    id: 'setting-news-enabled',
+    type: 'toggle',
+    read:  el => el.checked ? 'true' : 'false',
+    write: (el, v) => { el.checked = v === 'true'; },
+  },
+  {
+    key: 'woke_floor',
+    id: 'setting-woke-floor',
+    type: 'number',
+    read:  el => String(el.value),
+    write: (el, v) => { el.value = v; },
+  },
+  {
+    key: 'max_position_pct',
+    id: 'setting-max-position-pct',
+    type: 'number',
+    read:  el => String(parseFloat(el.value) / 100),   // UI shows %, API stores 0.xx
+    write: (el, v) => { el.value = Math.round(parseFloat(v) * 100); },
+  },
+  {
+    key: 'max_trade_size',
+    id: 'setting-max-trade-size',
+    type: 'number',
+    read:  el => String(el.value),
+    write: (el, v) => { el.value = v; },
+  },
+  {
+    key: 'trade_cooldown_minutes',
+    id: 'setting-trade-cooldown',
+    type: 'number',
+    read:  el => String(el.value),
+    write: (el, v) => { el.value = v; },
+  },
+  {
+    key: 'woke_score_ttl_hours',
+    id: 'setting-woke-ttl',
+    type: 'number',
+    read:  el => String(el.value),
+    write: (el, v) => { el.value = v; },
+  },
+  {
+    key: 'financial_score_ttl_minutes',
+    id: 'setting-fin-ttl',
+    type: 'number',
+    read:  el => String(el.value),
+    write: (el, v) => { el.value = v; },
+  },
+];
+
 async function initSettings() {
   try {
     const settings = await apiFetch('/settings');
-    const checkbox = document.getElementById('setting-news-enabled');
-    if (!checkbox) return;
-    checkbox.checked = settings.news_enabled === 'true';
-    checkbox.addEventListener('change', async () => {
+    console.log('[settings] Loaded:', settings);
+
+    // Populate all fields from current DB values
+    for (const field of SETTING_FIELDS) {
+      const el = document.getElementById(field.id);
+      if (!el) continue;
+      if (settings[field.key] !== undefined) field.write(el, settings[field.key]);
+    }
+
+    // Save button — gather all fields and PATCH in one request
+    const saveBtn    = document.getElementById('settings-save-btn');
+    const saveStatus = document.getElementById('settings-save-status');
+
+    saveBtn.addEventListener('click', async () => {
+      const payload = {};
+      for (const field of SETTING_FIELDS) {
+        const el = document.getElementById(field.id);
+        if (!el) continue;
+        payload[field.key] = field.read(el);
+      }
+
+      saveBtn.disabled = true;
+      saveStatus.textContent = 'Saving…';
+      saveStatus.className   = 'settings-save-status';
+
       try {
         await fetch('/api/settings', {
-          method: 'PATCH',
+          method:  'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ news_enabled: checkbox.checked ? 'true' : 'false' }),
+          body:    JSON.stringify(payload),
         });
-        console.log('[settings] news_enabled set to', checkbox.checked);
+        console.log('[settings] Saved:', payload);
+        saveStatus.textContent = '✓ Saved';
+        saveStatus.className   = 'settings-save-status saved';
       } catch (e) {
-        console.warn('[settings] Failed to save setting:', e.message);
+        console.warn('[settings] Save failed:', e.message);
+        saveStatus.textContent = '✗ Error saving';
+        saveStatus.className   = 'settings-save-status error';
+      } finally {
+        saveBtn.disabled = false;
+        setTimeout(() => { saveStatus.textContent = ''; }, 3000);
       }
     });
+
   } catch (e) {
     console.warn('[settings] Failed to load settings:', e.message);
   }

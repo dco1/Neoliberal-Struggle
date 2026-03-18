@@ -13,6 +13,7 @@
   --blue: #5b9cf6;
   --accent: #9b6dff;
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --mono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
 }
 
 body {
@@ -467,49 +468,166 @@ canvas { margin-bottom: 16px; }
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0;
-  width: 380px;
+  width: 440px;
   max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
   box-shadow: 0 8px 32px rgba(0,0,0,0.4);
   color: var(--text);
 
   & .settings-popover-header {
-    padding: 16px 20px 14px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 2;
   }
 
   & .settings-popover-title {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
   }
-  
+
   &::backdrop {
     backdrop-filter: blur(10px);
-    color:rgba(255, 255, 255, 0.31);
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    margin: 0;
+    inset: 0;
   }
 }
 
+/* ── Settings groups ─────────────────────────────────────────────── */
+
+.settings-group {
+  padding: 6px 20px 2px;
+  border-bottom: 1px solid var(--border);
+
+  &:last-of-type { border-bottom: none; }
+}
+
+.settings-group-label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  padding: 10px 0 2px;
+}
+
+/* Each row: description on left, control column fixed-width on right */
 .settings-row {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 18px 20px;
+  align-items: center;
+  gap: 20px;
+  padding: 11px 0;
 
-  & .settings-row-info { flex: 1; min-width: 0; }
+  & .settings-row-info {
+    flex: 1;
+    min-width: 0;
+  }
 
   & .settings-row-label {
     display: block;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
 
   & .settings-row-desc {
     display: block;
-    font-size: 13px;
+    font-size: 11.5px;
     color: var(--text-dim);
-    line-height: 1.6;
+    line-height: 1.5;
   }
+
+  /* Fixed-width control column so all inputs align on the same edge */
+  & .settings-control {
+    flex-shrink: 0;
+    width: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+}
+
+/* ── Number inputs ───────────────────────────────────────────────── */
+
+.settings-number-unit {
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+.settings-number {
+  width: 60px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 5px 8px;
+  text-align: right;
+  appearance: none;
+  -moz-appearance: textfield;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(155, 109, 255, 0.2);
+  }
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button { appearance: none; margin: 0; }
+}
+
+/* ── Save row ────────────────────────────────────────────────────── */
+
+.settings-save-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px 16px;
+  position: sticky;
+  bottom: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  z-index: 2;
+}
+
+.settings-save-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 7px 20px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+
+  &:hover   { opacity: 0.85; }
+  &:disabled { opacity: 0.45; cursor: not-allowed; }
+}
+
+.settings-save-status {
+  font-size: 13px;
+  color: var(--text-dim);
+
+  &.saved { color: var(--green); }
+  &.error  { color: var(--red); }
 }
 
 /* ── Toggle switch ───────────────────────────────────────────────── */

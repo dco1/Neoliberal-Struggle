@@ -260,6 +260,8 @@ router.patch('/settings', (req, res) => {
     'max_trade_size',
     'trade_cooldown_minutes',
     'news_enabled',
+    'woke_score_ttl_hours',
+    'financial_score_ttl_minutes',
   ];
   const updates = req.body;
 

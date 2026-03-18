@@ -130,15 +130,94 @@
     <div class="settings-popover-header">
       <span class="settings-popover-title">Settings</span>
     </div>
-    <div class="settings-row">
-      <div class="settings-row-info">
-        <span class="settings-row-label">Allow news to influence trading</span>
-        <span class="settings-row-desc">Fetches recent Alpaca headlines for each ticker and injects them into scoring prompts. Woke and financial scores will reflect current news context.</span>
+
+    <div class="settings-group">
+      <span class="settings-group-label">News</span>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Allow news to influence trading</span>
+          <span class="settings-row-desc">Fetches recent Alpaca headlines for each ticker and injects them into scoring prompts. Woke and financial scores will reflect current news context.</span>
+        </div>
+        <div class="settings-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-news-enabled">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
       </div>
-      <label class="toggle-switch">
-        <input type="checkbox" id="setting-news-enabled">
-        <span class="toggle-track"><span class="toggle-thumb"></span></span>
-      </label>
+    </div>
+
+    <div class="settings-group">
+      <span class="settings-group-label">Trading</span>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Woke floor</span>
+          <span class="settings-row-desc">Minimum ethics score a stock must have to be considered for purchase.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-woke-floor" class="settings-number" min="0" max="100" step="1">
+          <span class="settings-number-unit">/ 100</span>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Max position size</span>
+          <span class="settings-row-desc">Maximum share of a book's capital in a single position.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-max-position-pct" class="settings-number" min="1" max="50" step="1">
+          <span class="settings-number-unit">%</span>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Max trade size</span>
+          <span class="settings-row-desc">Hard dollar cap per individual trade order.</span>
+        </div>
+        <div class="settings-control">
+          <span class="settings-number-unit">$</span>
+          <input type="number" id="setting-max-trade-size" class="settings-number" min="100" max="100000" step="100">
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Trade cooldown</span>
+          <span class="settings-row-desc">Minutes before the same ticker can be traded again by the same book.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-trade-cooldown" class="settings-number" min="0" max="1440" step="5">
+          <span class="settings-number-unit">min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <span class="settings-group-label">Score caching</span>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Ethics score TTL</span>
+          <span class="settings-row-desc">How many hours a woke score is cached before Claude re-scores.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-woke-ttl" class="settings-number" min="1" max="168" step="1">
+          <span class="settings-number-unit">hr</span>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Financial score TTL</span>
+          <span class="settings-row-desc">How many minutes a financial score is cached before re-scoring.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-fin-ttl" class="settings-number" min="5" max="1440" step="5">
+          <span class="settings-number-unit">min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-save-row">
+      <button id="settings-save-btn" class="settings-save-btn">Save</button>
+      <span id="settings-save-status" class="settings-save-status"></span>
     </div>
   </div>
 
