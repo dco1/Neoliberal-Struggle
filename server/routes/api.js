@@ -47,13 +47,21 @@ router.get('/status', async (req, res) => {
 
 // GET /api/books — both books overview
 // Fetches live values from Alpaca on every request so the dashboard always
-// reflects reality, not stored estimates. Cash is split 50/50 between books
-// (both started with equal capital; Alpaca has no concept of our book split).
+// reflects reality, not stored estimates.
 //
-// P&L baseline: on the very first successful Alpaca call we store
-// (account.equity / 2) in settings.initial_equity_per_book. All future
-// P&L is measured against that fixed starting value, so gains compound
-// correctly from deposit day rather than resetting each request.
+// ── Cash split ───────────────────────────────────────────────────────────────
+// Cash is divided proportionally based on each book's undeployed capital
+// fraction (same logic as shared.js getBookValue).
+//
+// ── Invested value ───────────────────────────────────────────────────────────
+// Computed from TRADE RECORDS × CURRENT PRICE, not from Alpaca market_value.
+// This prevents double-counting: when both books hold the same ticker, each
+// only counts the shares it actually bought. Using Alpaca's market_value and
+// filtering by ticker would give both books the full position value.
+//
+// ── P&L baseline ─────────────────────────────────────────────────────────────
+// On the very first successful Alpaca call, (account.equity / 2) is stored as
+// initial_equity_per_book. All P&L is measured against that fixed value.
 router.get('/books', async (req, res) => {
   try {
     const books = db().prepare('SELECT * FROM books').all();
@@ -68,8 +76,6 @@ router.get('/books', async (req, res) => {
     const totalAccountEquity = parseFloat(account.equity);
 
     // ── P&L baseline ────────────────────────────────────────────────
-    // Read the stored initial equity per book; write it on first call.
-    // Using INSERT OR IGNORE so only the very first non-zero equity wins.
     const stored = db().prepare(`SELECT value FROM settings WHERE key = 'initial_equity_per_book'`).get();
     let initialEquityPerBook = stored ? parseFloat(stored.value) : 0;
 
@@ -82,27 +88,56 @@ router.get('/books', async (req, res) => {
       console.log(`[api] Initial equity per book locked in: $${initialEquityPerBook.toFixed(2)}`);
     }
 
-    // Each book's live cash = half the real Alpaca cash balance
-    const cashPerBook = totalAccountCash / 2;
+    // ── Cash split (proportional by undeployed capital) ─────────────
+    // Mirrors the logic in server/books/shared.js getBookValue().
+    function getNetSpend(bookId) {
+      const row = db().prepare(`
+        SELECT SUM(CASE WHEN side='buy' THEN total_value ELSE -total_value END) as net
+        FROM trades WHERE book_id = ?
+      `).get(bookId);
+      return Math.max(0, row?.net ?? 0);
+    }
+
+    const remainders = {};
+    let totalRemaining = 0;
+    for (const b of books) {
+      const r = Math.max(0, b.capital - getNetSpend(b.id));
+      remainders[b.id] = r;
+      totalRemaining += r;
+    }
+
+    // ── Current price map from Alpaca positions ──────────────────────
+    // Used to mark-to-market each book's net shares at today's price.
+    const priceMap = new Map(
+      alpacaPositions.map(p => [p.symbol, parseFloat(p.current_price)])
+    );
 
     const enriched = books.map(book => {
-      // Determine which Alpaca positions belong to this book via trade history
-      const myTrades = db().prepare(`
+      // Each book's proportional share of the real Alpaca cash balance
+      const cashPerBook = totalRemaining > 0
+        ? totalAccountCash * (remainders[book.id] / totalRemaining)
+        : totalAccountCash / 2;
+
+      // Net shares per ticker this book holds, from trade history
+      const netPositions = db().prepare(`
         SELECT ticker,
-               SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares
+               SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares,
+               SUM(CASE WHEN side='buy' THEN total_value ELSE 0 END) /
+               NULLIF(SUM(CASE WHEN side='buy' THEN shares ELSE 0 END), 0) as avg_cost
         FROM trades WHERE book_id = ?
         GROUP BY ticker HAVING net_shares > 0.001
       `).all(book.id);
-      const myTickers = new Set(myTrades.map(t => t.ticker));
 
-      // Live invested value: sum real Alpaca market_value for this book's positions
-      const myPositions = alpacaPositions.filter(p => myTickers.has(p.symbol));
-      const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value || 0), 0);
+      // Invested value = this book's net shares × current market price.
+      // Falls back to avg_cost if Alpaca doesn't have a price (e.g. position
+      // was fully sold on Alpaca's side but our trades table still shows it).
+      const investedValue = netPositions.reduce((sum, pos) => {
+        const price = priceMap.get(pos.ticker) ?? pos.avg_cost;
+        return sum + (pos.net_shares * price);
+      }, 0);
 
-      // Live total value and P&L — grounded entirely in Alpaca numbers.
-      // startingValue is fixed at the account's equity on the day the server
-      // first successfully contacted Alpaca, halved per book.
-      const totalValue   = cashPerBook + investedValue;
+      // Live total value and P&L
+      const totalValue    = cashPerBook + investedValue;
       const startingValue = initialEquityPerBook > 0 ? initialEquityPerBook : (totalAccountEquity / 2);
       const pnl    = totalValue - startingValue;
       const pnlPct = startingValue > 0 ? (pnl / startingValue) * 100 : 0;

@@ -96,18 +96,34 @@ async function getBookValue(bookId, alpacaPositions) {
     ? totalAccountCash * (myRemaining / totalRemaining)
     : totalAccountCash / 2;
 
-  // Determine which Alpaca positions belong to this book via net-positive trade history
-  const myTrades = db.prepare(`
+  // Build a price map from Alpaca's live positions.
+  // Used to mark-to-market this book's shares at today's price.
+  const priceMap = new Map(
+    alpacaPositions.map(p => [p.symbol, parseFloat(p.current_price)])
+  );
+
+  // Compute invested value from TRADE RECORDS × CURRENT PRICE.
+  // This avoids double-counting: both books may hold the same ticker, so
+  // filtering Alpaca's market_value by ticker would give each book the full
+  // position value instead of just their own share count.
+  const netPositions = db.prepare(`
     SELECT ticker,
-           SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares
+           SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares,
+           SUM(CASE WHEN side='buy' THEN total_value ELSE 0 END) /
+           NULLIF(SUM(CASE WHEN side='buy' THEN shares ELSE 0 END), 0) as avg_cost
     FROM trades WHERE book_id = ?
     GROUP BY ticker HAVING net_shares > 0.001
   `).all(bookId);
-  const myTickers = new Set(myTrades.map(t => t.ticker));
 
-  // Invested value: real Alpaca market_value for this book's positions only
-  const myPositions  = alpacaPositions.filter(p => myTickers.has(p.symbol));
-  const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value || 0), 0);
+  const investedValue = netPositions.reduce((sum, pos) => {
+    const price = priceMap.get(pos.ticker) ?? pos.avg_cost;
+    return sum + (pos.net_shares * price);
+  }, 0);
+
+  // myPositions is still used by book cycle files to know which tickers to re-score.
+  // Keep the ticker-filter approach here — it's only used for the tickers list, not value.
+  const myTickers  = new Set(netPositions.map(p => p.ticker));
+  const myPositions = alpacaPositions.filter(p => myTickers.has(p.symbol));
 
   const totalValue = cash + investedValue;
 
