@@ -80,15 +80,18 @@ async function getBookValue(bookId, alpacaPositions) {
 
   const otherBookId = bookId === 'index' ? 'screener' : 'index';
 
-  const myBook    = db.prepare('SELECT capital FROM books WHERE id = ?').get(bookId);
-  const otherBook = db.prepare('SELECT capital FROM books WHERE id = ?').get(otherBookId);
+  // Use the real per-book capital allocation — recorded from Alpaca on first startup
+  // as (account.equity / 2) and stored in settings as 'initial_equity_per_book'.
+  // book.capital is a legacy field seeded at $50,000 and must NOT be used here:
+  // with capital=$50k, a book that has spent $7,685 still shows $42,315 "remaining"
+  // and keeps receiving cash allocations well beyond its actual $5k fair share.
+  const initialEquityRow = db.prepare("SELECT value FROM settings WHERE key = 'initial_equity_per_book'").get();
+  const perBookCapital = initialEquityRow ? parseFloat(initialEquityRow.value) : 5000;
 
-  const myCapital    = myBook?.capital    || 5000;
-  const otherCapital = otherBook?.capital || 5000;
-
-  // Each book's "unspent" capital according to our trade records
-  const myRemaining    = Math.max(0, myCapital    - getNetSpend(bookId));
-  const otherRemaining = Math.max(0, otherCapital - getNetSpend(otherBookId));
+  // Each book's "unspent" capital according to our trade records.
+  // When net_spend >= perBookCapital the book is fully deployed and gets 0 cash.
+  const myRemaining    = Math.max(0, perBookCapital - getNetSpend(bookId));
+  const otherRemaining = Math.max(0, perBookCapital - getNetSpend(otherBookId));
   const totalRemaining = myRemaining + otherRemaining;
 
   // Distribute real Alpaca cash proportionally; fall back to 50/50 if no trades yet
