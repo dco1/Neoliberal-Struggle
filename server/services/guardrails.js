@@ -48,6 +48,33 @@ function recordCooldown(bookId, ticker) {
 }
 
 /**
+ * Record a cooldown with an explicit duration rather than using the global setting.
+ *
+ * isInCooldown checks: last_trade > datetime('now', '-{setting} minutes')
+ * So to block for `durationMinutes` regardless of the setting, we store
+ * last_trade = now + (durationMinutes - cooldown_setting), which makes the
+ * check go false exactly `durationMinutes` from now.
+ *
+ * Use this for error-based cooldowns (e.g. PDT protection) where a longer
+ * block is needed than the normal trade-cooldown setting.
+ *
+ * @param {string} bookId
+ * @param {string} ticker
+ * @param {number} durationMinutes - how long to block this ticker
+ */
+function recordCooldownMinutes(bookId, ticker, durationMinutes) {
+  const db = getDb();
+  const setting = getSetting('trade_cooldown_minutes') || 60;
+  const offset  = durationMinutes - setting; // sqlite modifier offset
+  const modifier = (offset >= 0 ? '+' : '') + String(Math.round(offset)) + ' minutes';
+  db.prepare(`
+    INSERT INTO trade_cooldowns (book_id, ticker, last_trade)
+    VALUES (?, ?, datetime('now', ?))
+    ON CONFLICT(book_id, ticker) DO UPDATE SET last_trade = datetime('now', ?)
+  `).run(bookId, ticker, modifier, modifier);
+}
+
+/**
  * Check if a proposed buy violates position size limits.
  * @param {string} bookId
  * @param {string} ticker
@@ -96,6 +123,7 @@ function checkWokeFloor(wokeScore) {
 module.exports = {
   isInCooldown,
   recordCooldown,
+  recordCooldownMinutes,
   checkPositionSize,
   checkWokeFloor,
 };

@@ -137,9 +137,11 @@ async function runCycle(cycleCount) {
     const validEvals = holdingEvals.filter(e => e !== null);
 
     if (cashBeforeRotation < 10 && validEvals.length > 0) {
+      // Skip any ticker that is in cooldown (e.g. a previous rotation sell was rejected
+      // by Alpaca — PDT protection, market closed, etc.) so we don't retry every cycle.
       const zombies = validEvals
-        .filter(e => e.composite < MIN_FINANCIAL_SCORE_TO_BUY) // below Book B's buy bar
-        .sort((a, b) => a.composite - b.composite);            // worst first
+        .filter(e => e.composite < MIN_FINANCIAL_SCORE_TO_BUY && !guardrails.isInCooldown(BOOK_ID, e.ticker))
+        .sort((a, b) => a.composite - b.composite); // worst first
 
       if (zombies.length > 0) {
         const worstZombie = zombies[0];
@@ -183,7 +185,19 @@ async function runCycle(cycleCount) {
             logDecision(BOOK_ID, cycleCount, 'sell', worstZombie.ticker, reason);
             currentHoldings.delete(worstZombie.ticker);
           } catch (e) {
-            console.error(`[book:screener] Rotation sell failed for ${worstZombie.ticker}:`, e.message);
+            const isPDT = e.message.toLowerCase().includes('pattern day trading');
+            // Block this ticker for 8 hours on PDT, or the normal cooldown period otherwise.
+            // This prevents hammering the same rejected sell on every subsequent cycle.
+            const blockMinutes = isPDT ? 480 : null;
+            if (blockMinutes) {
+              guardrails.recordCooldownMinutes(BOOK_ID, worstZombie.ticker, blockMinutes);
+              console.error(`[book:screener] Rotation sell blocked (PDT) for ${worstZombie.ticker} — cooldown ${blockMinutes} min. ${e.message}`);
+            } else {
+              guardrails.recordCooldown(BOOK_ID, worstZombie.ticker);
+              console.error(`[book:screener] Rotation sell failed for ${worstZombie.ticker} — cooldown set. ${e.message}`);
+            }
+            logDecision(BOOK_ID, cycleCount, 'skip', worstZombie.ticker,
+              `Rotation sell rejected by Alpaca${isPDT ? ' (PDT protection)' : ''}: ${e.message}`);
           }
         } else {
           console.log(`[book:screener] Rotation check: no candidate beats ${worstZombie.ticker} by ${ROTATION_MIN_IMPROVEMENT}+ points. Holding.`);
