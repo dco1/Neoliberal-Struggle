@@ -49,8 +49,11 @@ router.get('/status', async (req, res) => {
 // Fetches live values from Alpaca on every request so the dashboard always
 // reflects reality, not stored estimates. Cash is split 50/50 between books
 // (both started with equal capital; Alpaca has no concept of our book split).
-// P&L is computed relative to the live account equity split, not the seeded
-// book.capital value, so it stays grounded in what Alpaca actually reports.
+//
+// P&L baseline: on the very first successful Alpaca call we store
+// (account.equity / 2) in settings.initial_equity_per_book. All future
+// P&L is measured against that fixed starting value, so gains compound
+// correctly from deposit day rather than resetting each request.
 router.get('/books', async (req, res) => {
   try {
     const books = db().prepare('SELECT * FROM books').all();
@@ -61,8 +64,23 @@ router.get('/books', async (req, res) => {
       alpaca.getPositions(),
     ]);
 
-    const totalAccountCash  = parseFloat(account.cash);
+    const totalAccountCash   = parseFloat(account.cash);
     const totalAccountEquity = parseFloat(account.equity);
+
+    // ── P&L baseline ────────────────────────────────────────────────
+    // Read the stored initial equity per book; write it on first call.
+    // Using INSERT OR IGNORE so only the very first non-zero equity wins.
+    const stored = db().prepare(`SELECT value FROM settings WHERE key = 'initial_equity_per_book'`).get();
+    let initialEquityPerBook = stored ? parseFloat(stored.value) : 0;
+
+    if (initialEquityPerBook <= 0 && totalAccountEquity > 0) {
+      initialEquityPerBook = totalAccountEquity / 2;
+      db().prepare(`
+        UPDATE settings SET value = ?, updated_at = datetime('now')
+        WHERE key = 'initial_equity_per_book'
+      `).run(String(initialEquityPerBook));
+      console.log(`[api] Initial equity per book locked in: $${initialEquityPerBook.toFixed(2)}`);
+    }
 
     // Each book's live cash = half the real Alpaca cash balance
     const cashPerBook = totalAccountCash / 2;
@@ -81,9 +99,11 @@ router.get('/books', async (req, res) => {
       const myPositions = alpacaPositions.filter(p => myTickers.has(p.symbol));
       const investedValue = myPositions.reduce((sum, p) => sum + parseFloat(p.market_value || 0), 0);
 
-      // Live total value and P&L — grounded entirely in Alpaca numbers
-      const totalValue  = cashPerBook + investedValue;
-      const startingValue = totalAccountEquity / 2; // baseline = half of current equity (best available proxy)
+      // Live total value and P&L — grounded entirely in Alpaca numbers.
+      // startingValue is fixed at the account's equity on the day the server
+      // first successfully contacted Alpaca, halved per book.
+      const totalValue   = cashPerBook + investedValue;
+      const startingValue = initialEquityPerBook > 0 ? initialEquityPerBook : (totalAccountEquity / 2);
       const pnl    = totalValue - startingValue;
       const pnlPct = startingValue > 0 ? (pnl / startingValue) * 100 : 0;
 
