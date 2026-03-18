@@ -370,4 +370,16 @@ router.post('/agent/trigger', async (req, res) => {
   }
 });
 
+// POST /api/admin/export-scores — trigger a scores.json export immediately.
+// Waits for the result and returns a summary (useful for testing).
+router.post('/admin/export-scores', async (req, res) => {
+  try {
+    const { exportScores } = require('../services/export');
+    await exportScores();
+    res.json({ ok: true, message: 'Export complete — check server logs for details.' });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 module.exports = router;
