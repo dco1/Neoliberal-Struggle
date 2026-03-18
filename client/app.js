@@ -297,67 +297,86 @@ function renderLog(log) {
 // Book A reflects earnestly on its own ethics; Book B gives the numbers-first take.
 // Each writes a passive-aggressive-but-kind commentary on the other.
 
+function renderSummaryDay(s) {
+  return `
+    <div class="summary-day">
+      <div class="summary-date">${fmt.dateShort(s.date)}</div>
+      <div class="summary-perf">
+        <span class="summary-perf-item">Book A P&amp;L: <strong class="${s.book_a_pnl_pct >= 0 ? 'positive' : 'negative'}">${fmt.pct(s.book_a_pnl_pct)}</strong></span>
+        <span class="summary-perf-sep">·</span>
+        <span class="summary-perf-item">Book B P&amp;L: <strong class="${s.book_b_pnl_pct >= 0 ? 'positive' : 'negative'}">${fmt.pct(s.book_b_pnl_pct)}</strong></span>
+        ${s.book_a_woke_avg != null ? `<span class="summary-perf-sep">·</span><span class="summary-perf-item">Avg Woke A: <strong>${Math.round(s.book_a_woke_avg)}</strong></span>` : ''}
+        ${s.book_b_woke_avg != null ? `<span class="summary-perf-sep">·</span><span class="summary-perf-item">Avg Woke B: <strong>${Math.round(s.book_b_woke_avg)}</strong></span>` : ''}
+      </div>
+      <div class="summary-columns">
+        <div class="summary-col summary-col-a">
+          <div class="summary-col-header">
+            <span class="summary-book-tag">Book A</span>
+            <span class="summary-book-label">Index Universe — Ethics First</span>
+          </div>
+          <div class="summary-body">
+            <div class="summary-self">${s.book_a_summary}</div>
+            <div class="summary-commentary-header">On Book B…</div>
+            <div class="summary-commentary">${s.book_a_commentary_on_b}</div>
+          </div>
+        </div>
+        <div class="summary-col summary-col-b">
+          <div class="summary-col-header">
+            <span class="summary-book-tag">Book B</span>
+            <span class="summary-book-label">Screener Universe — Financials First</span>
+          </div>
+          <div class="summary-body">
+            <div class="summary-self">${s.book_b_summary}</div>
+            <div class="summary-commentary-header">On Book A…</div>
+            <div class="summary-commentary">${s.book_b_commentary_on_a}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+async function triggerRegenerate(btn) {
+  btn.disabled = true;
+  btn.textContent = '↺ Generating…';
+  try {
+    await apiPost('/admin/regenerate-summaries');
+    btn.textContent = '✓ Done';
+    setTimeout(() => refreshSummaries(), 1000);
+  } catch (e) {
+    btn.textContent = '✗ Failed';
+    console.error('Regenerate failed:', e.message);
+    setTimeout(() => { btn.disabled = false; btn.textContent = '↺ Generate Summaries'; }, 3000);
+  }
+}
+
 async function refreshSummaries() {
   try {
     const summaries = await apiFetch('/summaries');
     const container = document.getElementById('summaries-list');
 
-    const btn = document.getElementById('regenerate-summaries-btn');
     const today = new Date().toISOString().slice(0, 10);
     const hasTodaySummary = summaries.some(s => s.date === today);
+    const marketClosed = !window._marketOpen;
 
-    // Show the regenerate button only when market is closed and no summary exists for today
-    if (btn) {
-      const shouldShow = !window._marketOpen && !hasTodaySummary;
-      btn.hidden = !shouldShow;
-    }
-
-    if (!summaries.length) {
-      container.innerHTML = '<div class="summaries-empty">No summaries yet. Check back after market close.</div>';
+    if (!summaries.length || (!hasTodaySummary && marketClosed)) {
+      const showBtn = marketClosed && !hasTodaySummary;
+      container.innerHTML = `
+        <div class="summaries-empty">
+          No summaries yet for today.
+          ${showBtn ? '<button id="generate-summaries-btn" class="regenerate-btn">↺ Generate Summaries</button>' : 'Check back after market close.'}
+        </div>`;
+      if (showBtn) {
+        const genBtn = document.getElementById('generate-summaries-btn');
+        genBtn.addEventListener('click', () => triggerRegenerate(genBtn));
+      }
+      if (summaries.length) {
+        // Still render older summaries below
+        container.insertAdjacentHTML('beforeend', summaries.map(renderSummaryDay).join(''));
+      }
       return;
     }
 
-    container.innerHTML = summaries.map(s => `
-      <div class="summary-day">
-        <div class="summary-date">${fmt.dateShort(s.date)}</div>
-        <div class="summary-perf">
-          <span class="summary-perf-item">Book A P&amp;L: <strong class="${s.book_a_pnl_pct >= 0 ? 'positive' : 'negative'}">${fmt.pct(s.book_a_pnl_pct)}</strong></span>
-          <span class="summary-perf-sep">·</span>
-          <span class="summary-perf-item">Book B P&amp;L: <strong class="${s.book_b_pnl_pct >= 0 ? 'positive' : 'negative'}">${fmt.pct(s.book_b_pnl_pct)}</strong></span>
-          ${s.book_a_woke_avg != null ? `<span class="summary-perf-sep">·</span><span class="summary-perf-item">Avg Woke A: <strong>${Math.round(s.book_a_woke_avg)}</strong></span>` : ''}
-          ${s.book_b_woke_avg != null ? `<span class="summary-perf-sep">·</span><span class="summary-perf-item">Avg Woke B: <strong>${Math.round(s.book_b_woke_avg)}</strong></span>` : ''}
-        </div>
-        <div class="summary-columns">
-
-          <!-- Book A column -->
-          <div class="summary-col summary-col-a">
-            <div class="summary-col-header">
-              <span class="summary-book-tag">Book A</span>
-              <span class="summary-book-label">Index Universe — Ethics First</span>
-            </div>
-            <div class="summary-body">
-              <div class="summary-self">${s.book_a_summary}</div>
-              <div class="summary-commentary-header">On Book B…</div>
-              <div class="summary-commentary">${s.book_a_commentary_on_b}</div>
-            </div>
-          </div>
-
-          <!-- Book B column -->
-          <div class="summary-col summary-col-b">
-            <div class="summary-col-header">
-              <span class="summary-book-tag">Book B</span>
-              <span class="summary-book-label">Screener Universe — Financials First</span>
-            </div>
-            <div class="summary-body">
-              <div class="summary-self">${s.book_b_summary}</div>
-              <div class="summary-commentary-header">On Book A…</div>
-              <div class="summary-commentary">${s.book_b_commentary_on_a}</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    `).join('');
+    container.innerHTML = summaries.map(renderSummaryDay).join('');
   } catch (e) {
     console.warn('Summaries fetch failed:', e.message);
   }
@@ -674,25 +693,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initTrigger();
   initSettings();
-
-  // Regenerate summaries button — visible only when market is closed and no summary for today
-  const regenBtn = document.getElementById('regenerate-summaries-btn');
-  if (regenBtn) {
-    regenBtn.addEventListener('click', async () => {
-      regenBtn.disabled = true;
-      regenBtn.textContent = '↺ Generating…';
-      try {
-        await apiFetch('/admin/regenerate-summaries', { method: 'POST' });
-        regenBtn.textContent = '✓ Done';
-        setTimeout(() => refreshSummaries(), 1000);
-      } catch (e) {
-        regenBtn.textContent = '✗ Failed';
-        console.error('Regenerate failed:', e.message);
-      } finally {
-        setTimeout(() => { regenBtn.disabled = false; regenBtn.textContent = '↺ Regenerate'; }, 4000);
-      }
-    });
-  }
 
   // Initial full load
   refresh();
