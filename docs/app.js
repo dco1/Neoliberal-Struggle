@@ -117,9 +117,12 @@ function render() {
   for (const s of stocks) {
     rows.push(`
       <tr class="stock-row${expandedTicker === s.ticker ? ' expanded' : ''}" data-ticker="${s.ticker}">
-        <td class="ticker-cell">${s.ticker}</td>
-        <td class="company-cell" title="${s.company}">${s.company}</td>
-        <td><span class="sector-badge">${s.sector}</span></td>
+        <td class="ticker-cell">
+          <span class="ticker-sym">${s.ticker}</span>
+          <span class="ticker-mobile-sub">${s.company} <span class="sector-badge">${s.sector}</span></span>
+        </td>
+        <td class="company-cell hide-mobile" title="${s.company}">${s.company}</td>
+        <td class="hide-mobile"><span class="sector-badge">${s.sector}</span></td>
         <td class="score-cell">${scoreBar(s.woke, 'woke')}</td>
         <td class="score-cell">${scoreBar(s.financial, 'fin')}</td>
         <td><button class="expand-btn" data-ticker="${s.ticker}" title="Show details">${expandedTicker === s.ticker ? '▲' : '▼'}</button></td>

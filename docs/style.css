@@ -219,6 +219,30 @@ main {
   font-size: 13px;
   color: var(--accent);
   font-family: 'SF Mono', 'Fira Code', monospace;
+  white-space: nowrap;
+}
+
+.ticker-sym {
+  display: block;
+}
+
+/* Company + sector shown beneath the ticker on mobile, hidden on desktop */
+.ticker-mobile-sub {
+  display: none;
+  font-size: 11px;
+  font-weight: 400;
+  font-family: var(--font);
+  color: var(--text-dim);
+  margin-top: 3px;
+  white-space: normal;
+  line-height: 1.4;
+
+  & .sector-badge { margin-left: 4px; }
+}
+
+@media (max-width: 600px) {
+  .hide-mobile { display: none; }
+  .ticker-mobile-sub { display: block; }
 }
 
 .company-cell {
