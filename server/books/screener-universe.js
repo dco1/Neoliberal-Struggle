@@ -36,6 +36,8 @@ const SELL_COMPOSITE_THRESHOLD = 40;    // sell if composite drops below this
 const TOP_FINANCIAL_CANDIDATES = 30;    // evaluate top N financial performers on woke
 const MIN_FINANCIAL_SCORE_TO_BUY = 60; // must pass financial bar before woke scoring
 const SCORE_CONCURRENCY = 5;           // max parallel Claude API calls during scoring
+const ROTATION_MIN_IMPROVEMENT = 5;    // candidate must score this many points above the zombie to trigger a swap
+const ROTATION_CANDIDATES = 20;        // how many candidates to score during a rotation check
 
 async function runCycle(cycleCount) {
   const db = getDb();
@@ -63,12 +65,15 @@ async function runCycle(cycleCount) {
     heldMetrics = await market.getTickerMetrics(myTickers);
   }
 
+  // holdingEvals declared in outer scope so the rotation block can read it
+  let holdingEvals = [];
+
   if (myPositions.length > 0) {
     console.log(`[book:screener] Scoring ${myPositions.length} holdings in parallel (max ${SCORE_CONCURRENCY} concurrent).`);
     const limit = pLimit(SCORE_CONCURRENCY);
 
     // Fetch woke + financial scores concurrently per ticker, and across tickers (up to limit)
-    const holdingEvals = await Promise.all(myPositions.map(pos => limit(async () => {
+    holdingEvals = await Promise.all(myPositions.map(pos => limit(async () => {
       const ticker = pos.symbol;
       const metricData = heldMetrics.find(m => m.ticker === ticker);
       if (!metricData) {
@@ -119,17 +124,85 @@ async function runCycle(cycleCount) {
     }
   }
 
-  // 6. Re-fetch cash from Alpaca before buys — sells above may have freed up real capital
+  // 6. Build the candidate universe before rotation and buy passes
+  const currentHoldings = new Set(myTickers);
+  const universe = market.getSP500Tickers();
+  const universeTickers = universe.map(u => u.ticker).filter(t => !currentHoldings.has(t));
+
+  // 6b. Portfolio rotation — mirror of Book A's logic but financial-first.
+  //     Book B's zombie threshold uses composite score (financial-weighted).
+  //     Rotation only fires when cash is exhausted and a better candidate exists.
+  {
+    const { cash: cashBeforeRotation } = await getBookValue(BOOK_ID, await alpaca.getPositions());
+    const validEvals = holdingEvals.filter(e => e !== null);
+
+    if (cashBeforeRotation < 10 && validEvals.length > 0) {
+      const zombies = validEvals
+        .filter(e => e.composite < MIN_FINANCIAL_SCORE_TO_BUY) // below Book B's buy bar
+        .sort((a, b) => a.composite - b.composite);            // worst first
+
+      if (zombies.length > 0) {
+        const worstZombie = zombies[0];
+        const minRequired = worstZombie.composite + ROTATION_MIN_IMPROVEMENT;
+        console.log(`[book:screener] Rotation check: worst zombie is ${worstZombie.ticker} (composite ${worstZombie.composite.toFixed(1)}). Need candidate >= ${minRequired.toFixed(1)}.`);
+
+        // Score a fresh batch of candidates — financial-first (Book B's philosophy)
+        const rotMetrics = await market.getTickerMetrics(universeTickers.slice(0, 100));
+        const rotScreened = market.screenTickers(rotMetrics);
+        const rotRanked = market.rankByMomentum(rotScreened).slice(0, ROTATION_CANDIDATES);
+
+        const rotLimit = pLimit(SCORE_CONCURRENCY);
+        const rotScored = await Promise.all(rotRanked.map(c => rotLimit(async () => {
+          const financialScore = await scoring.getFinancialScore(c.ticker, c.metrics);
+          if (financialScore.score < MIN_FINANCIAL_SCORE_TO_BUY) return null;
+          const sp500Entry = universe.find(u => u.ticker === c.ticker);
+          const wokeScore = await scoring.getWokeScore(c.ticker, sp500Entry?.company);
+          const wokeCheck = guardrails.checkWokeFloor(wokeScore.score);
+          if (!wokeCheck.allowed) return null;
+          const composite = scoring.compositeScore(wokeScore.score, financialScore.score, wokeWeight, financialWeight);
+          return { ticker: c.ticker, composite, wokeScore: wokeScore.score, financialScore: financialScore.score, metrics: c.metrics };
+        })));
+
+        const bestCandidate = rotScored
+          .filter(c => c !== null && c.composite >= minRequired)
+          .sort((a, b) => b.composite - a.composite)[0];
+
+        if (bestCandidate) {
+          const reason = `Rotation: ${worstZombie.ticker} (composite ${worstZombie.composite.toFixed(1)}) underperforming — ` +
+            `replacing with ${bestCandidate.ticker} (composite ${bestCandidate.composite.toFixed(1)}).`;
+          console.log(`[book:screener] ROTATION: ${worstZombie.ticker} → ${bestCandidate.ticker} ` +
+            `(${worstZombie.composite.toFixed(1)} → ${bestCandidate.composite.toFixed(1)})`);
+          try {
+            const qty = parseFloat(worstZombie.pos.qty);
+            await alpaca.placeMarketOrder({ ticker: worstZombie.ticker, side: 'sell', qty });
+            recordTrade(db, BOOK_ID, worstZombie.ticker, 'sell', qty, parseFloat(worstZombie.pos.current_price), reason, {
+              composite: worstZombie.composite,
+              wokeScore: worstZombie.wokeScore.score,
+              financialScore: worstZombie.financialScore.score,
+            });
+            logDecision(BOOK_ID, cycleCount, 'sell', worstZombie.ticker, reason);
+            currentHoldings.delete(worstZombie.ticker);
+          } catch (e) {
+            console.error(`[book:screener] Rotation sell failed for ${worstZombie.ticker}:`, e.message);
+          }
+        } else {
+          console.log(`[book:screener] Rotation check: no candidate beats ${worstZombie.ticker} by ${ROTATION_MIN_IMPROVEMENT}+ points. Holding.`);
+          logDecision(BOOK_ID, cycleCount, 'hold', null,
+            `Rotation check: no materially better candidates. Worst holding ${worstZombie.ticker} stays (composite ${worstZombie.composite.toFixed(1)}).`
+          );
+        }
+      }
+    }
+  }
+
+  // 7. Re-fetch cash from Alpaca before buys — rotation sell above may have freed capital
   const { cash: freshCash } = await getBookValue(BOOK_ID, await alpaca.getPositions());
   if (freshCash < 10) {
     console.log(`[book:screener] Cash $${freshCash.toFixed(2)} < $10. Skipping buys.`);
     logDecision(BOOK_ID, cycleCount, 'skip', null, `Cash $${freshCash.toFixed(2)} below minimum. No buys.`);
   } else {
-    // 7. Screen the universe: financial criteria first, then apply woke filter
-    const currentHoldings = new Set(myTickers);
-    const universe = market.getSP500Tickers();
-    const universeTickers = universe.map(u => u.ticker).filter(t => !currentHoldings.has(t));
-
+    // 8. Screen the universe: financial criteria first, then apply woke filter
+    // (currentHoldings, universe, universeTickers already defined in step 6 above)
     console.log(`[book:screener] $${freshCash.toFixed(0)} available. Scanning ${universeTickers.length} candidates (financial-first).`);
 
     // Get metrics, screen for baseline quality, rank by financial momentum

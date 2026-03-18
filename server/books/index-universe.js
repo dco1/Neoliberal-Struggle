@@ -11,6 +11,7 @@
  *   4. Snapshot the portfolio
  *   5. Re-score current holdings in parallel; sell anything below thresholds or woke floor
  *   6. Scan S&P 500 universe for candidates
+ *   6b. Rotation: if cash-poor, sell worst zombie holding if a better candidate exists
  *   7. If cash >= $10, score candidates in parallel and buy the best ones
  *   8. Adjust woke/financial weights based on recent P&L trend
  *
@@ -32,6 +33,8 @@ const SELL_COMPOSITE_THRESHOLD = 45;  // sell if composite drops below this
 const BUY_COMPOSITE_THRESHOLD = 60;   // only buy if composite is above this
 const CANDIDATES_TO_SCORE = 50;       // score top N by momentum before picking
 const SCORE_CONCURRENCY = 5;          // max parallel Claude API calls during scoring
+const ROTATION_MIN_IMPROVEMENT = 5;   // candidate must score this many points above the zombie to trigger a swap
+const ROTATION_CANDIDATES = 20;       // how many candidates to score during a rotation check
 
 async function runCycle(cycleCount) {
   const db = getDb();
@@ -60,12 +63,15 @@ async function runCycle(cycleCount) {
     heldMetrics = await market.getTickerMetrics(myTickers);
   }
 
+  // holdingEvals declared in outer scope so the rotation block (step 6b) can read it
+  let holdingEvals = [];
+
   if (myPositions.length > 0) {
     console.log(`[book:index] Scoring ${myPositions.length} holdings in parallel (max ${SCORE_CONCURRENCY} concurrent).`);
     const limit = pLimit(SCORE_CONCURRENCY);
 
     // Score all held positions concurrently — woke + financial per ticker in parallel
-    const holdingEvals = await Promise.all(myPositions.map(pos => limit(async () => {
+    holdingEvals = await Promise.all(myPositions.map(pos => limit(async () => {
       const ticker = pos.symbol;
       const metricData = heldMetrics.find(m => m.ticker === ticker);
       if (!metricData) {
@@ -118,6 +124,86 @@ async function runCycle(cycleCount) {
   const currentHoldings = new Set(myTickers);
   const universe = market.getSP500Tickers();
   const universeTickers = universe.map(u => u.ticker).filter(t => !currentHoldings.has(t));
+
+  // 6b. Portfolio rotation — when fully deployed, swap the worst "zombie" holding
+  //     for a materially better candidate rather than sitting idle every cycle.
+  //
+  //     A "zombie" is a holding that scores below BUY_COMPOSITE_THRESHOLD — not bad
+  //     enough to auto-sell (above SELL_COMPOSITE_THRESHOLD) but not good enough to
+  //     buy fresh. When cash is exhausted these positions just sit there, dragging.
+  //
+  //     Rotation only fires when:
+  //       (a) cash is below the buy minimum ($10), AND
+  //       (b) at least one zombie holding exists, AND
+  //       (c) a candidate scores ROTATION_MIN_IMPROVEMENT+ points above the worst zombie.
+  //     Only one position is rotated per cycle to avoid excessive churn.
+  {
+    const { cash: cashBeforeRotation } = await getBookValue(BOOK_ID, await alpaca.getPositions());
+    const validEvals = holdingEvals.filter(e => e !== null);
+
+    if (cashBeforeRotation < 10 && validEvals.length > 0) {
+      // Zombies: above sell floor but below buy threshold — mediocre, not catastrophic
+      const zombies = validEvals
+        .filter(e => e.composite < BUY_COMPOSITE_THRESHOLD)
+        .sort((a, b) => a.composite - b.composite); // worst first
+
+      if (zombies.length > 0) {
+        const worstZombie = zombies[0];
+        const minRequired = worstZombie.composite + ROTATION_MIN_IMPROVEMENT;
+        console.log(`[book:index] Rotation check: worst zombie is ${worstZombie.ticker} (composite ${worstZombie.composite.toFixed(1)}). Need candidate >= ${minRequired.toFixed(1)}.`);
+
+        // Score a small batch of fresh candidates to look for something materially better
+        const rotMetrics = await market.getTickerMetrics(universeTickers.slice(0, 100));
+        const rotScreened = market.screenTickers(rotMetrics);
+        const rotRanked = market.rankByMomentum(rotScreened).slice(0, ROTATION_CANDIDATES);
+
+        const rotLimit = pLimit(SCORE_CONCURRENCY);
+        const rotScored = await Promise.all(rotRanked.map(c => rotLimit(async () => {
+          const sp500Entry = universe.find(u => u.ticker === c.ticker);
+          const [ws, fs] = await Promise.all([
+            scoring.getWokeScore(c.ticker, sp500Entry?.company),
+            scoring.getFinancialScore(c.ticker, c.metrics),
+          ]);
+          const composite = scoring.compositeScore(ws.score, fs.score, wokeWeight, financialWeight);
+          return { ticker: c.ticker, composite, wokeScore: ws.score, financialScore: fs.score, ws, metrics: c.metrics };
+        })));
+
+        // Find the best candidate that clearly beats the zombie and clears ethics
+        const bestCandidate = rotScored
+          .filter(c => {
+            const wokeCheck = guardrails.checkWokeFloor(c.wokeScore);
+            return wokeCheck.allowed && c.composite >= BUY_COMPOSITE_THRESHOLD && c.composite >= minRequired;
+          })
+          .sort((a, b) => b.composite - a.composite)[0];
+
+        if (bestCandidate) {
+          const reason = `Rotation: ${worstZombie.ticker} (composite ${worstZombie.composite.toFixed(1)}) is below buy threshold — ` +
+            `replacing with ${bestCandidate.ticker} (composite ${bestCandidate.composite.toFixed(1)}).`;
+          console.log(`[book:index] ROTATION: ${worstZombie.ticker} → ${bestCandidate.ticker} ` +
+            `(${worstZombie.composite.toFixed(1)} → ${bestCandidate.composite.toFixed(1)})`);
+          try {
+            const qty = parseFloat(worstZombie.pos.qty);
+            await alpaca.placeMarketOrder({ ticker: worstZombie.ticker, side: 'sell', qty });
+            recordTrade(db, BOOK_ID, worstZombie.ticker, 'sell', qty, parseFloat(worstZombie.pos.current_price), reason, {
+              composite: worstZombie.composite,
+              wokeScore: worstZombie.wokeScore.score,
+              financialScore: worstZombie.financialScore.score,
+            });
+            logDecision(BOOK_ID, cycleCount, 'sell', worstZombie.ticker, reason);
+            // Remove from currentHoldings so the buy pass can pick up the freed cash
+            currentHoldings.delete(worstZombie.ticker);
+          } catch (e) {
+            console.error(`[book:index] Rotation sell failed for ${worstZombie.ticker}:`, e.message);
+          }
+        } else {
+          console.log(`[book:index] Rotation check: no candidate beats ${worstZombie.ticker} by ${ROTATION_MIN_IMPROVEMENT}+ points. Holding.`);
+          logDecision(BOOK_ID, cycleCount, 'hold', null,
+            `Rotation check: no materially better candidates found. Worst holding ${worstZombie.ticker} stays (composite ${worstZombie.composite.toFixed(1)}).`
+          );
+        }
+      }
+    }
+  }
 
   // 7. Check cash before proceeding to buys.
   // Re-fetch from Alpaca since sells above may have freed up real capital.
