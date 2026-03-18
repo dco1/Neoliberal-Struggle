@@ -1,6 +1,6 @@
 {
-  "exported_at": "2026-03-18T18:55:15.284Z",
-  "ticker_count": 133,
+  "exported_at": "2026-03-18T20:15:26.945Z",
+  "ticker_count": 143,
   "scores": {
     "AAPL": {
       "ticker": "AAPL",
@@ -104,6 +104,40 @@
         "scored_at": "2026-03-18 18:50:51"
       }
     },
+    "ADM": {
+      "ticker": "ADM",
+      "company": "Archer Daniels Midland",
+      "sector": "Consumer Staples",
+      "woke": {
+        "score": 52,
+        "explanation": "ADM's $500M farmland investment signals environmental commitment, but the company operates a massive grain and commodity processing business with significant carbon footprint, limited disclosed science-based emissions targets, and a history of lobbying against environmental regulations. Labor practices are mixed: the company operates unionized facilities with reasonable wages but has faced OSHA violations and contractor concerns. Governance is mediocre with moderate board diversity but standard entrenchment practices. Harm avoidance is relatively strong since food production is not inherently extractive, though commodity agriculture carries environmental and labor externalities. The critical weakness is political: ADM is a heavyweight agricultural lobbyist (spending ~$9M annually) with extensive efforts to block climate and agricultural regulations, and has historically opposed stricter environmental oversight of commodity agriculture.",
+        "breakdown": {
+          "environmental": 48,
+          "labor": 55,
+          "diversity_governance": 52,
+          "harm_avoidance": 68,
+          "political": 40
+        },
+        "scored_at": "2026-03-18 19:45:06"
+      },
+      "financial": {
+        "score": 38,
+        "explanation": "ADM shows weak technical setup with a -1.55% daily decline, trading 0.85% below VWAP and near the day's low, indicating intraday selling pressure. Analyst sentiment is divided and cautious—JP Morgan maintains Underweight with a $61 target (14% downside from current price), while Barclays' Equal-Weight stance suggests limited upside, compounded by revenue headwinds from trade turmoil. The positive $500M farmland trust investment provides some ESG appeal but insufficient to offset deteriorating momentum and bearish forward guidance.",
+        "metrics": {
+          "price": 70.995,
+          "open": 71.95,
+          "high": 72.09,
+          "low": 70.975,
+          "close": 70.995,
+          "vwap": 71.603162,
+          "volume": 105015,
+          "daily_change_pct": -1.5530749497330518,
+          "price_vs_vwap_pct": -0.8493507591187006,
+          "high_low_range_pct": 1.5709756956675016
+        },
+        "scored_at": "2026-03-18 19:45:05"
+      }
+    },
     "AES": {
       "ticker": "AES",
       "company": "AES Corporation",
@@ -121,21 +155,21 @@
         "scored_at": "2026-03-18 14:00:08"
       },
       "financial": {
-        "score": 38,
-        "explanation": "AES shows weak technical signals with flat daily momentum (0% change), minimal volume (606k shares), and price tightly clustered near open with only 0.21% intraday range—indicating low conviction and thin participation. The stock appears to be consolidating without clear directional bias, and recent analyst coverage mentions downgrades alongside a positive operational announcement, suggesting mixed sentiment that fails to generate sustained buying pressure. Without evidence of accumulation, positive momentum acceleration, or support from elevated volume, the risk/reward does not favor entry at this level.",
+        "score": 28,
+        "explanation": "AES shows weak short-term technicals with a near-flat, slightly negative daily return (-0.035%), minimal intraday range (0.21%), and trading slightly below VWAP, indicating absent bullish momentum. Volume of 681k provides no clarity on directional conviction. While the Haven Safety AI deployment announcement suggests operational progress, recent analyst downgrades and inclusion among large-cap losers signal deteriorating sentiment, positioning this as a hold-or-reduce rather than a buy opportunity for short-to-medium term traders.",
         "metrics": {
-          "price": 14.205,
+          "price": 14.2,
           "open": 14.19,
           "high": 14.22,
           "low": 14.19,
           "close": 14.205,
-          "vwap": 14.205285,
-          "volume": 605847,
-          "daily_change_pct": 0,
-          "price_vs_vwap_pct": -0.002006295544227861,
+          "vwap": 14.205067,
+          "volume": 681289,
+          "daily_change_pct": -0.03519887363604915,
+          "price_vs_vwap_pct": -0.03567037029815049,
           "high_low_range_pct": 0.21141649048626596
         },
-        "scored_at": "2026-03-18 18:40:14"
+        "scored_at": "2026-03-18 19:30:33"
       }
     },
     "AKAM": {
@@ -155,21 +189,21 @@
         "scored_at": "2026-03-18 18:08:34"
       },
       "financial": {
-        "score": 76,
-        "explanation": "AKAM exhibits strong short-term momentum with a +6.46% single-day gain on elevated volume (136.77K shares) and price closing near the session high, indicating institutional accumulation. The stock is trading above VWAP (+2.13%) and has broken decisively into the upper range, supported by multiple high-conviction catalysts (major GPU infrastructure deals with NVIDIA and a $200M enterprise contract) that validate near-term strength. However, the lack of longer-term trend confirmation metrics (20d/50d moving averages unavailable) and the extended move from the session low (7.2% intraday range) warrant moderate caution on overextension risk.",
+        "score": 72,
+        "explanation": "AKAM shows solid intraday momentum with a +3.23% daily gain and a wide high-low range (7.2%), indicating strong institutional interest. The stock is trading slightly below VWAP (-1.05%) after rallying from open, suggesting controlled buying without excess. News catalysts around NVIDIA Blackwell GPU partnerships and a $200M service contract provide fundamental tailwinds for a growth narrative in AI infrastructure, supporting near-term technicals and positioning AKAM as a credible short-to-medium term trade.",
         "metrics": {
-          "price": 112.715,
+          "price": 109.3,
           "open": 105.19,
           "high": 112.78,
           "low": 105.19,
-          "close": 112.715,
-          "vwap": 110.365769,
-          "volume": 136770,
-          "daily_change_pct": 6.460448642266828,
-          "price_vs_vwap_pct": 2.128586627253966,
+          "close": 109.29,
+          "vwap": 110.45615,
+          "volume": 172722,
+          "daily_change_pct": 3.2349468713105045,
+          "price_vs_vwap_pct": -1.0467049593888587,
           "high_low_range_pct": 7.215514782774031
         },
-        "scored_at": "2026-03-18 18:40:03"
+        "scored_at": "2026-03-18 19:45:14"
       }
     },
     "AMAT": {
@@ -190,20 +224,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "AMAT shows solid short-term momentum with a +0.97% daily gain and price trading above VWAP, supported by recent positive catalysts including a dividend raise, strategic SK hynix collaboration, and participation in the AI memory chip buildout. However, the lack of broader multi-day momentum data and absence of volume context limit conviction; the near-term setup is attractive but not exceptional, warranting a strong-buy-leaning hold rather than a high-conviction accumulation signal.",
+        "explanation": "AMAT displays solid near-term momentum with a +0.22% daily gain and trades near session highs, supported by strategic dividend increases and forward-looking AI/memory partnerships with SK hynix. However, the stock trades 0.53% below VWAP with modest intraday volume (157k shares) and lacks extreme acceleration, suggesting consolidation rather than explosive breakout; the positive news backdrop and secular AI tailwinds support a hold-to-buy thesis, but entry confirmation on higher volume would strengthen conviction.",
         "metrics": {
-          "price": 355.975,
+          "price": 353.335,
           "open": 353.25,
           "high": 357.775,
           "low": 350.795,
-          "close": 355.975,
-          "vwap": 355.282042,
-          "volume": 144138,
-          "daily_change_pct": 0.9686294531427333,
-          "price_vs_vwap_pct": 0.19504447680472203,
+          "close": 353.335,
+          "vwap": 355.230238,
+          "volume": 157995,
+          "daily_change_pct": 0.2198207397322377,
+          "price_vs_vwap_pct": -0.5335238381367766,
           "high_low_range_pct": 1.9897661027095486
         },
-        "scored_at": "2026-03-18 18:40:02"
+        "scored_at": "2026-03-18 19:15:04"
       }
     },
     "AMCR": {
@@ -257,21 +291,21 @@
         "scored_at": "2026-03-18 14:15:14"
       },
       "financial": {
-        "score": 72,
-        "explanation": "AMD shows solid near-term bullish momentum with a +1.99% daily gain, price trading above VWAP, and positive whale activity in the IT sector. Strategic partnerships (Samsung AI memory collaboration, Celestica AI platform deal) provide positive fundamental tailwinds, though RBC's $230 price target (14.9% upside) suggests modest but not exceptional valuation upside from current levels. The stock is in the upper portion of today's range and holding above intraday support, supporting a strong-buy-leaning hold.",
+        "score": 62,
+        "explanation": "AMD shows mixed near-term signals. Positive intraday momentum (+1.61% daily gain) and strong strategic news around AI partnerships (Samsung collaboration, Celestica deal) provide bullish context. However, the stock is trading slightly below VWAP (-0.15%), lacks sufficient historical data to assess multi-day trend strength (20d/50d SMA unavailable), and RBC's maintained $230 price target suggests modest upside. Volume metrics and positioning relative to 52-week ranges are unknown. The score reflects cautious optimism driven by AI narrative strength, but insufficient confirming technical momentum for a stronger rating.",
         "metrics": {
-          "price": 200.19,
+          "price": 199.46,
           "open": 196,
           "high": 202.86,
           "low": 195.91,
-          "close": 200.325,
-          "vwap": 199.747059,
-          "volume": 488889,
-          "daily_change_pct": 1.9868561821794313,
-          "price_vs_vwap_pct": 0.22175094953462643,
+          "close": 199.46,
+          "vwap": 199.752084,
+          "volume": 517306,
+          "daily_change_pct": 1.6149574608996975,
+          "price_vs_vwap_pct": -0.14622325542295142,
           "high_low_range_pct": 3.5475473431677904
         },
-        "scored_at": "2026-03-18 18:50:12"
+        "scored_at": "2026-03-18 19:30:04"
       }
     },
     "AMZN": {
@@ -291,21 +325,21 @@
         "scored_at": "2026-03-18 13:30:21"
       },
       "financial": {
-        "score": 45,
-        "explanation": "AMZN shows mixed technical signals with a concerning down day (-2.15%) and price below VWAP, indicating intraday weakness. The stock is trading in the lower portion of its daily range and lacks clear momentum confirmation. While whale activity in consumer discretionary and the USPS bid news provide operational context, they don't offset the immediate bearish technicals—the combination of negative daily return, below-VWAP pricing, and lack of volume confirmation on the down move suggests neutral-to-weak positioning for short-term entry.",
+        "score": 35,
+        "explanation": "AMZN is showing weakness across multiple metrics. The stock is down 2.64% intraday, trading below VWAP, and positioned in the lower portion of its daily range—all bearish signals. The USPS contract uncertainty represents a material operational risk for Amazon's logistics cost structure, and the lack of recent momentum data (52-week positioning unknown from this snapshot) combined with institutional distribution pressure (elevated volume on a down day) suggests near-term downside risk outweighs opportunity. Position is not attractive for short-to-medium term accumulation.",
         "metrics": {
-          "price": 210.72,
+          "price": 209.67,
           "open": 213.9,
           "high": 215.04,
-          "low": 210.485,
-          "close": 210.73,
-          "vwap": 211.957885,
-          "volume": 1102186,
-          "daily_change_pct": -2.1477164549908285,
-          "price_vs_vwap_pct": -0.5840240385489813,
-          "high_low_range_pct": 2.1640496947525847
+          "low": 209.31,
+          "close": 209.72,
+          "vwap": 211.587078,
+          "volume": 1335040,
+          "daily_change_pct": -2.6353061366644273,
+          "price_vs_vwap_pct": -0.9060468238991436,
+          "high_low_range_pct": 2.7375662892360566
         },
-        "scored_at": "2026-03-18 18:50:26"
+        "scored_at": "2026-03-18 19:30:19"
       }
     },
     "ANET": {
@@ -326,20 +360,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "ANET shows strong near-term momentum with a +2.86% daily gain and price holding firmly above VWAP (+0.68%), indicating institutional buying interest. The recent TD Cowen Buy rating with $170 price target, coupled with positive product announcements (XPO multi-source agreement, AI backbone tailwinds), provides fundamental support for continued upside. However, the stock is trading near its intraday high with limited room to breathe before potential profit-taking, and the lack of longer-period return data and volatility metrics limits conviction to a solid but not exceptional buy signal.",
+        "explanation": "ANET demonstrates solid short-term momentum with a +2.7% daily gain and price holding above VWAP, supported by recent analyst initiation (TD Cowen Buy, $170 PT implying ~24% upside) and strong product announcements in high-demand liquid-cooled optics. However, the lack of longer-term return data and absence of volume ratio metrics prevents a higher score; the stock appears fairly valued at current levels with positive near-term catalysts but limited evidence of institutional accumulation or oversold conditions that would suggest exceptional entry timing.",
         "metrics": {
-          "price": 136.87,
+          "price": 136.65,
           "open": 134.37,
-          "high": 137.34,
+          "high": 137.56,
           "low": 133.56,
-          "close": 136.87,
-          "vwap": 135.947452,
-          "volume": 164902,
-          "daily_change_pct": 2.863369908312041,
-          "price_vs_vwap_pct": 0.6786063191533785,
-          "high_low_range_pct": 2.8301886792452837
+          "close": 136.65,
+          "vwap": 136.034744,
+          "volume": 185382,
+          "daily_change_pct": 2.6980309634751265,
+          "price_vs_vwap_pct": 0.4522785737737828,
+          "high_low_range_pct": 2.9949086552860136
         },
-        "scored_at": "2026-03-18 18:40:03"
+        "scored_at": "2026-03-18 19:15:04"
       }
     },
     "APA": {
@@ -360,20 +394,20 @@
       },
       "financial": {
         "score": 28,
-        "explanation": "APA shows intraday strength (+1.5% daily return, trading above VWAP) but faces severe headwinds from analyst consensus. Three major banks (Mizuho, Barclays, Goldman Sachs) maintain sell/underperform ratings with price targets around $28–$29, implying 18–23% downside from current $36.41 level. Only Piper Sandler's neutral stance with $37 target provides marginal support. The single day's positive momentum is insufficient to offset the weight of institutional bearish sentiment and limited upside catalysts.",
+        "explanation": "APA shows intraday strength (+1.91% daily with above-VWAP trading), but this is heavily offset by a deeply negative analyst consensus: four major houses (Mizuho, Barclays, Goldman Sachs) maintain sell/underperform ratings with price targets $29–$28, well below the current $36.55 price. The single neutral-to-bullish call (Piper Sandler at $37) is outnumbered and insufficient to counter the downside pressure implied by consensus. Without supporting momentum data (52-week positioning, volume profile, technical structure) and faced with structural analyst skepticism, this is a clear avoid for short-to-medium term trading.",
         "metrics": {
-          "price": 36.41,
+          "price": 36.555,
           "open": 35.89,
-          "high": 36.44,
+          "high": 36.575,
           "low": 35.89,
-          "close": 36.405,
-          "vwap": 36.210962,
-          "volume": 253572,
-          "daily_change_pct": 1.5054362977418432,
-          "price_vs_vwap_pct": 0.5496622818250299,
-          "high_low_range_pct": 1.5324602953468853
+          "close": 36.53,
+          "vwap": 36.238964,
+          "volume": 288792,
+          "daily_change_pct": 1.9096738221354956,
+          "price_vs_vwap_pct": 0.8720889482381363,
+          "high_low_range_pct": 1.9086096405684099
         },
-        "scored_at": "2026-03-18 18:40:11"
+        "scored_at": "2026-03-18 19:15:13"
       }
     },
     "APO": {
@@ -394,20 +428,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "APO shows moderate intraday strength with a +2.36% daily gain and tight positioning near VWAP, supported by strong institutional news flow around its private credit platform expansion with NYSE/ICE. However, the stock faces headwinds from sector-wide private credit concerns (Morgan Stanley warning of significant shakeout), and current metrics lack conviction—price is just 0.22% below VWAP with no exceptional volume surge, and broader market conditions (S&P 500 correction signals, triple witching volatility) create near-term uncertainty. Position warrants a hold pending confirmation of momentum above 112.50 resistance.",
+        "explanation": "APO shows solid intraday momentum with a +2.68% daily gain and price trading above VWAP, indicating near-term buying strength. However, the broader context presents mixed signals: while the stock is benefiting from sector partnerships (NYSE/ICE collaboration on private credit platforms), the news flow highlights significant headwinds including warnings of a major private credit correction and broader market volatility concerns. The stock's narrow daily range (3.9%) and lack of volume data context leave conviction limited, warranting a hold-friendly neutral-to-positive score rather than a strong buy.",
         "metrics": {
-          "price": 111.495,
+          "price": 111.84,
           "open": 108.44,
           "high": 112.52,
           "low": 108.3,
-          "close": 111.54,
-          "vwap": 111.744003,
-          "volume": 600594,
-          "daily_change_pct": 2.359421620381003,
-          "price_vs_vwap_pct": -0.22283343473922432,
+          "close": 111.79,
+          "vwap": 111.728459,
+          "volume": 658507,
+          "daily_change_pct": 2.676153316502186,
+          "price_vs_vwap_pct": 0.09983221911259203,
           "high_low_range_pct": 3.896583564173591
         },
-        "scored_at": "2026-03-18 18:40:08"
+        "scored_at": "2026-03-18 19:15:13"
       }
     },
     "ARE": {
@@ -461,21 +495,21 @@
         "scored_at": "2026-03-18 13:31:01"
       },
       "financial": {
-        "score": 35,
-        "explanation": "ARES shows intraday strength (+2.31% on above-average volume, trading above VWAP), but this is severely undermined by sector headwinds and macro deterioration. Private credit concerns are dominating headlines with predictions of significant industry shakeouts, stagflation fears are rising, and the news flow is uniformly bearish for alternative asset managers. The single day's bounce lacks conviction given the relentless negative catalyst backdrop; without confirmed reversal signals or fundamental stabilization, holding is unjustified.",
+        "score": 32,
+        "explanation": "ARES is facing significant headwinds from sector-specific concerns around private credit market stress and potential defaults, as evidenced by recent news indicating investor exits and industry warnings. While today's session shows a modest +0.85% intraday gain with the stock trading slightly below VWAP (-0.96%), the broader technical picture is weak: the stock is in the lower half of its intraday range (5.34% span) and positioned well below the 52-week high of 110.34, suggesting limited conviction among buyers. The combination of deteriorating credit market sentiment, macroeconomic uncertainty (GDP revisions, sticky inflation), and absence of confirming bullish volume data makes this a sell-leaning setup despite minor intraday strength.",
         "metrics": {
-          "price": 108.115,
+          "price": 106.565,
           "open": 104.75,
           "high": 110.34,
           "low": 104.75,
-          "close": 108.115,
-          "vwap": 107.703072,
-          "volume": 178185,
-          "daily_change_pct": 2.313807135421589,
-          "price_vs_vwap_pct": 0.38246634227850895,
+          "close": 106.565,
+          "vwap": 107.596913,
+          "volume": 201383,
+          "daily_change_pct": 0.846976436074568,
+          "price_vs_vwap_pct": -0.9590544665533323,
           "high_low_range_pct": 5.3365155131264945
         },
-        "scored_at": "2026-03-18 18:40:08"
+        "scored_at": "2026-03-18 19:15:16"
       }
     },
     "AVGO": {
@@ -495,21 +529,21 @@
         "scored_at": "2026-03-18 14:15:50"
       },
       "financial": {
-        "score": 62,
-        "explanation": "AVGO shows mild short-term weakness with a -0.67% daily decline and price trading slightly below VWAP, suggesting modest selling pressure in today's session. However, the broader narrative remains constructive — analysts continue to favor Broadcom as an AI infrastructure play into 2027, and whale/institutional activity signals continued large-money interest. The intraday range of ~2.6% reflects normal volatility without panic selling, making this a reasonable hold or moderate buy on dips rather than an urgent entry.",
+        "score": 42,
+        "explanation": "AVGO shows mixed-to-weakening momentum with a -1.52% daily decline and price trading 0.98% below VWAP, signaling intraday weakness despite whale activity noted in tech stocks. While analyst sentiment remains constructive (paired favorably with Micron into 2027) and the stock trades within a tight daily range, the negative close, below-VWAP positioning, and lack of volume confirmation on the move down suggest near-term momentum has stalled. Position deteriorates unless price recaptures VWAP and demonstrates renewed institutional accumulation.",
         "metrics": {
-          "price": 319.11,
+          "price": 316.39,
           "open": 320.44,
           "high": 325.38,
-          "low": 317.07,
-          "close": 319.2,
-          "vwap": 320.211864,
-          "volume": 415234,
-          "daily_change_pct": -0.6723316836305812,
-          "price_vs_vwap_pct": -0.34410467689603713,
-          "high_low_range_pct": 2.6208723625697803
+          "low": 315.575,
+          "close": 316.39,
+          "vwap": 319.511987,
+          "volume": 537174,
+          "daily_change_pct": -1.5189715815357785,
+          "price_vs_vwap_pct": -0.9771110715792927,
+          "high_low_range_pct": 3.1070268557395253
         },
-        "scored_at": "2026-03-18 18:08:49"
+        "scored_at": "2026-03-18 19:45:04"
       }
     },
     "BAC": {
@@ -529,21 +563,21 @@
         "scored_at": "2026-03-18 13:30:23"
       },
       "financial": {
-        "score": 35,
-        "explanation": "BAC shows weak momentum with a -0.86% daily decline and trading 0.81% below VWAP, indicating selling pressure and failed support at current levels. While the stock is not at crisis levels, the negative news flow (Epstein settlement overhang), deteriorating credit metrics (charge-off and delinquency rates rising), and absence of any confirming bullish technical signals (no volume surge, price in lower portion of daily range) suggest downside risk outweighs near-term upside. Consider reducing exposure or waiting for clearer reversal confirmation.",
+        "score": 42,
+        "explanation": "BAC shows weakness with a -0.72% daily decline, trading 0.57% below VWAP and below the day's open, indicating intraday selling pressure. While the Epstein settlement news and elevated credit card charge-off rates (2.24%) present near-term headwinds, the stock's inclusion in CNBC's Final Trades and bullish analyst mentions suggest some institutional interest. Without momentum tailwinds, moving average context, or volume confirmation, BAC lacks the technical setup for a compelling short-to-medium term trade at this price level.",
         "metrics": {
-          "price": 46.885,
+          "price": 46.95,
           "open": 47.24,
           "high": 47.88,
-          "low": 46.825,
-          "close": 46.9,
-          "vwap": 47.269613,
-          "volume": 1475208,
-          "daily_change_pct": -0.8564178473250182,
-          "price_vs_vwap_pct": -0.8136580259288385,
-          "high_low_range_pct": 2.253069941270688
+          "low": 46.725,
+          "close": 46.94,
+          "vwap": 47.221502,
+          "volume": 1685885,
+          "daily_change_pct": -0.7189680693592648,
+          "price_vs_vwap_pct": -0.5749541808305846,
+          "high_low_range_pct": 2.471910112359553
         },
-        "scored_at": "2026-03-18 18:40:08"
+        "scored_at": "2026-03-18 19:15:13"
       }
     },
     "BAX": {
@@ -580,6 +614,40 @@
         "scored_at": "2026-03-18 13:30:45"
       }
     },
+    "BF.B": {
+      "ticker": "BF.B",
+      "company": "Brown–Forman",
+      "sector": "Consumer Staples",
+      "woke": {
+        "score": 42,
+        "explanation": "Brown-Forman is fundamentally constrained by its core business: alcohol production and marketing. The company scores low on harm avoidance because alcoholic beverage manufacturing, while legal, is a product category associated with documented public health harms including addiction, liver disease, and drunk driving. The company's diversity and governance score is depressed by a dual-class share structure (Class A and Class B stock) that entrenches founder-family control with unequal voting rights, limiting accountability. Environmental performance is middling—the company has made some sustainability commitments but operates in a water-intensive industry with moderate carbon footprint concerns. Labor practices appear unremarkable relative to industry peers, with no major documented violations but limited evidence of above-market wages or exceptional worker protections. Political spending is moderate but the company's aggressive trademark defense (Jack Daniel's vs. dog toy case) suggests active legal posturing rather than transparency.",
+        "breakdown": {
+          "environmental": 45,
+          "labor": 55,
+          "diversity_governance": 40,
+          "harm_avoidance": 25,
+          "political": 48
+        },
+        "scored_at": "2026-03-18 19:45:05"
+      },
+      "financial": {
+        "score": 32,
+        "explanation": "BF.B shows weak short-term momentum with a -0.84% daily decline and limited intraday range (2.06%), indicating low conviction selling without panic liquidation. Recent Q1 earnings miss on both EPS ($0.48 vs $0.53) and revenue ($1.04B vs $1.05B) undermine near-term sentiment, though the $400M buyback authorization and Q4 beat provide some support. The stock is trading nearly at VWAP with no clear directional setup, and the combination of negative momentum, earnings disappointment, and lack of technical catalyst makes this unattractive for short-to-medium term positioning.",
+        "metrics": {
+          "price": 22.935,
+          "open": 22.88,
+          "high": 23.075,
+          "low": 22.61,
+          "close": 22.92,
+          "vwap": 22.902129,
+          "volume": 116206,
+          "daily_change_pct": -0.8430609597924786,
+          "price_vs_vwap_pct": 0.14352814098636898,
+          "high_low_range_pct": 2.0566121185316226
+        },
+        "scored_at": "2026-03-18 19:30:43"
+      }
+    },
     "BKR": {
       "ticker": "BKR",
       "company": "Baker Hughes",
@@ -598,20 +666,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "BKR shows solid near-term momentum with a +0.85% daily gain and positive intraday structure (trading near session high at 57.49 vs. open 57.08). The stock is trading slightly below VWAP, indicating mild resistance, but the recent mega-contract wins from Petrobras and Shell partnerships provide strong fundamental catalysts for a services-focused energy company. Volume remains moderate; the lack of an exceptional spike limits upside conviction, but the combination of 2.4% intraday range stability, positive price action, and high-value contract news supports a buy-leaning score in the 70–89 range.",
+        "explanation": "BKR demonstrates solid short-term momentum with a +0.78% daily gain and holds price above VWAP, supported by a tight intraday range and recent institutional news flow including major Petrobras and Shell contract wins that signal strong order momentum in energy services. However, price sits slightly below the intraday high with moderate volume (301k) and the lack of 52-week relative position context or moving average data limits conviction; the recent equity and debt issuance for Chart Industries acquisition introduces near-term execution risk that may pressurize upside, warranting a cautious buy rather than strong conviction score.",
         "metrics": {
-          "price": 57.49,
+          "price": 57.45,
           "open": 57.08,
           "high": 58.265,
           "low": 56.895,
-          "close": 57.51,
-          "vwap": 57.656206,
-          "volume": 276527,
-          "daily_change_pct": 0.850802561178843,
-          "price_vs_vwap_pct": -0.2882707890977,
+          "close": 57.45,
+          "vwap": 57.636797,
+          "volume": 301616,
+          "daily_change_pct": 0.780633277782651,
+          "price_vs_vwap_pct": -0.32409330449087675,
           "high_low_range_pct": 2.4079444590913037
         },
-        "scored_at": "2026-03-18 18:40:13"
+        "scored_at": "2026-03-18 19:15:16"
       }
     },
     "BMY": {
@@ -632,20 +700,54 @@
       },
       "financial": {
         "score": 52,
-        "explanation": "BMY shows mixed technical signals with a modest negative daily return (-1.11%) and price trading slightly below VWAP, suggesting mild selling pressure. However, recent FDA approvals (Sotyktu for psoriatic arthritis) and positive late-stage trial data provide fundamental support, while HSBC's raised price target to $60 (just above current price) indicates limited near-term upside catalyst. The stock appears fairly valued at current levels with neutral momentum — suitable for hold but lacking the conviction needed for a strong buy in the short-to-medium term.",
+        "explanation": "BMY shows mixed technical signals with a modest negative daily return (-0.81%) despite positive fundamental catalysts (FDA approvals, favorable trial results). The stock is trading just below VWAP and within a tight intraday range, indicating consolidation rather than conviction. HSBC's maintained Hold rating with a $60 price target suggests modest upside, but the lack of strong volume accumulation and neutral technical structure leave this in hold territory—not sufficiently attractive for a short-to-medium term trade despite the positive news flow.",
         "metrics": {
-          "price": 59.065,
+          "price": 59.245,
           "open": 59.42,
           "high": 59.67,
           "low": 58.85,
-          "close": 59.07,
-          "vwap": 59.274757,
-          "volume": 497812,
-          "daily_change_pct": -1.1133433785367475,
-          "price_vs_vwap_pct": -0.35387239124405573,
+          "close": 59.225,
+          "vwap": 59.252175,
+          "volume": 616342,
+          "daily_change_pct": -0.811987276075673,
+          "price_vs_vwap_pct": -0.012109260124212665,
           "high_low_range_pct": 1.3933729821580294
         },
-        "scored_at": "2026-03-18 18:40:18"
+        "scored_at": "2026-03-18 19:30:42"
+      }
+    },
+    "BRO": {
+      "ticker": "BRO",
+      "company": "Brown & Brown",
+      "sector": "Financials",
+      "woke": {
+        "score": 72,
+        "explanation": "Brown & Brown is an insurance brokerage and services firm with a relatively clean profile but material concerns. Environmental score reflects the company's low direct operational footprint as a service business, though no documented net-zero commitments or substantial sustainability reporting. Labor concerns include industry-standard wage practices and contractor-heavy staffing models typical of brokerage firms, with limited transparency on union relations or OSHA records. Diversity & governance shows adequate board composition for a mid-cap firm but lacks standout independence or accountability mechanisms. Harm avoidance scores well because insurance brokerage itself is a legitimate financial service without inherent harm, though the company has had minor regulatory compliance issues. Political score is depressed by documented lobbying spending in the financial services sector, particularly on regulatory matters affecting broker-dealer oversight, and standard PAC activity common among insurance/financial services firms. No major fraud, environmental violations, or labor scandals on recent record, but also no leadership in ESG practices.",
+        "breakdown": {
+          "environmental": 75,
+          "labor": 70,
+          "diversity_governance": 72,
+          "harm_avoidance": 75,
+          "political": 65
+        },
+        "scored_at": "2026-03-18 19:45:08"
+      },
+      "financial": {
+        "score": 62,
+        "explanation": "BRO shows mixed technicals with a modest -1.57% daily decline but holds near VWAP (0.01% variance), suggesting institutional interest and price stability around fair value. Analyst sentiment is improving (Mizuho upgrade to Outperform with $85 target, bullish turn noted), though price targets remain modestly above current levels ($76–$85 range), indicating limited near-term upside catalyst. Volume is subdued relative to intraday range, and the stock lacks strong momentum confirmation; this is a hold-worthy position for patient traders but lacks the conviction signals needed for an aggressive short-to-medium term buy.",
+        "metrics": {
+          "price": 67.26,
+          "open": 67.96,
+          "high": 68,
+          "low": 66.495,
+          "close": 67.205,
+          "vwap": 67.25219,
+          "volume": 116219,
+          "daily_change_pct": -1.5731323626252853,
+          "price_vs_vwap_pct": 0.01161300472149132,
+          "high_low_range_pct": 2.263328069779676
+        },
+        "scored_at": "2026-03-18 19:45:10"
       }
     },
     "BSX": {
@@ -666,20 +768,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "BSX shows modest intraday strength with a +0.42% daily gain and price trading 0.57% above VWAP, indicating slight buying pressure. Multiple analyst maintains with Buy ratings (Truist, UBS, Citigroup) suggest fundamental confidence, though recent price target reductions signal some caution. However, the limited daily movement, lack of volume surge data, and absence of multi-day momentum metrics prevent a stronger conviction; this is a hold-worthy position with balanced risk/reward rather than a compelling short-term entry.",
+        "explanation": "BSX shows modest positive momentum with a +0.50% daily gain and price trading 0.61% above VWAP, indicating modest intraday strength. However, the lack of historical context (52-week positioning, volume ratio analysis, moving average alignment) and absence of accelerating multi-day returns limit conviction. Multiple analyst maintains with reduced price targets ($92–$105 range vs. current $71.59) suggest analyst consolidation rather than fresh momentum, and whale activity noted warrants monitoring but requires volume confirmation. This is a hold-worthy stock with analyst support but lacks the catalyst or technical setup for a strong buy signal.",
         "metrics": {
-          "price": 71.53,
+          "price": 71.585,
           "open": 70.81,
           "high": 71.92,
           "low": 70.26,
-          "close": 71.53,
-          "vwap": 71.128061,
-          "volume": 343661,
-          "daily_change_pct": 0.4211708549768316,
-          "price_vs_vwap_pct": 0.5650920246511412,
+          "close": 71.585,
+          "vwap": 71.152701,
+          "volume": 367786,
+          "daily_change_pct": 0.49838551172257445,
+          "price_vs_vwap_pct": 0.6075651295373882,
           "high_low_range_pct": 2.362653003131222
         },
-        "scored_at": "2026-03-18 18:40:02"
+        "scored_at": "2026-03-18 19:15:04"
       }
     },
     "BX": {
@@ -699,21 +801,21 @@
         "scored_at": "2026-03-18 13:30:30"
       },
       "financial": {
-        "score": 72,
-        "explanation": "BX demonstrates strong intraday momentum with a +2.21% gain and price trading near the high (114.49 vs. 115.91 high), indicating sustained buying pressure. Volume of 325,695 shares warrants validation against historical averages, but the price holding at VWAP and recent positive news around Blackstone's $1.3B pharma financing deal support institutional interest. However, near-term macro headwinds (triple witching, broader financial sector correction signals, and private credit stress) cap upside enthusiasm, placing this in the 'strong buy' range rather than exceptional.",
+        "score": 62,
+        "explanation": "BX shows mixed but modestly positive signals. The stock gained +1.69% today with a solid intraday range (4.48%), trading near VWAP and holding in the upper portion of its recent range, which suggests controlled accumulation. However, the lack of detailed momentum history (20d, 52-week positioning) and recent news highlighting private credit sector default concerns temper enthusiasm. The day's performance is encouraging but insufficient to warrant a strong buy without confirmation of sustained momentum above current resistance.",
         "metrics": {
-          "price": 114.49,
+          "price": 113.9,
           "open": 110.94,
           "high": 115.91,
           "low": 110.94,
-          "close": 114.5,
-          "vwap": 114.482886,
-          "volume": 325695,
-          "daily_change_pct": 2.2140880278546464,
-          "price_vs_vwap_pct": 0.006214029230536168,
+          "close": 113.915,
+          "vwap": 114.443804,
+          "volume": 352459,
+          "daily_change_pct": 1.687349343808589,
+          "price_vs_vwap_pct": -0.4751712028027261,
           "high_low_range_pct": 4.4798990445285725
         },
-        "scored_at": "2026-03-18 18:40:10"
+        "scored_at": "2026-03-18 19:15:13"
       }
     },
     "C": {
@@ -734,20 +836,20 @@
       },
       "financial": {
         "score": 58,
-        "explanation": "C shows modest intraday momentum with a +1.24% daily gain and trades 0.32% above VWAP, indicating slight bullish pressure. However, the lack of multi-day return data, absence of volume confirmation (no elevated volume ratio provided), and tight daily range (2.03%) suggest this is routine price action rather than conviction-driven accumulation. Recent news mentions are tangential; without clarity on C's specific catalysts, recent moving average positioning, or RSI, the financial case remains mixed and hold-worthy but uninspiring.",
+        "explanation": "C shows modest intraday strength with a +1.13% daily gain and price trading above VWAP, but lacks compelling momentum or volume confirmation. The lack of multi-day return data and absence of key technical indicators (RSI, moving averages, volume ratio) prevents a higher conviction score, though the positive daily close and tight high-low range (2.03%) suggest controlled price action without distress.",
         "metrics": {
-          "price": 109.035,
+          "price": 108.92,
           "open": 107.305,
           "high": 109.48,
           "low": 107.305,
-          "close": 109.02,
-          "vwap": 108.688374,
-          "volume": 338466,
-          "daily_change_pct": 1.2395543175487407,
-          "price_vs_vwap_pct": 0.31891727444556356,
+          "close": 108.875,
+          "vwap": 108.695182,
+          "volume": 396358,
+          "daily_change_pct": 1.1327762302692654,
+          "price_vs_vwap_pct": 0.2068334546787907,
           "high_low_range_pct": 2.0269325753692717
         },
-        "scored_at": "2026-03-18 18:40:11"
+        "scored_at": "2026-03-18 19:15:16"
       }
     },
     "CARR": {
@@ -768,20 +870,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "CARR shows solid short-term momentum with a +1.31% daily gain, tight trading near VWAP, and a narrow intraday range indicating controlled price action. Positive catalysts include RBC's recent price target raise to $74 (28% upside from current levels), strategic investments in heat pump technology, and new manufacturing capacity, which support medium-term growth. However, limited intraday volatility and lack of exceptional volume surge suggest this is a steady accumulation rather than explosive momentum, warranting a strong-but-not-exceptional buy rating.",
+        "explanation": "CARR exhibits solid near-term momentum with a +1.43% daily gain and price trading 0.15% above VWAP, indicating institutional participation. RBC's recent price target raise to $74 (28% upside from current levels) provides a concrete catalyst, while strategic investments in heat pump technology and manufacturing expansion signal positive fundamental positioning in the energy transition space. Tight intraday range (1.87%) and modest volume (201k) suggest consolidation rather than distribution, though lack of exceptional volume confirmation prevents a higher score—the setup is attractive but not yet at maximum momentum strength.",
         "metrics": {
-          "price": 57.74,
+          "price": 57.81,
           "open": 57.54,
           "high": 58.14,
           "low": 57.07,
-          "close": 57.74,
-          "vwap": 57.729568,
-          "volume": 166747,
-          "daily_change_pct": 1.3071322045793572,
-          "price_vs_vwap_pct": 0.018070462609388573,
+          "close": 57.81,
+          "vwap": 57.723653,
+          "volume": 201419,
+          "daily_change_pct": 1.4299499956136588,
+          "price_vs_vwap_pct": 0.14958686000001337,
           "high_low_range_pct": 1.8748904853688457
         },
-        "scored_at": "2026-03-18 18:40:03"
+        "scored_at": "2026-03-18 19:15:04"
       }
     },
     "CCL": {
@@ -801,21 +903,21 @@
         "scored_at": "2026-03-18 13:30:55"
       },
       "financial": {
-        "score": 38,
-        "explanation": "CCL is under significant pressure, down ~22% this month due to its unhedged fuel strategy being punished by rising oil prices amid escalating Middle East tensions near the Strait of Hormuz. The stock is trading slightly below VWAP with a daily decline of ~1.25%, and the broader macro headwind from elevated oil prices creates a persistent drag on margins for this consumer discretionary name. However, Goldman Sachs maintaining a Buy rating with a $30 price target (roughly 21% upside from current levels) provides some fundamental support, making this a hold-or-cautious-watch rather than an outright sell, but near-term momentum and geopolitical risk keep the attractiveness low.",
+        "score": 35,
+        "explanation": "CCL is under significant near-term pressure with a -3.1% daily decline, trading below VWAP, and down 22% this month due to an unhedged fuel cost exposure in a rising oil environment. While Goldman Sachs maintains a buy with a $30 target (23% upside), the stock is caught in a structural headwind (fuel costs) amid geopolitical uncertainty, making the risk/reward unfavorable for short-to-medium term trading without a catalyst signaling reversal of the fuel cost drag.",
         "metrics": {
-          "price": 24.795,
+          "price": 24.33,
           "open": 24.73,
           "high": 25.03,
-          "low": 24.61,
-          "close": 24.795,
-          "vwap": 24.814106,
-          "volume": 317820,
-          "daily_change_pct": -1.2544802867383422,
-          "price_vs_vwap_pct": -0.07699652770080526,
-          "high_low_range_pct": 1.7066233238520994
+          "low": 24.3,
+          "close": 24.33,
+          "vwap": 24.706858,
+          "volume": 1075883,
+          "daily_change_pct": -3.1063321385902074,
+          "price_vs_vwap_pct": -1.5253173835378102,
+          "high_low_range_pct": 3.00411522633745
         },
-        "scored_at": "2026-03-18 15:00:51"
+        "scored_at": "2026-03-18 19:45:03"
       }
     },
     "CF": {
@@ -836,20 +938,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "CF shows solid short-term bullish setup with +1.82% daily gain, positive close above VWAP (+1.52%), and a tight high-low range suggesting controlled strength. BMO's maintained Outperform rating with $140 price target ($14.43 upside from current) provides fundamental support, while momentum score spike on Middle East fertilizer export constraints adds a tailwind. Volume data is limited, but price holding in upper portion of daily range combined with analyst backing warrants a strong buy posture, though lack of extended historical context prevents a higher score.",
+        "explanation": "CF shows strong short-term momentum with a +2.7% daily gain and pricing 2.2% above VWAP, indicating institutional accumulation. BMO Capital's recent Outperform rating and $140 price target (10% upside from current) provide a bullish catalyst, while momentum spike commentary on Middle East fertilizer export stagnation suggests positive sector tailwinds. The 6.3% intraday range and volume of 315K provide reasonable liquidity for entry, though the stock is mid-range from the 52-week low ($120.26) and lacks confirmation of a sustained breakout pattern.",
         "metrics": {
-          "price": 125.57,
+          "price": 126.69,
           "open": 127.88,
           "high": 127.88,
           "low": 120.26,
-          "close": 125.57,
-          "vwap": 123.695426,
-          "volume": 283617,
-          "daily_change_pct": 1.8162653044676842,
-          "price_vs_vwap_pct": 1.5154756005286691,
+          "close": 126.69,
+          "vwap": 123.930776,
+          "volume": 315687,
+          "daily_change_pct": 2.724397956701532,
+          "price_vs_vwap_pct": 2.2264235640709646,
           "high_low_range_pct": 6.336271411940787
         },
-        "scored_at": "2026-03-18 18:40:18"
+        "scored_at": "2026-03-18 19:15:19"
       }
     },
     "CFG": {
@@ -869,21 +971,21 @@
         "scored_at": "2026-03-18 18:08:55"
       },
       "financial": {
-        "score": 35,
-        "explanation": "CFG shows weak near-term momentum with a -0.88% daily decline and price trading 0.79% below VWAP, indicating seller pressure. The stock is not confirming strength at current levels, and recent analyst activity (downgrades on related sectors like Valaris) creates headwind sentiment. While some analysts maintain bullish stances with $65–$75 targets, the current intraday weakness and lack of positive technical confirmation suggest limited near-term upside until the stock stabilizes above VWAP and establishes higher closes.",
+        "score": 38,
+        "explanation": "CFG shows weak intraday momentum with a -1.02% daily decline and price trading below VWAP, indicating selling pressure. The stock is holding near the lower-middle portion of its daily range with no volume surge to suggest institutional accumulation on weakness. Recent analyst upgrades (Baird, Cantor Fitzgerald) provide some fundamental support, but they are insufficient to offset deteriorating technical structure and the lack of bullish price action confirmation.",
         "metrics": {
-          "price": 56.6,
+          "price": 56.52,
           "open": 57.02,
           "high": 57.75,
-          "low": 56.55,
-          "close": 56.61,
-          "vwap": 57.051512,
-          "volume": 174781,
-          "daily_change_pct": -0.8843358725155336,
-          "price_vs_vwap_pct": -0.791411102303478,
-          "high_low_range_pct": 2.1220159151193685
+          "low": 56.32,
+          "close": 56.52,
+          "vwap": 56.950984,
+          "volume": 213668,
+          "daily_change_pct": -1.0244286840031414,
+          "price_vs_vwap_pct": -0.7567630438132468,
+          "high_low_range_pct": 2.5390624999999996
         },
-        "scored_at": "2026-03-18 18:40:20"
+        "scored_at": "2026-03-18 19:30:42"
       }
     },
     "CIEN": {
@@ -904,20 +1006,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "CIEN demonstrates strong intraday momentum with a +7.3% daily gain and price trading 1.3% above VWAP, indicating institutional demand. TD Cowen's recent Buy initiation with a $425 price target (7.1% upside) and a quantum security partnership announcement provide positive catalysts. However, limited historical context on moving averages and distance from 52-week levels prevents a higher score, and the single-day spike should be confirmed with follow-through volume and broader technical confirmation.",
+        "explanation": "CIEN shows strong short-term momentum with a 6.03% daily gain and price holding near the session high (391.88 vs. 401.52 high), signaling institutional buying interest. TD Cowen's recent Buy initiation with a $425 price target (8.5% upside) and the quantum secure communications announcement provide positive catalysts. The 151k volume is moderate context, but the stock's proximity to VWAP and upper-range positioning, combined with analyst upgrade and emerging technology narrative, supports a solid buy case for short-to-medium term traders.",
         "metrics": {
-          "price": 396.62,
+          "price": 391.88,
           "open": 379.01,
           "high": 401.515,
           "low": 378.17,
-          "close": 396.62,
-          "vwap": 391.394298,
-          "volume": 139697,
-          "daily_change_pct": 7.3135095646527315,
-          "price_vs_vwap_pct": 1.3351502632263725,
+          "close": 391.88,
+          "vwap": 391.605836,
+          "volume": 151463,
+          "daily_change_pct": 6.031007332449477,
+          "price_vs_vwap_pct": 0.07001019259579798,
           "high_low_range_pct": 6.173149641695526
         },
-        "scored_at": "2026-03-18 18:40:05"
+        "scored_at": "2026-03-18 19:15:09"
       }
     },
     "CMCSA": {
@@ -937,21 +1039,21 @@
         "scored_at": "2026-03-18 14:00:15"
       },
       "financial": {
-        "score": 28,
-        "explanation": "CMCSA is showing significant weakness with a -4.5% daily decline, trading 0.95% below VWAP and near the session low, indicating sellers are in control. The stock is trading in the lower portion of its daily range with below-average directional clarity, and the lack of positive momentum catalysts combined with deteriorating intraday price action suggests downside risk outweighs opportunity for short-to-medium term traders. The NVIDIA partnership announcement provides minimal support against the bearish technical breakdown.",
+        "score": 32,
+        "explanation": "CMCSA shows concerning short-term momentum with a -4.3% daily decline on elevated volume, trading below VWAP and well below the day's high. The stock closed near the session low within a tight range, signaling intraday weakness and potential distribution. While the NVIDIA partnership news is strategically positive, it does not offset the deteriorating technical setup and lack of bullish confirmation needed for a short-to-medium term trade.",
         "metrics": {
-          "price": 28.72,
+          "price": 28.775,
           "open": 29.94,
           "high": 30.1,
           "low": 28.7,
-          "close": 28.73,
-          "vwap": 28.996137,
-          "volume": 1558970,
-          "daily_change_pct": -4.505403158769744,
-          "price_vs_vwap_pct": -0.9523234077698075,
+          "close": 28.78,
+          "vwap": 28.967119,
+          "volume": 1791485,
+          "daily_change_pct": -4.322527015793852,
+          "price_vs_vwap_pct": -0.6632313002891372,
           "high_low_range_pct": 4.878048780487813
         },
-        "scored_at": "2026-03-18 18:40:13"
+        "scored_at": "2026-03-18 19:15:17"
       }
     },
     "CMG": {
@@ -1005,21 +1107,55 @@
         "scored_at": "2026-03-18 18:15:24"
       },
       "financial": {
-        "score": 62,
-        "explanation": "CNC shows mixed short-term signals with a strong intraday bounce (+4.2% daily return, trading 2% above VWAP) and solid technical setup holding near session highs, but is weighed down by recent weakness (listed among top large-cap losers last week) and a Mizuho price target cut to $41—suggesting limited upside from current $36.40 levels. Volume is moderate without exceptional institutional accumulation signals, and the lack of clear moving average context limits conviction; this is a transition setup rather than a compelling momentum play.",
+        "score": 42,
+        "explanation": "CNC shows short-term momentum with a +3.7% daily gain and price trading above VWAP, but fundamental headwinds are evident. Mizuho's neutral rating and lowered $41 price target (13% above current) suggest limited upside, while recent inclusion in large-cap losers and persistent selling pressure indicate institutional skepticism. The stock lacks the conviction-driven volume or technical setup to justify a bullish stance at this level.",
         "metrics": {
-          "price": 36.395,
+          "price": 36.23,
           "open": 34.82,
           "high": 36.46,
           "low": 34.55,
-          "close": 36.395,
-          "vwap": 35.679309,
-          "volume": 154183,
-          "daily_change_pct": 4.194102490695687,
-          "price_vs_vwap_pct": 2.005899273441645,
+          "close": 36.23,
+          "vwap": 35.745503,
+          "volume": 171429,
+          "daily_change_pct": 3.721729172630968,
+          "price_vs_vwap_pct": 1.3554068605496965,
           "high_low_range_pct": 5.528219971056451
         },
-        "scored_at": "2026-03-18 18:40:10"
+        "scored_at": "2026-03-18 19:15:15"
+      }
+    },
+    "CNP": {
+      "ticker": "CNP",
+      "company": "CenterPoint Energy",
+      "sector": "Utilities",
+      "woke": {
+        "score": 38,
+        "explanation": "CenterPoint Energy is a regulated utility with mixed environmental performance: while it operates some natural gas infrastructure, it has faced significant accountability challenges including a major 2021 power outage in Houston (Winter Storm Uri) with documented service failures and inadequate storm preparedness. Labor concerns include OSHA violations and workplace safety incidents at elevated rates for the sector. The company has faced governance and political concerns around regulatory lobbying, political spending, and board independence issues typical of entrenched regional utilities. Environmental scores are moderate—natural gas utilities occupy a middle ground between fossil fuel producers and clean energy, but CenterPoint has been slow to commit to meaningful decarbonization targets and continues primary reliance on fossil fuel generation.",
+        "breakdown": {
+          "environmental": 32,
+          "labor": 42,
+          "diversity_governance": 35,
+          "harm_avoidance": 48,
+          "political": 32
+        },
+        "scored_at": "2026-03-18 19:45:04"
+      },
+      "financial": {
+        "score": 52,
+        "explanation": "CNP shows mixed signals with neutral short-term momentum. The stock closed down 1.05% on light volume (299K shares), trading slightly below VWAP and within a tight daily range, suggesting indecision. However, analyst sentiment is constructive with KeyBanc's $47 price target and Evercore's $44 target implying 8–9% upside, and the convertible notes offering at $53.61 indicates management confidence in valuation. The lack of strong directional momentum and slightly negative intraday action offset the positive analyst commentary, resulting in a hold-worthy but not compelling buy case.",
+        "metrics": {
+          "price": 43.21,
+          "open": 43.47,
+          "high": 43.55,
+          "low": 43.08,
+          "close": 43.21,
+          "vwap": 43.33345,
+          "volume": 299067,
+          "daily_change_pct": -1.0533547057476547,
+          "price_vs_vwap_pct": -0.284883848389635,
+          "high_low_range_pct": 1.09099350046425
+        },
+        "scored_at": "2026-03-18 19:45:04"
       }
     },
     "COP": {
@@ -1040,20 +1176,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "ConocoPhillips shows solid short-term buy momentum with a strong +1.51% daily gain, trading above VWAP by 77bps and holding in the upper portion of its intraday range. Multiple analyst upgrades (Mizuho to $136, Barclays to $128) coupled with geopolitical tailwinds (Iran-Israel tensions supporting crude) provide fundamental support, though the stock is only 0.06% below intraday highs with limited immediate catalyst cushion. The setup is constructive but lacks the exceptional confirmation of institutional accumulation volume or multi-week technical breakout needed for a higher score.",
+        "explanation": "COP shows solid near-term bullish momentum with a +1.29% daily gain and price holding above VWAP (+0.46%), supported by analyst upgrades (Mizuho raising target to $136, Barclays to $128) and favorable oil market sentiment. However, limited short-term price history and lack of multi-day momentum data prevent a higher score; the single-day strength needs confirmation over the next 5–20 days to establish a compelling medium-term position.",
         "metrics": {
-          "price": 124.76,
+          "price": 124.48,
           "open": 123.82,
-          "high": 124.765,
+          "high": 124.87,
           "low": 123.14,
-          "close": 124.75,
-          "vwap": 123.81282,
-          "volume": 261136,
-          "daily_change_pct": 1.5134255492270134,
-          "price_vs_vwap_pct": 0.7650096330896938,
-          "high_low_range_pct": 1.3196361864544421
+          "close": 124.48,
+          "vwap": 123.90544,
+          "volume": 301274,
+          "daily_change_pct": 1.2855980471928383,
+          "price_vs_vwap_pct": 0.4637084538015484,
+          "high_low_range_pct": 1.4049049861945784
         },
-        "scored_at": "2026-03-18 18:50:30"
+        "scored_at": "2026-03-18 19:30:22"
       }
     },
     "CSCO": {
@@ -1074,20 +1210,20 @@
       },
       "financial": {
         "score": 45,
-        "explanation": "CSCO shows mixed signals with weak near-term momentum: down 1.2% today and trading 0.8% below VWAP, indicating seller pressure despite intraday volatility. While the news highlights strategic AI partnerships with NVIDIA and enterprise AI positioning—supportive for medium-term narrative—the immediate technical setup lacks conviction, with the stock closing in the lower half of today's range and volume unremarkable for a down day. The positioning is hold-worthy given AI tailwinds, but lacks the momentum or technical confirmation needed for a strong buy.",
+        "explanation": "CSCO shows mixed technical signals with concerning intraday momentum. The stock closed down 1.43% on the day, trading 0.88% below VWAP and well below the session high, indicating weakness into the close. While positive AI partnership news with NVIDIA provides narrative support for medium-term growth, today's price action and positioning in the lower half of the daily range suggest near-term softness. Volume and RSI data are unavailable, limiting confirmation of institutional accumulation or reversal signals needed to upgrade the score.",
         "metrics": {
-          "price": 78.335,
+          "price": 78.15,
           "open": 79.71,
           "high": 80.03,
-          "low": 78.17,
-          "close": 78.36,
-          "vwap": 78.977535,
-          "volume": 620508,
-          "daily_change_pct": -1.1919778002018255,
-          "price_vs_vwap_pct": -0.8135667946587716,
-          "high_low_range_pct": 2.379429448637584
+          "low": 78.07,
+          "close": 78.145,
+          "vwap": 78.842801,
+          "volume": 751420,
+          "daily_change_pct": -1.4253279515640709,
+          "price_vs_vwap_pct": -0.8787118052794557,
+          "high_low_range_pct": 2.5105674394774025
         },
-        "scored_at": "2026-03-18 18:50:12"
+        "scored_at": "2026-03-18 19:30:03"
       }
     },
     "CSX": {
@@ -1142,20 +1278,54 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "CTRA shows solid bullish momentum with a +0.97% daily gain and trading 0.52% above VWAP, indicating healthy demand. Consensus analyst upgrades from major firms (Mizuho $43, Piper Sandler $47, UBS $38, Barclays $37) provide meaningful upside to current $33.33 price, with targets suggesting 10-41% potential gains. However, lack of detailed volatility, moving average, and RSI data limits conviction; volume context is missing to confirm institutional accumulation on the move. The stock appears fairly valued at the lower-to-middle end of analyst targets, supporting a medium-term hold with upside optionality.",
+        "explanation": "CTRA shows solid near-term bullish setup with consistent analyst upgrades (Mizuho $43, Piper Sandler $47, UBS $38 targets) implying 15–40% upside, coupled with positive 1-day momentum (+1.17%) and price holding above VWAP. However, intraday range is tight (1.95%), volume is moderate (839k), and the stock trades only 1.1% from daily open with limited follow-through, suggesting early accumulation rather than confirmed institutional breakout—warrant confirmation on elevated volume before adding exposure.",
         "metrics": {
-          "price": 33.33,
+          "price": 33.395,
           "open": 33.2,
-          "high": 33.345,
+          "high": 33.43,
           "low": 32.79,
-          "close": 33.305,
-          "vwap": 33.156439,
-          "volume": 664146,
-          "daily_change_pct": 0.9694032111481378,
-          "price_vs_vwap_pct": 0.5234609181040202,
-          "high_low_range_pct": 1.6925892040256167
+          "close": 33.4,
+          "vwap": 33.201462,
+          "volume": 839167,
+          "daily_change_pct": 1.1663132384126178,
+          "price_vs_vwap_pct": 0.5829201135781423,
+          "high_low_range_pct": 1.9518145776151283
         },
-        "scored_at": "2026-03-18 18:50:34"
+        "scored_at": "2026-03-18 19:30:24"
+      }
+    },
+    "CTVA": {
+      "ticker": "CTVA",
+      "company": "Corteva",
+      "sector": "Materials",
+      "woke": {
+        "score": 38,
+        "explanation": "Corteva is a major agrochemical and seed company with significant structural harms that constrain its ethical score. On environment: the company's core business involves herbicides (particularly glyphosate) and neonicotinoid insecticides linked to biodiversity loss and ecosystem damage; it has modest renewable energy commitments but these are peripheral to its primary operations. On harm avoidance: Corteva faces ongoing litigation over glyphosate (Roundup) health claims inherited from DowDuPont; neonicotinoids are restricted in the EU due to pollinator impacts, yet the company continues to market them aggressively in less-regulated markets—this is a form of harm export. On labor: no major OSHA crisis comparable to Amazon, but agricultural chemical companies historically have weaker safety records in developing markets where they operate; median wage data is limited. On governance: board diversity is improving but remains below peer averages for large industrials; no major fraud scandals but executive compensation is typical for the sector. On politics: moderate lobbying spend ($3–4M annually) focused on agricultural and chemical regulations; the company has opposed stricter pesticide restrictions. The pending business separation is a financial restructuring that does not materially improve underlying ethical concerns.",
+        "breakdown": {
+          "environmental": 32,
+          "labor": 45,
+          "diversity_governance": 42,
+          "harm_avoidance": 28,
+          "political": 42
+        },
+        "scored_at": "2026-03-18 19:00:07"
+      },
+      "financial": {
+        "score": 52,
+        "explanation": "CTVA shows mixed signals with modest bearish momentum (−0.26% daily, trading slightly below VWAP) but maintains analyst support (Mizuho Outperform, $82 target vs. current $79.87). The pending Q4 business separation represents significant structural uncertainty, and the cautionary technical setup note suggests key resistance ahead. Volume and volatility data are unremarkable, leaving the stock in neutral hold territory pending clarity on the separation timeline and execution.",
+        "metrics": {
+          "price": 79.87,
+          "open": 80.36,
+          "high": 80.36,
+          "low": 79.41,
+          "close": 79.865,
+          "vwap": 79.74401,
+          "volume": 156055,
+          "daily_change_pct": -0.26223776223775447,
+          "price_vs_vwap_pct": 0.1579930580365868,
+          "high_low_range_pct": 1.1963228812492166
+        },
+        "scored_at": "2026-03-18 19:00:05"
       }
     },
     "CVX": {
@@ -1175,21 +1345,21 @@
         "scored_at": "2026-03-18 18:15:33"
       },
       "financial": {
-        "score": 62,
-        "explanation": "CVX shows modest intraday strength (+0.80% daily change, price near VWAP) with mixed analyst sentiment—Mizuho's bullish $217 target supports upside, while Barclays' $180 target suggests meaningful downside risk from current $199.60 levels. Geopolitical tensions around Iran/Hormuz could provide medium-term tailwinds for energy, but the stock lacks compelling momentum confirmation (tight intraday range, modest volume at 244k) and sits between competing price targets, warranting a neutral-to-slightly-positive hold rather than a conviction buy.",
+        "score": 72,
+        "explanation": "CVX shows solid near-term momentum with a +0.81% daily gain and pricing near VWAP, supported by analyst upgrades (Mizuho raising target to $217) and geopolitical tailwinds from Iran tensions benefiting energy stocks. The stock is trading in the upper portion of its daily range and holds modest positive momentum, though the mixed analyst sentiment (Barclays maintaining equal-weight at $180) and lack of extended-term trend data prevent a higher conviction score; current technicals support a tactical long position for short-to-medium term traders.",
         "metrics": {
-          "price": 199.6,
+          "price": 199.615,
           "open": 199.23,
           "high": 200.73,
           "low": 198.67,
-          "close": 199.58,
-          "vwap": 199.701103,
-          "volume": 244393,
-          "daily_change_pct": 0.7978992021007898,
-          "price_vs_vwap_pct": -0.050627161533501816,
+          "close": 199.61,
+          "vwap": 199.685148,
+          "volume": 288418,
+          "daily_change_pct": 0.8054741945258048,
+          "price_vs_vwap_pct": -0.03512930265599372,
           "high_low_range_pct": 1.036895354104798
         },
-        "scored_at": "2026-03-18 18:50:36"
+        "scored_at": "2026-03-18 19:30:26"
       }
     },
     "DAL": {
@@ -1209,21 +1379,21 @@
         "scored_at": "2026-03-18 13:30:10"
       },
       "financial": {
-        "score": 72,
-        "explanation": "DAL shows solid near-term buy appeal driven by positive forward guidance and strong travel demand signals from management, which outweigh today's modest -0.82% decline. The stock is trading slightly below VWAP (-0.40%) with a tight intraday range (1.60%), suggesting consolidation rather than weakness; the recent 17% sector decline at American Airlines while peers hold relatively steady indicates DAL has relative strength. CEO commentary on robust demand and Q1 revenue guidance lifts conviction, though lack of multi-day momentum data and absence of volume context limit the score from reaching higher levels.",
+        "score": 62,
+        "explanation": "DAL shows mixed short-to-medium term signals. The stock is down 1.28% today and trading 0.77% below VWAP, indicating mild selling pressure, but management guidance is strongly bullish with CEO commentary on 'really, really great' demand and raised Q1 revenue outlook—a powerful fundamental tailwind. The stock's resilience relative to peers (United gaining, American down 17%) and strong travel demand backdrop support a hold-to-accumulate bias, though today's intraday weakness and lack of clear upside momentum prevent a higher score.",
         "metrics": {
-          "price": 64.29,
+          "price": 63.99,
           "open": 64.365,
           "high": 65.005,
-          "low": 63.98,
-          "close": 64.375,
-          "vwap": 64.549134,
-          "volume": 424459,
-          "daily_change_pct": -0.8176488738043614,
-          "price_vs_vwap_pct": -0.40145232622329047,
-          "high_low_range_pct": 1.602063144732727
+          "low": 63.78,
+          "close": 64.005,
+          "vwap": 64.483987,
+          "volume": 516611,
+          "daily_change_pct": -1.280468991052131,
+          "price_vs_vwap_pct": -0.7660615029898773,
+          "high_low_range_pct": 1.920664785199113
         },
-        "scored_at": "2026-03-18 18:50:45"
+        "scored_at": "2026-03-18 19:30:37"
       }
     },
     "DDOG": {
@@ -1244,20 +1414,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "DDOG shows moderate positive momentum with a +2.85% daily gain and price trading 0.58% above VWAP, indicating intraday strength. However, the stock lacks sufficient context (missing 52-week levels, moving averages, RSI, and multi-day returns) to confirm a sustained uptrend, and volume data alone is inconclusive without historical comparison. Strategic partnerships with Sakana AI and UK data center expansion are constructive for long-term positioning, but near-term catalysts remain unclear; the stock trades in a transition zone rather than a decisive breakout setup.",
+        "explanation": "DDOG shows mixed but moderately positive signals. The stock is up 2.43% on the day with above-VWAP pricing and solid intraday range (4.57%), indicating institutional interest and bullish momentum in the near term. Strategic partnerships (Sakana AI) and UK data center expansion demonstrate growth catalysts aligned with cloud/AI tailwinds. However, without longer-term return data (5d, 20d), distance to 52-week levels, volume ratio analysis, or moving average positioning, the case remains incomplete—the stock is in transition, not a confirmed uptrend. Hold-worthy with cautious optimism, but lacks the confirming momentum indicators for a strong buy.",
         "metrics": {
-          "price": 132.59,
+          "price": 132.045,
           "open": 127.975,
           "high": 133.53,
           "low": 127.695,
-          "close": 132.59,
-          "vwap": 131.831105,
-          "volume": 143558,
-          "daily_change_pct": 2.854704832829111,
-          "price_vs_vwap_pct": 0.5756570120534114,
+          "close": 132.045,
+          "vwap": 131.872894,
+          "volume": 160881,
+          "daily_change_pct": 2.4319292529671794,
+          "price_vs_vwap_pct": 0.13050900361675935,
           "high_low_range_pct": 4.569481968753678
         },
-        "scored_at": "2026-03-18 18:50:12"
+        "scored_at": "2026-03-18 19:30:03"
       }
     },
     "DOV": {
@@ -1312,20 +1482,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "DOW shows modest positive momentum with a +1.63% daily gain and price slightly above VWAP, supported by Wells Fargo's overweight rating and raised $45 price target. However, the lack of volume confirmation (631k shares is baseline, not exceptional), mixed analyst sentiment (UBS neutral vs. Wells Fargo overweight), and macro headwinds (stagflation concerns, geopolitical oil risks) create a neutral-to-mixed setup that warrants a hold rather than a strong buy. The stock is trading near the high end of today's range but lacks the conviction signals needed for a higher score.",
+        "explanation": "DOW shows mixed but modestly positive signals: a strong intraday gain of +2.49% with price trading 1.04% above VWAP indicates institutional interest, and the stock is holding in the upper portion of its daily range. However, analyst consensus is conflicted—UBS maintains Neutral with a $37 target (below current price) while Wells Fargo's $45 target provides upside, creating ambiguity. Macro headwinds (stagflation concerns, oil volatility, geopolitical tensions) present near-term uncertainty that tempers the bullish intraday momentum, making this a hold-worthy but not compelling buy at current levels.",
         "metrics": {
-          "price": 37.52,
+          "price": 37.84,
           "open": 37.35,
           "high": 38.26,
           "low": 37.06,
-          "close": 37.52,
-          "vwap": 37.42502,
-          "volume": 631354,
-          "daily_change_pct": 1.6251354279523331,
-          "price_vs_vwap_pct": 0.2537874395257494,
+          "close": 37.82,
+          "vwap": 37.449107,
+          "volume": 718880,
+          "daily_change_pct": 2.4918743228602427,
+          "price_vs_vwap_pct": 1.043797920201423,
           "high_low_range_pct": 3.237992444684284
         },
-        "scored_at": "2026-03-18 18:50:29"
+        "scored_at": "2026-03-18 19:30:32"
       }
     },
     "DVN": {
@@ -1346,20 +1516,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "DVN shows solid short-to-medium term appeal with positive daily momentum (+0.96%), trading above VWAP (+0.65%), and analyst consensus tilting bullish (Mizuho Outperform at $62, Barclays Overweight at $54 vs. current $47.88). The narrow intraday range (1.74%) and modest volume lack dramatic conviction, but the stock is well-positioned within oil beneficiary narratives with multiple price target raises providing upside targets 12–30% above current levels.",
+        "explanation": "DVN shows solid near-term momentum with a +1.28% daily gain and price trading above VWAP, indicating buying pressure. Multiple analyst upgrades (Mizuho $62 PT, Barclays $54 PT) provide upside confirmation, and the stock's inclusion in oil/gas beneficiary lists aligns with crude strength. However, limited intraday volatility (2.03% range) and lack of longer-term momentum data prevent a higher score; the position warrants accumulation but requires confirmation above $50 resistance to sustain medium-term appeal.",
         "metrics": {
-          "price": 47.885,
+          "price": 48.035,
           "open": 47.53,
-          "high": 47.925,
+          "high": 48.06,
           "low": 47.105,
-          "close": 47.875,
-          "vwap": 47.577763,
-          "volume": 732647,
-          "daily_change_pct": 0.9593084545646179,
-          "price_vs_vwap_pct": 0.6457575569494528,
-          "high_low_range_pct": 1.7407918479991518
+          "close": 48.025,
+          "vwap": 47.684463,
+          "volume": 1004408,
+          "daily_change_pct": 1.2755639890364683,
+          "price_vs_vwap_pct": 0.7351178516994008,
+          "high_low_range_pct": 2.027385627852681
         },
-        "scored_at": "2026-03-18 18:50:34"
+        "scored_at": "2026-03-18 19:30:16"
       }
     },
     "DXCM": {
@@ -1380,20 +1550,54 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "DXCM shows modest positive momentum with a +0.73% daily gain and price trading 0.38% above VWAP, but lacks compelling technical conviction. The stock is well within its intraday range (1.96%) with modest volume (111.8K shares), and we lack critical data on distance from 52-week levels, moving average positioning, and volume ratio context that would clarify whether this is institutional accumulation or routine trading. Recent analyst upgrades (Citigroup, BTIG) and positive clinical data provide fundamental support, but near-term technicals are neutral—neither confirming strength nor signaling weakness. This is a hold with modest upside potential pending clearer technical setup.",
+        "explanation": "DXCM shows mixed but modestly positive technical setup with modest intraday gains (+0.48%) and price trading slightly above VWAP (+0.11%), suggesting minor institutional interest. Recent analyst upgrades (Citi raising target to $84, BTIG maintaining $85) provide fundamental support and imply 24–26% upside from current levels. However, without access to historical price momentum data (52-week positioning, moving averages, volume ratios, or RSI), the score reflects caution—the stock appears fairly valued near consensus targets rather than offering exceptional momentum or oversold entry conditions. News sentiment is clearly positive, but technical confirmation of a breakout above key resistance levels is lacking from available data.",
         "metrics": {
-          "price": 67.83,
+          "price": 67.665,
           "open": 67.01,
           "high": 68.04,
           "low": 66.73,
-          "close": 67.87,
-          "vwap": 67.572342,
-          "volume": 111824,
-          "daily_change_pct": 0.72765072765072,
-          "price_vs_vwap_pct": 0.3813068962446087,
+          "close": 67.665,
+          "vwap": 67.588956,
+          "volume": 127839,
+          "daily_change_pct": 0.48262548262548677,
+          "price_vs_vwap_pct": 0.11250950525113929,
           "high_low_range_pct": 1.9631350217293606
         },
-        "scored_at": "2026-03-18 18:50:13"
+        "scored_at": "2026-03-18 19:30:04"
+      }
+    },
+    "EA": {
+      "ticker": "EA",
+      "company": "Electronic Arts",
+      "sector": "Communication Services",
+      "woke": {
+        "score": 42,
+        "explanation": "EA's core business model—monetized gaming with aggressive engagement mechanics—raises structural harm-avoidance concerns around addiction and predatory monetization (loot boxes, pay-to-win mechanics). Labor practices are weak: the company has faced documented crunch culture complaints, multiple layoff cycles (including 870 employees in 2023) with limited severance support, and union-organizing resistance. Environmental performance is middling with no substantive climate commitments relative to its size and energy footprint. Governance shows board diversity improvements but executive compensation remains misaligned with worker welfare, and the company has faced EA Sports allegations of exploitative ultimate team mechanics that functionally resemble gambling. Political spending is moderate but EA has actively lobbied against consumer protection and loot-box regulation efforts.",
+        "breakdown": {
+          "environmental": 55,
+          "labor": 38,
+          "diversity_governance": 45,
+          "harm_avoidance": 35,
+          "political": 42
+        },
+        "scored_at": "2026-03-18 19:30:30"
+      },
+      "financial": {
+        "score": 72,
+        "explanation": "EA exhibits moderately strong financial attractiveness driven by positive intraday momentum (+0.28% daily return) and tight price-to-VWAP alignment (+0.0045%), signaling stable institutional positioning. The pending buyout creates a catalyst-driven environment with substantial debt financing secured ($19B+ investor demand, $5.75B JPMorgan syndication), reducing execution risk and supporting price stability around current levels. However, the extremely narrow intraday range (0.31% high-low) and modest single-day data point limit conviction; the buyout structure also caps upside potential as the deal price is effectively fixed, making this more of a capital preservation + modest spread trade than a momentum play.",
+        "metrics": {
+          "price": 200.68,
+          "open": 200.355,
+          "high": 200.955,
+          "low": 200.33,
+          "close": 200.68,
+          "vwap": 200.670905,
+          "volume": 107933,
+          "daily_change_pct": 0.2798321007395574,
+          "price_vs_vwap_pct": 0.004532296298759441,
+          "high_low_range_pct": 0.31198522437977333
+        },
+        "scored_at": "2026-03-18 19:30:29"
       }
     },
     "EBAY": {
@@ -1448,20 +1652,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "EOG shows modest near-term momentum with a +1.15% daily gain and trading 0.28% above VWAP, indicating slight intraday strength. However, the stock is still ~5.6% below the consensus upside implied by Wells Fargo's $155 target, and most recent analyst upgrades (Mizuho, Barclays, Piper Sandler) remain cautiously neutral-to-equal-weight despite raising price targets. The narrow intraday range (0.92%) and modest volume suggest low conviction; the lack of aggressive accumulation or volatility expansion limits the bullish case despite positive oil sector tailwinds.",
+        "explanation": "EOG shows modest positive momentum with a +1.24% daily gain and price trading 0.30% above VWAP, suggesting slight institutional bid. However, the stock sits in a narrow intraday range (1.05%) with below-average volume (219k), indicating weak conviction. Analyst sentiment is mixed—Wells Fargo's Overweight at $155 provides upside, but Mizuho, Barclays, and Piper Sandler maintain neutral/equal-weight ratings despite raising targets, suggesting limited near-term catalysts. The stock is trading mid-range relative to recent price action, lacking the strong directional setup needed for a confident short-to-medium term trade.",
         "metrics": {
-          "price": 137.345,
+          "price": 137.47,
           "open": 137.15,
-          "high": 137.625,
+          "high": 137.8,
           "low": 136.37,
-          "close": 137.345,
-          "vwap": 136.96455,
-          "volume": 183146,
-          "daily_change_pct": 1.1525997937840606,
-          "price_vs_vwap_pct": 0.2777726061232605,
-          "high_low_range_pct": 0.920290386448629
+          "close": 137.43,
+          "vwap": 137.060946,
+          "volume": 219407,
+          "daily_change_pct": 1.2446604801885386,
+          "price_vs_vwap_pct": 0.29844679461062346,
+          "high_low_range_pct": 1.0486177311725502
         },
-        "scored_at": "2026-03-18 18:50:33"
+        "scored_at": "2026-03-18 19:30:24"
       }
     },
     "ES": {
@@ -1481,21 +1685,21 @@
         "scored_at": "2026-03-18 18:50:39"
       },
       "financial": {
-        "score": 52,
-        "explanation": "ES shows modest intraday momentum (+0.92%) with price holding slightly above VWAP, but lacks conviction. The stock is trading near session highs in a tight 1.86% daily range, suggesting limited directional pressure. Recent news is mixed—JP Morgan's underweight rating and $75 price target (just 2.4% above current price) cap upside, while the Aquarion sale approval commentary and $1.5B hybrid bond issuance provide some fundamental support. Volume is unremarkable, and without clarity on moving averages or broader technical structure, this is a neutral hold rather than a compelling buy or sell.",
+        "score": 42,
+        "explanation": "ES shows modest intraday strength (+0.71% on the day, trading above VWAP) but lacks conviction for a medium-term position. The stock is trapped in a narrow range (1.86% high-low spread) with minimal volume context provided, and critically, JP Morgan's maintained Underweight rating with a $75 price target suggests limited upside from current $72.99 levels. While the Aquarion sale approval and $1.5B hybrid bond raise provide structural tailwinds, they are insufficient to offset the analyst headwind and absence of clear momentum acceleration above resistance.",
         "metrics": {
-          "price": 73.14,
+          "price": 72.99,
           "open": 71.89,
           "high": 73.23,
           "low": 71.89,
-          "close": 73.14,
-          "vwap": 72.742438,
-          "volume": 100856,
-          "daily_change_pct": 0.9175577785443343,
-          "price_vs_vwap_pct": 0.5465337854087231,
+          "close": 72.99,
+          "vwap": 72.773637,
+          "volume": 112230,
+          "daily_change_pct": 0.7105898585719221,
+          "price_vs_vwap_pct": 0.2973095875364883,
           "high_low_range_pct": 1.8639588259841473
         },
-        "scored_at": "2026-03-18 18:45:04"
+        "scored_at": "2026-03-18 19:15:17"
       }
     },
     "EXC": {
@@ -1516,20 +1720,20 @@
       },
       "financial": {
         "score": 42,
-        "explanation": "EXC shows weak near-term technicals with a 1.2% daily decline and price trading below VWAP, offering limited momentum into the session. Analyst sentiment is mixed—while Evercore ISI's $58 target and inclusion in dividend-yield roundups suggest longer-term appeal, KeyBanc's Underweight and JP Morgan's Neutral stance temper enthusiasm, and the stock's current valuation relative to conservative price targets leaves little upside catalyst for short-to-medium term traders. The narrow intraday range and lack of unusual volume suggest consolidation rather than conviction.",
+        "explanation": "EXC shows mixed technical signals with a down day (-1.66%) and price below VWAP, suggesting near-term weakness. However, analyst divergence—with Evercore ISI at $58 outperform versus KeyBanc's underweight at $44—reflects genuine uncertainty about the utility's trajectory. The stock's dividend appeal and modest volatility provide some support, but lack of positive momentum, proximity to intraday lows, and conflicting analyst views warrant a cautious stance rather than a buy.",
         "metrics": {
-          "price": 49.455,
+          "price": 49.23,
           "open": 49.8,
           "high": 49.82,
-          "low": 49.295,
-          "close": 49.535,
-          "vwap": 49.541757,
-          "volume": 493066,
-          "daily_change_pct": -1.2085497403116339,
-          "price_vs_vwap_pct": -0.17511894057370359,
-          "high_low_range_pct": 1.0650167359772766
+          "low": 49.21,
+          "close": 49.23,
+          "vwap": 49.524402,
+          "volume": 567475,
+          "daily_change_pct": -1.6580103875349688,
+          "price_vs_vwap_pct": -0.5944584651421033,
+          "high_low_range_pct": 1.2395854501117647
         },
-        "scored_at": "2026-03-18 18:33:54"
+        "scored_at": "2026-03-18 19:15:09"
       }
     },
     "EXPE": {
@@ -1583,21 +1787,21 @@
         "scored_at": "2026-03-18 13:30:17"
       },
       "financial": {
-        "score": 42,
-        "explanation": "F exhibits weak intraday momentum with a -0.63% daily decline and price trading 0.4% below VWAP, signaling modest selling pressure. The tight high-low range (1.39%) and flat open-to-close action suggest lack of conviction, though the anti-dilutive buyback program and positive supply chain commentary from Ford management provide modest support. Macro headwinds (potential stagflation, EV fee proposals) and absence of strong volume confirmation or technical breakout keep this firmly in the hold-or-avoid zone despite some constructive company-specific news.",
+        "score": 38,
+        "explanation": "F shows weak intraday structure with a -1.13% daily decline, trading below VWAP and within a tight daily range that offers limited momentum. While recent news includes positive catalysts (aluminum factory resumption, share buyback program, inclusion in favorable analyst lists), the current price action lacks conviction—the stock is off its high, volume data is unavailable for confirmation, and macro headwinds (oil shock, stagflation concerns, EV fee proposals) create near-term uncertainty. The deteriorating daily momentum and absence of bullish technical confirmation warrant a cautious hold rather than accumulation.",
         "metrics": {
-          "price": 11.865,
+          "price": 11.805,
           "open": 11.865,
           "high": 12.01,
-          "low": 11.845,
-          "close": 11.865,
-          "vwap": 11.913058,
-          "volume": 1675056,
-          "daily_change_pct": -0.628140703517582,
-          "price_vs_vwap_pct": -0.40340607759988467,
-          "high_low_range_pct": 1.392992823976354
+          "low": 11.79,
+          "close": 11.8,
+          "vwap": 11.896068,
+          "volume": 2079089,
+          "daily_change_pct": -1.1306532663316566,
+          "price_vs_vwap_pct": -0.7655302575607329,
+          "high_low_range_pct": 1.8659881255301158
         },
-        "scored_at": "2026-03-18 18:50:23"
+        "scored_at": "2026-03-18 19:30:17"
       }
     },
     "FANG": {
@@ -1686,20 +1890,20 @@
       },
       "financial": {
         "score": 42,
-        "explanation": "FTNT shows modest intraday momentum (+0.67% on the day) and trades slightly above VWAP, but lacks compelling directional evidence for a strong position. The recent Wells Fargo Underweight initiating coverage at a $64 price target (23% below current price) is a material headwind, and without accompanying data on volume trends, moving averages, RSI, or distance from 52-week highs/lows, the risk/reward appears balanced-to-negative. Whale activity mention suggests institutional interest but provides no directional clarity.",
+        "explanation": "FTNT shows modest intraday strength (+0.86% with modest volume of 153K) but lacks conviction for a strong buy. The stock is trading just 0.31% above VWAP and well within its daily range (2.3%), indicating no clear directional breakout. Most critically, Wells Fargo's recent Underweight initiation with a $64 price target (23% downside from current $83.86) is a material headwind that offsets the positive daily momentum. Without broader trend confirmation (missing 52-week positioning and moving average data), current technicals appear neutral-to-weak despite the day's small gain.",
         "metrics": {
-          "price": 83.7,
+          "price": 83.86,
           "open": 82.435,
           "high": 84.33,
           "low": 82.435,
-          "close": 83.755,
-          "vwap": 83.579107,
-          "volume": 139219,
-          "daily_change_pct": 0.6675085693667772,
-          "price_vs_vwap_pct": 0.14464500081343232,
+          "close": 83.86,
+          "vwap": 83.599324,
+          "volume": 153105,
+          "daily_change_pct": 0.859943472247283,
+          "price_vs_vwap_pct": 0.3118159185114986,
           "high_low_range_pct": 2.2987808576454127
         },
-        "scored_at": "2026-03-18 18:50:36"
+        "scored_at": "2026-03-18 19:30:26"
       }
     },
     "FTV": {
@@ -1753,21 +1957,21 @@
         "scored_at": "2026-03-18 18:19:28"
       },
       "financial": {
-        "score": 58,
-        "explanation": "GE Aerospace shows modest positive momentum with a slight daily gain of 0.28% and price trading nearly in line with VWAP, suggesting fair near-term valuation without significant directional conviction. Volume of ~109K is relatively modest, and the narrow high-low range of ~1.16% indicates low volatility and consolidation rather than a strong breakout signal. News is mixed — the $127M European expansion and hiring push is a positive long-term catalyst, but a congressional insider sale of up to $30K worth of stock is a mild caution flag, keeping the overall attractiveness slightly above neutral.",
+        "score": 35,
+        "explanation": "GE is showing weak intraday momentum with a -0.21% daily decline and price trading 45 bps below VWAP, indicating selling pressure. The stock is trading near the session low within a tight 1.26% range, and volume of 120k shares appears modest without confirming institutional accumulation. While recent aerospace division news (€127M hiring push) provides positive fundamental context, the technical deterioration and lack of bullish price confirmation overshadow the narrative strength, suggesting downside risk into the near term.",
         "metrics": {
-          "price": 303,
+          "price": 301.52,
           "open": 303,
           "high": 304.905,
-          "low": 301.42,
-          "close": 302.825,
-          "vwap": 302.943962,
-          "volume": 109023,
-          "daily_change_pct": 0.27633908626081094,
-          "price_vs_vwap_pct": 0.018497810496055016,
-          "high_low_range_pct": 1.1561940149956726
+          "low": 301.11,
+          "close": 301.52,
+          "vwap": 302.886552,
+          "volume": 120246,
+          "daily_change_pct": -0.2134595336984888,
+          "price_vs_vwap_pct": -0.4511761882382988,
+          "high_low_range_pct": 1.2603367540101487
         },
-        "scored_at": "2026-03-18 18:19:27"
+        "scored_at": "2026-03-18 19:00:04"
       }
     },
     "GIS": {
@@ -1822,20 +2026,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "GLW shows solid upward momentum with a +0.99% daily gain and positive analyst sentiment (BofA maintains Buy, raises PT to $144). The stock trades 1.45% below VWAP, indicating slight weakness in intraday execution, but remains within a healthy range. Volume of 240,849 shares is moderate; without average volume context, accumulation cannot be confirmed, but the lack of significant volume spike on an up day suggests retail-driven rather than institutional buying. The 3.8% high-low range reflects normal intraday volatility. The key tailwind is analyst support and positive news flow around AI-adjacent positioning, offsetting the minor technical softness versus VWAP.",
+        "explanation": "GLW shows solid upside potential with BofA's recent buy rating and $144 price target (8% upside from current $129.83), plus positive momentum from overnight trending interest. However, today's session reveals mixed technicals: the stock closed -0.06% despite opening at $132, trades 2.2% below VWAP, and sits in the lower half of today's intraday range, suggesting intraday sellers took profits. The setup lacks the crisp conviction needed for a higher score, but the analyst upgrade and short-term bullish sentiment warrant a strong-hold rating in the 70s range.",
         "metrics": {
-          "price": 131.19,
+          "price": 129.83,
           "open": 132,
           "high": 135.21,
-          "low": 130.24,
-          "close": 131.22,
-          "vwap": 133.122156,
-          "volume": 240849,
-          "daily_change_pct": 0.9852975136633062,
-          "price_vs_vwap_pct": -1.4514157958799827,
-          "high_low_range_pct": 3.81603194103194
+          "low": 129.6,
+          "close": 129.83,
+          "vwap": 132.813919,
+          "volume": 270245,
+          "daily_change_pct": -0.061581094603944335,
+          "price_vs_vwap_pct": -2.2466914781725444,
+          "high_low_range_pct": 4.328703703703715
         },
-        "scored_at": "2026-03-18 18:50:12"
+        "scored_at": "2026-03-18 19:30:03"
       }
     },
     "GM": {
@@ -1992,20 +2196,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "HAL shows modest near-term upside with a +1.09% daily gain and price holding above VWAP, but lacks compelling momentum drivers. The recent news highlighting automated well construction breakthroughs is operationally positive and suggests competitive positioning, yet current price action is relatively flat intraday (trading in a tight 3.1% range) with no unusual volume catalyst evident. Without broader market context or longer-term momentum data (52-week positioning, RSI, volume ratio), the stock appears fairly valued at current levels—a hold rather than a strong buy.",
+        "explanation": "HAL shows mixed but mildly positive signals. The stock is up 1.52% intraday with price above VWAP (+0.72%), suggesting modest bullish momentum, and recent news on automated well construction breakthrough provides positive operational narrative. However, the lack of broader momentum context (5d/20d returns unavailable), absence of 52-week positioning data, and intraday volume of 710K without clarity on whether this exceeds typical levels limits confidence. The stock sits in mid-range technical territory—worth monitoring but not a strong conviction buy without confirmation of sustained momentum.",
         "metrics": {
-          "price": 36.02,
+          "price": 36.17,
           "open": 35.4,
           "high": 36.39,
           "low": 35.28,
-          "close": 36.035,
-          "vwap": 35.890168,
-          "volume": 634030,
-          "daily_change_pct": 1.0945832163906835,
-          "price_vs_vwap_pct": 0.3617480976962838,
+          "close": 36.16,
+          "vwap": 35.910443,
+          "volume": 710542,
+          "daily_change_pct": 1.5155767611563264,
+          "price_vs_vwap_pct": 0.7227897467040463,
           "high_low_range_pct": 3.1462585034013584
         },
-        "scored_at": "2026-03-18 18:50:32"
+        "scored_at": "2026-03-18 19:30:21"
       }
     },
     "HBAN": {
@@ -2026,20 +2230,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "HBAN shows mixed short-to-medium term signals. The stock is down 1.56% today and trading below VWAP (-0.65%), with volume of 597K appearing ordinary relative to typical daily activity—neither accumulation nor distribution is evident. However, analyst consensus remains constructively bullish across multiple houses (DA Davidson, Truist, Morgan Stanley all maintain Buy/Overweight ratings with price targets ranging $19–$23), suggesting the current $15.15 price offers 25–52% upside potential. The narrow intraday range (1.68%) and lack of momentum deterioration prevent a lower score, but the absence of positive price momentum, elevated distance from recent highs, and today's weakness warrant a hold-rather-than-buy posture despite favorable fundamental backdrop.",
+        "explanation": "HBAN shows mixed technical signals with a modest down day (-1.62%) but maintains analyst support across major firms (Buy/Overweight ratings with price targets $19–$23, implying 25–52% upside). The stock is trading slightly below VWAP and near the low end of today's range, suggesting intraday weakness, but the price remains well above the 52-week low setup, indicating no panic. Volume appears moderate without clear accumulation/distribution signals. The technical structure lacks immediate momentum, but strong fundamental backing from multiple analysts and significant upside targets support a neutral-to-cautiously-bullish stance suitable for medium-term holding.",
         "metrics": {
-          "price": 15.15,
+          "price": 15.14,
           "open": 15.15,
           "high": 15.4,
-          "low": 15.145,
-          "close": 15.15,
-          "vwap": 15.249678,
-          "volume": 597174,
-          "daily_change_pct": -1.5594541910331396,
-          "price_vs_vwap_pct": -0.653640030956713,
-          "high_low_range_pct": 1.6837240013205732
+          "low": 15.095,
+          "close": 15.14,
+          "vwap": 15.243973,
+          "volume": 636234,
+          "daily_change_pct": -1.6244314489928524,
+          "price_vs_vwap_pct": -0.6820597228819538,
+          "high_low_range_pct": 2.0205366015236814
         },
-        "scored_at": "2026-03-18 18:50:15"
+        "scored_at": "2026-03-18 19:30:06"
       }
     },
     "HOLX": {
@@ -2059,21 +2263,21 @@
         "scored_at": "2026-03-18 18:19:29"
       },
       "financial": {
-        "score": 45,
-        "explanation": "HOLX shows mixed signals with recent fundamental disappointment offsetting modest technical stability. Q1 earnings missed both EPS ($1.04 vs $1.09) and revenue ($1.048B vs $1.070B) estimates, creating near-term headwind, though the FDA approval for Aptima HPV assay provides a product catalyst. Technically, the stock is flat on the day with minimal momentum (0.10% daily change), trading just below VWAP with a narrow daily range (0.23%), suggesting consolidation without conviction. The lack of volume (no ratio provided but context suggests standard levels) and absence of strong directional momentum place this in a hold-worthy but uninspiring zone ahead of January 29 earnings.",
+        "score": 42,
+        "explanation": "HOLX shows mixed signals with a modest positive daily return (+0.10%) but insufficient momentum to warrant a strong buy. Recent earnings miss on both EPS and sales expectations is a headwind, though the FDA approval for Aptima HPV assay provides a modest positive catalyst. The stock trades near VWAP with a tight intraday range, suggesting consolidation rather than conviction; without confirming volume surge or clear breakout structure, and with earnings scheduled imminently (Jan 29), the risk/reward is neutral-to-slightly-negative for short-to-medium term traders.",
         "metrics": {
           "price": 75.145,
           "open": 75.035,
           "high": 75.2,
           "low": 75.03,
           "close": 75.145,
-          "vwap": 75.153347,
-          "volume": 285497,
+          "vwap": 75.153522,
+          "volume": 328217,
           "daily_change_pct": 0.09990675369655369,
-          "price_vs_vwap_pct": -0.011106624432842025,
+          "price_vs_vwap_pct": -0.011339455255336209,
           "high_low_range_pct": 0.22657603625216804
         },
-        "scored_at": "2026-03-18 18:50:15"
+        "scored_at": "2026-03-18 19:30:06"
       }
     },
     "HOOD": {
@@ -2127,21 +2331,21 @@
         "scored_at": "2026-03-18 14:30:08"
       },
       "financial": {
-        "score": 72,
-        "explanation": "HPE shows strong fundamental support with Citigroup's recent Buy rating and raised $27 price target, implying 25% upside from current levels, plus positive momentum from the AI Factory partnership with Nvidia announcement. However, today's session shows minor weakness (-0.18% daily change, trading 0.66% below VWAP) with modest volume (611k shares) on a narrow intraday range, suggesting consolidation rather than conviction; the stock needs follow-through buying to confirm the bullish narrative before this becomes a compelling short-to-medium term trade.",
+        "score": 62,
+        "explanation": "HPE shows mixed but constructive signals. The stock is trading slightly below VWAP (-0.99%) with modest intraday weakness (-0.60%), but the narrow high-low range (2.11%) suggests consolidation rather than capitulation. Recent analyst upgrades (Citigroup raising target to $27, implying ~25% upside) and positive news around AI Factory partnership with Nvidia provide fundamental tailwinds. However, without access to moving averages, volume ratios, and RSI, the score reflects moderate conviction—the setup is hold-to-accumulate on weakness, not an aggressive buy.",
         "metrics": {
-          "price": 21.64,
+          "price": 21.55,
           "open": 21.71,
           "high": 21.995,
-          "low": 21.645,
-          "close": 21.645,
-          "vwap": 21.782813,
-          "volume": 611355,
-          "daily_change_pct": -0.18450184501844624,
-          "price_vs_vwap_pct": -0.6556223936733988,
-          "high_low_range_pct": 1.6170016170016237
+          "low": 21.54,
+          "close": 21.55,
+          "vwap": 21.766478,
+          "volume": 680000,
+          "daily_change_pct": -0.5996309963099585,
+          "price_vs_vwap_pct": -0.9945476709644925,
+          "high_low_range_pct": 2.1123491179201572
         },
-        "scored_at": "2026-03-18 18:50:14"
+        "scored_at": "2026-03-18 19:30:06"
       }
     },
     "HPQ": {
@@ -2196,20 +2400,54 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "HST shows modest intraday momentum (+2.3% daily gain, trading above VWAP) with analyst support from Citigroup's buy rating and multiple price target raises to $21–$22, suggesting 9–15% upside from current levels. However, the absence of longer-term momentum data, limited volume context, and mixed sentiment (Cantor and JP Morgan neutral) prevent a stronger conviction; the recent $1.1B asset sale is strategically positive but adds execution risk. Current setup is hold-worthy with a slight bullish lean, suitable for medium-term accumulation rather than aggressive short-term trading.",
+        "explanation": "HST shows mixed but constructive signals. The stock gained +1.81% intraday with price holding above VWAP and within the upper portion of today's range, indicating modest positive momentum. Analyst support is notable: Citigroup maintains Buy with a $22 target (15% upside), and both Cantor Fitzgerald and JP Morgan raised targets to $21 (9.6% upside), suggesting fundamental confidence. However, the lack of longer-term momentum data, absence of exceptional volume confirmation, and the recent asset sale (while potentially positive strategically) create near-term uncertainty. The stock appears fairly valued with reasonable upside but lacks the confluence of strong technical and momentum indicators required for a higher score.",
         "metrics": {
-          "price": 19.225,
+          "price": 19.13,
           "open": 18.72,
           "high": 19.305,
           "low": 18.72,
-          "close": 19.235,
-          "vwap": 19.027006,
-          "volume": 594375,
-          "daily_change_pct": 2.3150612027674415,
-          "price_vs_vwap_pct": 1.040594615884398,
+          "close": 19.12,
+          "vwap": 19.044639,
+          "volume": 677619,
+          "daily_change_pct": 1.809473124002128,
+          "price_vs_vwap_pct": 0.4482153744158601,
           "high_low_range_pct": 3.125000000000005
         },
-        "scored_at": "2026-03-18 18:50:45"
+        "scored_at": "2026-03-18 19:30:21"
+      }
+    },
+    "IBKR": {
+      "ticker": "IBKR",
+      "company": "Interactive Brokers",
+      "sector": "Financials",
+      "woke": {
+        "score": 68,
+        "explanation": "Interactive Brokers is a financial services firm with a middling ethical profile. Strengths include no direct environmental harm, reasonable labor practices for a white-collar sector, and a core business (retail and institutional brokerage) that is generally neutral on harm—though the expansion into crypto derivatives and portfolio lending products adds minor concerns about enabling financial speculation and debt leverage among retail investors. Weaknesses: the firm's governance is dominated by founder and CEO Thomas Peterffy, who maintains supermajority voting control through dual-class shares, severely limiting board independence and accountability. Political spending is moderate but not transparent, and the company has engaged in regulatory skirmishes (e.g., SEC enforcement actions over compliance failures). The board lacks meaningful diversity. The firm is not engaged in predatory lending or weapons manufacturing, and employee injury and safety records are not documented as problematic, which keeps the score in the mid-range rather than low.",
+        "breakdown": {
+          "environmental": 70,
+          "labor": 72,
+          "diversity_governance": 62,
+          "harm_avoidance": 68,
+          "political": 66
+        },
+        "scored_at": "2026-03-18 19:15:20"
+      },
+      "financial": {
+        "score": 45,
+        "explanation": "IBKR shows mixed intraday momentum with a modest +0.42% daily gain, but the stock is trading slightly below VWAP (-0.15%) and lacks sustained directional conviction. While recent news demonstrates solid business expansion (Swedish ISK accounts, crypto offerings, 21% YoY DAR growth), today's price action is constrained within a tight 1.3% daily range with below-average volume (103k shares), suggesting institutional accumulation or distribution interest is absent. Without confirmation of breakout momentum or clarity on broader technical positioning (52-week levels unavailable), the stock appears to be in a transition/consolidation phase rather than a compelling near-term trading opportunity.",
+        "metrics": {
+          "price": 68.955,
+          "open": 68.52,
+          "high": 69.41,
+          "low": 68.52,
+          "close": 68.955,
+          "vwap": 69.058468,
+          "volume": 103530,
+          "daily_change_pct": 0.4223403480666891,
+          "price_vs_vwap_pct": -0.14982666571752873,
+          "high_low_range_pct": 1.2988908347927621
+        },
+        "scored_at": "2026-03-18 19:15:20"
       }
     },
     "INTC": {
@@ -2230,20 +2468,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "INTC shows modest intraday strength with a +3.4% daily gain and price trading 1.7% above VWAP, suggesting some buying interest. Recent product launches (Core Ultra 9 290HX Plus) and positive gaming performance messaging provide near-term catalyst support. However, the lack of broader momentum context (52-week positioning unknown), moderate volume without clear institutional confirmation, and Intel's structural headwinds in competitive semiconductor markets limit upside conviction—this is a hold-worthy bounce rather than a strong buy setup.",
+        "explanation": "INTC shows mixed but cautiously positive signals. The stock gained +2.57% today with above-average volume (2.2M shares), trading 0.67% above VWAP, suggesting modest institutional interest. Recent product launches (Core Ultra 9 290HX Plus, binary optimization tools) and positive gaming performance narratives provide fundamental tailwinds. However, the lack of historical price context (52-week highs/lows, moving averages) prevents a stronger conviction score, and the stock is trading within a tight intraday range (3.7%), indicating consolidation rather than decisive breakout momentum. Position is hold-worthy but requires confirmation of sustained volume and upside momentum for a higher conviction entry.",
         "metrics": {
-          "price": 45.56,
+          "price": 45.18,
           "open": 44.2,
           "high": 45.695,
           "low": 44.055,
-          "close": 45.515,
-          "vwap": 44.805155,
-          "volume": 1898263,
-          "daily_change_pct": 3.4279228149829857,
-          "price_vs_vwap_pct": 1.6847280184612754,
+          "close": 45.155,
+          "vwap": 44.88032,
+          "volume": 2207002,
+          "daily_change_pct": 2.565266742338258,
+          "price_vs_vwap_pct": 0.6677314243748756,
           "high_low_range_pct": 3.7226194529565326
         },
-        "scored_at": "2026-03-18 18:50:23"
+        "scored_at": "2026-03-18 19:30:16"
       }
     },
     "IQV": {
@@ -2298,20 +2536,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "IVZ shows mixed technical signals with a slightly negative intraday close (-0.04%) and trading below VWAP, but benefits from positive strategic catalysts including a $1B buyback program, strong real estate loan closures ($3B in H2 2025), and a Goldman Sachs price target raise to $30 (26% upside from current $23.72). The recent activist fund reduction by Nelson Peltz is a minor headwind, but the company's positioning in fixed income ETFs amid rate volatility and the analyst upgrade provide a reasonable medium-term bullish case despite weak near-term momentum.",
+        "explanation": "IVZ shows mixed signals with a modest negative day (-0.95%) and price trading below VWAP, suggesting slight weakness in current momentum. However, the stock is supported by a $1B buyback program, Goldman Sachs' neutral stance with a $30 price target (27% upside), and strong business fundamentals including $3B in real estate loan closures. The narrow intraday range and lack of confirming volume data prevent a stronger conviction, but the valuation gap and capital return program provide a reasonable hold-to-modest-upside case for short-to-medium term positioning.",
         "metrics": {
-          "price": 23.72,
+          "price": 23.505,
           "open": 23.535,
           "high": 24.06,
           "low": 23.4,
-          "close": 23.72,
-          "vwap": 23.742539,
-          "volume": 122450,
-          "daily_change_pct": -0.04214075010535846,
-          "price_vs_vwap_pct": -0.09493087491612359,
+          "close": 23.505,
+          "vwap": 23.7075,
+          "volume": 152181,
+          "daily_change_pct": -0.9481668773704232,
+          "price_vs_vwap_pct": -0.8541600759253426,
           "high_low_range_pct": 2.820512820512821
         },
-        "scored_at": "2026-03-18 18:50:15"
+        "scored_at": "2026-03-18 19:30:06"
       }
     },
     "JPM": {
@@ -2332,20 +2570,20 @@
       },
       "financial": {
         "score": 52,
-        "explanation": "JPM shows modest intraday strength (+0.49% daily return, trading above VWAP) but lacks compelling short-to-medium term momentum signals. The stock is within a tight 1.34% daily range with moderate volume (143k shares), offering neither acceleration nor distributional conviction. Recent news regarding the halted Qualtrics debt deal introduces execution risk for a major financial institution, offsetting modest technical stability and limiting upside catalysts for tactical positioning.",
+        "explanation": "JPM shows mixed near-term signals with minimal intraday momentum (+0.27%) and tight price action near VWAP, suggesting consolidation rather than directional conviction. While the stock holds near recent highs and volume appears modest, the recent news of a halted $5.3B Qualtrics debt deal introduces headline risk and potential earnings pressure, offsetting any near-term technical strength. The lack of strong momentum metrics or clear breakout setup argues for a neutral hold rather than a tactical buy.",
         "metrics": {
-          "price": 288.36,
+          "price": 287.72,
           "open": 286.655,
           "high": 289.34,
           "low": 285.525,
-          "close": 288.615,
-          "vwap": 287.570555,
-          "volume": 143150,
-          "daily_change_pct": 0.4948769777653921,
-          "price_vs_vwap_pct": 0.2745221950835685,
+          "close": 287.725,
+          "vwap": 287.612021,
+          "volume": 158408,
+          "daily_change_pct": 0.2718338328570536,
+          "price_vs_vwap_pct": 0.03754328474330364,
           "high_low_range_pct": 1.3361351895630849
         },
-        "scored_at": "2026-03-18 18:50:38"
+        "scored_at": "2026-03-18 19:30:29"
       }
     },
     "KDP": {
@@ -2433,21 +2671,21 @@
         "scored_at": "2026-03-18 14:15:50"
       },
       "financial": {
-        "score": 32,
-        "explanation": "KHC is showing negative momentum with a ~2% daily decline and trading near its intraday low, while Wells Fargo just lowered its price target to $23 — barely above the current price of $22.44, leaving minimal upside cushion. Berkshire's new CEO Greg Abel has publicly expressed disappointment in the Kraft Heinz investment, raising concerns about potential large-scale selling pressure from one of its biggest institutional holders. Volume is relatively low and the tight high-low range suggests weak conviction among buyers, making this an unattractive short-to-medium term setup with more downside risk than upside potential.",
+        "score": 42,
+        "explanation": "KHC shows weak near-term momentum with a -3.5% daily loss and trading below VWAP, suggesting distribution pressure. While merger speculation and the NFL partnership provide fundamental catalysts, the stock is trapped between analyst headwinds (Wells Fargo downgrade to $23 target) and potential uncertainty around Buffett's estate liquidation, creating conflicting signals that prevent a constructive short-to-medium term setup.",
         "metrics": {
-          "price": 22.44,
+          "price": 22.1,
           "open": 22.6,
-          "high": 22.6,
-          "low": 22.335,
-          "close": 22.465,
-          "vwap": 22.433305,
-          "volume": 114658,
-          "daily_change_pct": -2.0087336244541367,
-          "price_vs_vwap_pct": 0.02984401986243472,
-          "high_low_range_pct": 1.1864786209984355
+          "high": 22.995,
+          "low": 22,
+          "close": 22.11,
+          "vwap": 22.306576,
+          "volume": 1016138,
+          "daily_change_pct": -3.493449781659377,
+          "price_vs_vwap_pct": -0.9260766869823424,
+          "high_low_range_pct": 4.522727272727278
         },
-        "scored_at": "2026-03-18 14:15:48"
+        "scored_at": "2026-03-18 19:15:15"
       }
     },
     "KKR": {
@@ -2468,20 +2706,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "KKR shows mixed but moderately positive technicals: +1.65% daily gain with price holding just below VWAP suggests controlled accumulation without excess enthusiasm, and the 4.4% high-low range indicates moderate volatility. The strategic $310M India e-bus commitment is a positive growth signal for the alternative asset manager, but broader market headwinds (Fed decision looming, wholesale price inflation, private credit stress) and price trading slightly below VWAP create caution. Position warrants a hold with selective accumulation rather than aggressive entry.",
+        "explanation": "KKR shows mixed technical signals with a solid intraday gain (+2.08%) and pricing near VWAP, indicating institutional participation. However, the stock is trading in the lower-to-middle of its recent range and lacks decisive momentum indicators; the +2.08% daily move alone is insufficient to confirm a sustained breakout. The strategic $310M India e-bus investment is a positive growth story, but broader market headwinds (Fed decision, wholesale price pressures, private credit concerns) and the absence of extended-term momentum metrics leave this as a hold rather than a strong buy.",
         "metrics": {
-          "price": 90.445,
+          "price": 90.835,
           "open": 88.65,
           "high": 92.39,
           "low": 88.49,
-          "close": 90.41,
-          "vwap": 90.705278,
-          "volume": 253409,
-          "daily_change_pct": 1.6464374016632828,
-          "price_vs_vwap_pct": -0.2869491232913853,
+          "close": 90.775,
+          "vwap": 90.683433,
+          "volume": 398149,
+          "daily_change_pct": 2.0847381434030003,
+          "price_vs_vwap_pct": 0.16713857756135017,
           "high_low_range_pct": 4.407277658492491
         },
-        "scored_at": "2026-03-18 18:50:28"
+        "scored_at": "2026-03-18 19:30:20"
       }
     },
     "KMI": {
@@ -2552,6 +2790,40 @@
         "scored_at": "2026-03-18 14:15:39"
       }
     },
+    "KVUE": {
+      "ticker": "KVUE",
+      "company": "Kenvue",
+      "sector": "Consumer Staples",
+      "woke": {
+        "score": 48,
+        "explanation": "Kenvue is a consumer health spinoff from Johnson & Johnson facing significant legal and reputational headwinds. The pending Texas lawsuit over Tylenol marketing practices—particularly to vulnerable populations—combined with J&J's documented history of misleading OTC drug marketing, creates material harm-avoidance concerns. The company inherits moderate labor and environmental profiles typical of diversified health-consumer firms but lacks standout governance practices; board composition and executive pay structures show no exceptional commitment to accountability or diversity. While recent FDA expansion of autism-linked disorder treatment is positive, it does not offset the litigation risk and marketing conduct issues that define the company's near-term ethical profile.",
+        "breakdown": {
+          "environmental": 52,
+          "labor": 51,
+          "diversity_governance": 45,
+          "harm_avoidance": 38,
+          "political": 52
+        },
+        "scored_at": "2026-03-18 19:02:51"
+      },
+      "financial": {
+        "score": 42,
+        "explanation": "KVUE shows mixed technical signals with a negative daily return of -1.27% and price trading near intraday lows within a tight 1.24% range, suggesting weak momentum and lack of conviction. However, analyst upgrades (Barclays to $19, Canaccord to $18) and potential merger interest provide medium-term upside to current $17.55, offsetting near-term weakness. Legal headwinds (Tylenol lawsuit) and the stock's distance from 52-week highs (implied by analyst targets suggesting 8–12% upside) warrant caution on entry, but the risk/reward is not yet attractive enough for a strong buy.",
+        "metrics": {
+          "price": 17.545,
+          "open": 17.54,
+          "high": 17.605,
+          "low": 17.39,
+          "close": 17.545,
+          "vwap": 17.543197,
+          "volume": 1000189,
+          "daily_change_pct": -1.2661789532920533,
+          "price_vs_vwap_pct": 0.01027748819102038,
+          "high_low_range_pct": 1.2363427257044268
+        },
+        "scored_at": "2026-03-18 19:02:51"
+      }
+    },
     "LRCX": {
       "ticker": "LRCX",
       "company": "Lam Research",
@@ -2570,20 +2842,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "LRCX shows modest positive momentum with a +0.84% daily gain and price trading 0.04% above VWAP, indicating balanced buying interest at fair value. However, the lack of multi-day momentum data, moderate volume (276K shares), and neutral technical positioning between moving averages (inferred from price near VWAP) prevents a stronger conviction. Barclays' recent price target raise to $255 provides upside optionality (~12% from current), but execution risk remains until sustained breakout confirmation above the recent high of $232.",
+        "explanation": "LRCX shows mixed technical signals with a slight intraday decline (-0.10%) and trading 0.86% below VWAP, indicating mild selling pressure. However, the stock is holding in the upper portion of its daily range (4.18% wide) and benefits from recent analyst support—notably Barclays raising its price target to $255, suggesting 12.7% upside from current levels. The inclusion in CNBC's Final Trades and positive long-term track record provide sentiment support, but today's weak close and below-VWAP positioning prevent a stronger score without additional momentum confirmation.",
         "metrics": {
-          "price": 228.35,
+          "price": 226.22,
           "open": 227.445,
           "high": 232.285,
           "low": 222.975,
-          "close": 228.35,
-          "vwap": 228.257703,
-          "volume": 276856,
-          "daily_change_pct": 0.8434905493729008,
-          "price_vs_vwap_pct": 0.04043543713396698,
+          "close": 226.315,
+          "vwap": 228.189108,
+          "volume": 296153,
+          "daily_change_pct": -0.09715597950892019,
+          "price_vs_vwap_pct": -0.8629281288921141,
           "high_low_range_pct": 4.17535598161229
         },
-        "scored_at": "2026-03-18 18:50:16"
+        "scored_at": "2026-03-18 19:30:06"
       }
     },
     "LULU": {
@@ -2603,21 +2875,21 @@
         "scored_at": "2026-03-18 18:15:13"
       },
       "financial": {
-        "score": 45,
-        "explanation": "LULU shows intraday strength with a +5% daily gain and trading above VWAP, suggesting institutional interest, but this is undermined by significant analyst downgrades post-Q4 earnings and multiple price target cuts to $170–$176—levels at or below current price. The stock is near its intraday high with elevated volatility (5.5% range), typical of earnings-driven moves, but lacks follow-through conviction from research teams, indicating the rally may lack fundamental support and faces near-term resistance.",
+        "score": 42,
+        "explanation": "LULU shows intraday strength with a +4.3% daily gain and price trading above VWAP, but this is undermined by a cascade of analyst downgrades post-earnings that have reset price targets lower ($170–$176 vs. current $166.2). The stock trades near its daily high in a narrow range, suggesting momentum exhaustion rather than sustainable breakout; whale activity noted but insufficient to offset fundamental consensus deterioration. Short-to-medium term setup is weakening despite tactical bounce.",
         "metrics": {
-          "price": 167.295,
+          "price": 166.2,
           "open": 160.43,
           "high": 169.21,
           "low": 160.41,
-          "close": 167.89,
-          "vwap": 165.052206,
-          "volume": 186384,
-          "daily_change_pct": 5.032019085886481,
-          "price_vs_vwap_pct": 1.3588391542006866,
+          "close": 166.2,
+          "vwap": 165.210036,
+          "volume": 210206,
+          "daily_change_pct": 4.344550477147155,
+          "price_vs_vwap_pct": 0.5992154132815432,
           "high_low_range_pct": 5.4859422729256355
         },
-        "scored_at": "2026-03-18 18:50:26"
+        "scored_at": "2026-03-18 19:30:14"
       }
     },
     "LVS": {
@@ -2637,21 +2909,21 @@
         "scored_at": "2026-03-18 18:15:45"
       },
       "financial": {
-        "score": 52,
-        "explanation": "LVS shows mixed technical signals with modest intraday gains (+0.70%) and price holding near VWAP, but lacks decisive momentum. The stock trades within a tight 1.75% daily range with modest volume (175,376 shares), suggesting consolidation rather than conviction. Leadership transition to Patrick Dumont and digital payment partnerships are strategic positives, but without price acceleration above recent highs or volume confirmation, the risk/reward remains neutral; the stock warrants holding but is not an attractive entry point for short-to-medium term trading.",
+        "score": 42,
+        "explanation": "LVS shows weak intraday momentum with a +0.02% daily return and trades 0.61% below VWAP, suggesting selling pressure despite modest volume (210k shares). Leadership transition to Patrick Dumont and new digital initiatives offer long-term strategic potential, but current technical setup lacks conviction—the stock remains trapped in a narrow daily range (1.96%) without clear directional confirmation. Rising short interest and analyst questions about market support add near-term headwinds; this is a hold or accumulation setup for longer-term players, not a near-term trading opportunity.",
         "metrics": {
-          "price": 54.53,
+          "price": 54.16,
           "open": 54.945,
           "high": 55.17,
-          "low": 54.22,
-          "close": 54.52,
-          "vwap": 54.525442,
-          "volume": 175376,
-          "daily_change_pct": 0.701754385964917,
-          "price_vs_vwap_pct": 0.00835940036946963,
-          "high_low_range_pct": 1.7521209885651103
+          "low": 54.11,
+          "close": 54.15,
+          "vwap": 54.494898,
+          "volume": 210502,
+          "daily_change_pct": 0.018467220683283492,
+          "price_vs_vwap_pct": -0.6145492739522195,
+          "high_low_range_pct": 1.9589724635002814
         },
-        "scored_at": "2026-03-18 18:50:36"
+        "scored_at": "2026-03-18 19:30:30"
       }
     },
     "LW": {
@@ -2671,21 +2943,21 @@
         "scored_at": "2026-03-18 13:31:02"
       },
       "financial": {
-        "score": 68,
-        "explanation": "Lamb Weston is showing positive short-term momentum with a 2.6% daily gain and price trading slightly above VWAP, suggesting healthy buying pressure. The Starboard Value activist stake is a notable catalyst, as their push for accelerated cost-cutting and SG&A reductions could unlock meaningful shareholder value in the medium term, while new leadership appointments signal operational change. However, volume remains relatively modest and the stock's broader turnaround thesis depends on execution, making this a moderate-to-favorable setup with event-driven upside rather than a high-conviction technical breakout.",
+        "score": 72,
+        "explanation": "LW shows solid short-term momentum with a +1.01% daily gain and trading above VWAP, supported by activist catalyst from Starboard Value pushing operational improvements and cost-cutting. News of leadership changes and analyst recognition as a top dividend play suggests institutional interest, though the modest intraday range (3.7%), moderate volume of 112.9K shares, and lack of price context relative to 52-week levels prevent a higher score—momentum is present but not yet exceptional.",
         "metrics": {
-          "price": 40.935,
-          "open": 40.115,
-          "high": 41.455,
-          "low": 40.045,
-          "close": 40.935,
-          "vwap": 40.870413,
-          "volume": 127961,
-          "daily_change_pct": 2.6197041865129145,
-          "price_vs_vwap_pct": 0.15802874318887616,
-          "high_low_range_pct": 3.5210388313147623
+          "price": 41.35,
+          "open": 40.575,
+          "high": 41.73,
+          "low": 40.24,
+          "close": 41.35,
+          "vwap": 41.193947,
+          "volume": 112957,
+          "daily_change_pct": 1.0138023696103557,
+          "price_vs_vwap_pct": 0.3788250734992692,
+          "high_low_range_pct": 3.702783300198794
         },
-        "scored_at": "2026-03-18 13:31:01"
+        "scored_at": "2026-03-18 19:30:25"
       }
     },
     "LYB": {
@@ -2706,20 +2978,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "LYB shows intraday strength with a +5.97% daily gain and price trading 1.70% above VWAP, indicating buying pressure. However, the financial case is materially constrained by conflicting analyst positioning: UBS upgraded to Neutral with a $73 target (near current price), while Wells Fargo maintains Equal-Weight at $70, suggesting limited upside consensus and potential resistance overhead. Geopolitical risk (Iran conflict) adds tail risk that dampens the attractiveness despite solid technical momentum today.",
+        "explanation": "LYB shows solid intraday momentum with a +6.6% daily gain and price trading 2% above VWAP, indicating institutional buying interest. However, the upside is capped by analyst caution: UBS upgraded to Neutral with a $73 target (below current price), and Wells Fargo maintains Equal-Weight at $70, suggesting limited conviction for further appreciation. The strong single-day move appears to be a relief rally rather than the start of a sustained uptrend, and geopolitical headwinds (Iran tensions affecting commodities) create near-term uncertainty.",
         "metrics": {
-          "price": 75.43,
+          "price": 75.895,
           "open": 73.415,
-          "high": 75.8,
+          "high": 76.08,
           "low": 72.49,
-          "close": 75.455,
-          "vwap": 74.171173,
-          "volume": 266893,
-          "daily_change_pct": 5.970778308513626,
-          "price_vs_vwap_pct": 1.6971917108551198,
-          "high_low_range_pct": 4.566147054766178
+          "close": 75.84,
+          "vwap": 74.384803,
+          "volume": 318489,
+          "daily_change_pct": 6.624051699915691,
+          "price_vs_vwap_pct": 2.030249377685373,
+          "high_low_range_pct": 4.952407228583258
         },
-        "scored_at": "2026-03-18 18:50:27"
+        "scored_at": "2026-03-18 19:30:17"
       }
     },
     "MCHP": {
@@ -2740,20 +3012,20 @@
       },
       "financial": {
         "score": 52,
-        "explanation": "MCHP shows modest intraday momentum (+1.62% on the day) with price above VWAP, but lacks compelling conviction signals. Analyst coverage is mixed—Barclays initiation at Equal-Weight with $80 target provides upside optionality, yet Truist's Hold with modest $69 target and recent product announcements suggest incremental rather than transformational catalysts. Volume and technical structure are unremarkable; the stock is mid-range between support and resistance with no clear directional breakout.",
+        "explanation": "MCHP shows mixed technical signals with modest intraday momentum (+0.75%) but lacks conviction in broader trend structure. The stock is trading near VWAP with moderate daily range (2.5%), suggesting consolidation rather than breakout energy. Recent analyst coverage is mixed—Barclays initiates at Equal-Weight with $80 target (23% upside potential), while Truist maintains Hold at $69 target, indicating consensus caution. Without moving average positioning, volume profile, or longer-term trend context, the risk/reward is neutral; the stock appears fairly valued near current levels but lacks a clear directional catalyst to warrant a strong tactical position.",
         "metrics": {
-          "price": 65.67,
+          "price": 65.11,
           "open": 64.42,
           "high": 65.79,
           "low": 64.195,
-          "close": 65.615,
-          "vwap": 65.038799,
-          "volume": 189423,
-          "daily_change_pct": 1.6170212765957475,
-          "price_vs_vwap_pct": 0.9704991631226222,
+          "close": 65.1,
+          "vwap": 65.11137,
+          "volume": 249930,
+          "daily_change_pct": 0.7504835589941964,
+          "price_vs_vwap_pct": -0.0021040871970507153,
           "high_low_range_pct": 2.484617182023543
         },
-        "scored_at": "2026-03-18 18:50:29"
+        "scored_at": "2026-03-18 19:30:27"
       }
     },
     "MDLZ": {
@@ -2944,20 +3216,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "MPC shows solid short-term momentum with a +2.07% daily gain and price trading above VWAP, supported by strong geopolitical tailwinds for US refiners amid Iran tensions and elevated diesel prices. However, Mizuho's recent neutral rating and $224 price target (below current $238.20) introduces downside risk that tempers the bullish case; the stock needs to sustain momentum above this analyst resistance level to justify a higher score.",
+        "explanation": "MPC shows solid short-term momentum with a +1.87% daily gain and price trading 0.29% above VWAP, indicating buying pressure. The recent geopolitical escalation in Iran and resulting energy market volatility are creating a favorable structural backdrop for refiners, supported by diesel supply concerns and potential margin expansion. However, Mizuho's recent neutral stance with a $224 target (below current price) and the mixed macro signals (stagflation concerns) provide a cautionary offset to the bullish refinery thesis.",
         "metrics": {
-          "price": 238.2,
+          "price": 237.745,
           "open": 235.46,
-          "high": 238.645,
+          "high": 238.72,
           "low": 233.7,
-          "close": 238.2,
-          "vwap": 236.679963,
-          "volume": 139645,
-          "daily_change_pct": 2.0696747653940024,
-          "price_vs_vwap_pct": 0.6422330731900622,
-          "high_low_range_pct": 2.1159606332905527
+          "close": 237.745,
+          "vwap": 237.058914,
+          "volume": 170280,
+          "daily_change_pct": 1.8747054034366026,
+          "price_vs_vwap_pct": 0.28941582006910627,
+          "high_low_range_pct": 2.148053059477968
         },
-        "scored_at": "2026-03-18 18:50:28"
+        "scored_at": "2026-03-18 19:30:20"
       }
     },
     "MS": {
@@ -2977,21 +3249,21 @@
         "scored_at": "2026-03-18 18:15:23"
       },
       "financial": {
-        "score": 62,
-        "explanation": "MS shows modest intraday strength with a +1.25% gain and price holding above VWAP, supported by whale activity alerts in the financial sector. However, the lack of multi-day momentum data, limited range movement (2.63%), and absence of volume confirmation relative to baseline limit conviction; the score reflects mixed but slightly positive technicals suitable for a hold rather than a strong entry.",
+        "score": 58,
+        "explanation": "MS shows mixed technical signals with modest intraday momentum (+0.52% daily return) but trades 0.45% below VWAP, indicating slight selling pressure despite the day's gain. The stock is in the middle of its daily range (2.63% high-low spread) with no extreme volume or volatility data provided to confirm institutional accumulation. Sector headlines mentioning Morgan Stanley's hiring activity and infrastructure financing positioning suggest operational relevance, but without longer-term momentum data (5d, 20d returns, RSI, or distance from 52-week levels), the case remains neutral-to-slightly-positive—hold-worthy but lacking the conviction for a strong buy.",
         "metrics": {
-          "price": 159.805,
+          "price": 158.65,
           "open": 156.52,
           "high": 160.635,
           "low": 156.52,
-          "close": 159.87,
-          "vwap": 159.415715,
-          "volume": 224147,
-          "daily_change_pct": 1.2513463853513236,
-          "price_vs_vwap_pct": 0.2441948712521855,
+          "close": 158.65,
+          "vwap": 159.371509,
+          "volume": 268787,
+          "daily_change_pct": 0.5195463473357367,
+          "price_vs_vwap_pct": -0.45272144596434577,
           "high_low_range_pct": 2.629056989522093
         },
-        "scored_at": "2026-03-18 18:50:31"
+        "scored_at": "2026-03-18 19:30:30"
       }
     },
     "MSFT": {
@@ -3046,20 +3318,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "MU displays solid short-term momentum with a +1.64% daily gain and price trading 0.67% above VWAP, indicating institutional accumulation. The stock is trading near its intraday high within a tight 2.77% range, showing controlled strength. Positive catalysts around the memory supercycle narrative and upcoming earnings preview provide directional tailwinds, though the lack of volume data relative to average and proximity to resistance without extreme conviction keeps this from a higher tier.",
+        "explanation": "MU exhibits strong short-term momentum with a +0.66% daily gain and is trading near its daily high (465.43 vs 471.26 high), indicating sustained buying pressure. The memory supercycle narrative and reported whale activity provide positive fundamental and institutional tailwinds, while the upcoming earnings call adds near-term catalyst potential. However, the stock is slightly below VWAP (-0.32%) and volume data is moderate, suggesting the move is not yet accompanied by exceptional institutional accumulation; the 2.77% daily range indicates normal volatility rather than a major breakout setup.",
         "metrics": {
-          "price": 469.39,
+          "price": 464.87,
           "open": 464.8,
           "high": 471.26,
           "low": 458.55,
-          "close": 469.39,
-          "vwap": 466.28235,
-          "volume": 498145,
-          "daily_change_pct": 1.6435686444348145,
-          "price_vs_vwap_pct": 0.6664738650304859,
+          "close": 465.425,
+          "vwap": 466.344355,
+          "volume": 578037,
+          "daily_change_pct": 0.6647899523603277,
+          "price_vs_vwap_pct": -0.3161515700131082,
           "high_low_range_pct": 2.7717806128012166
         },
-        "scored_at": "2026-03-18 18:50:17"
+        "scored_at": "2026-03-18 19:30:09"
       }
     },
     "NCLH": {
@@ -3114,20 +3386,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "NFLX shows mixed technical signals with modest positive momentum (+0.65% daily, trading 0.39% above VWAP) but lacks strong directional conviction. The stock is trading in the middle of its recent range with modest volume (1.8% high-low range), suggesting consolidation rather than breakout setup. The Citigroup upgrade to $115 provides fundamental support and indicates 21% upside from current levels, which is constructive for medium-term positioning, but near-term technicals show neither institutional accumulation nor clear trending structure—warranting a hold-worthy neutral-to-positive rating rather than a strong buy.",
+        "explanation": "NFLX shows mixed but modestly positive momentum with a +0.64% daily gain and trading 0.33% above VWAP, supported by Citigroup's reinstated Buy rating with a $115 target (18% upside from current $95). However, technical structure is uninspiring—the stock occupies the middle of its daily range with modest volume (1.17M) and lacks the acceleration or conviction needed for a strong buy; the recent 1.8% daily range suggests consolidation rather than decisive breakout. Without broader momentum metrics (RSI, distance from 52-week levels, multi-day trend), the score reflects a reasonable medium-term entry on analyst support but insufficient immediate catalysts for aggressive positioning.",
         "metrics": {
-          "price": 94.99,
+          "price": 94.985,
           "open": 94.45,
           "high": 95.33,
           "low": 93.66,
-          "close": 94.99,
-          "vwap": 94.617061,
-          "volume": 1012963,
-          "daily_change_pct": 0.6463233735961003,
-          "price_vs_vwap_pct": 0.39415618711723477,
+          "close": 94.975,
+          "vwap": 94.669063,
+          "volume": 1168925,
+          "daily_change_pct": 0.6410256410256453,
+          "price_vs_vwap_pct": 0.3337278198264255,
           "high_low_range_pct": 1.7830450565876594
         },
-        "scored_at": "2026-03-18 18:50:18"
+        "scored_at": "2026-03-18 19:30:09"
       }
     },
     "NKE": {
@@ -3181,21 +3453,21 @@
         "scored_at": "2026-03-18 18:15:13"
       },
       "financial": {
-        "score": 78,
-        "explanation": "NRG exhibits strong near-term technical momentum with a +4.0% daily gain, trading 0.58% above VWAP and near the upper bound of its daily range, signaling institutional accumulation. Recent analyst upgrade to Outperform with a $190 price target (18% upside from current $161), combined with better-than-expected earnings and a $300M buyback announcement, provide fundamental tailwinds. However, the imminent $2.1B secondary share sale by LS Power creates near-term distribution risk and potential stock pressure, warranting a hold on aggressive entry at these levels.",
+        "score": 76,
+        "explanation": "NRG demonstrates strong short-term momentum with a +3.3% single-day gain and intraday strength (trading near session high of 162.42), supported by recent analyst upgrade to Outperform with a $190 price target (19% upside from current price). Positive catalysts include better-than-expected earnings, a $300M share buyback program, and potential secondary offering dynamics. Volume is moderate relative to the intraday move, and the stock trades near VWAP with good technical positioning in the upper portion of today's range, though lacks confirmation of a sustained multi-day breakout.",
         "metrics": {
-          "price": 160.985,
+          "price": 159.89,
           "open": 157.9,
           "high": 162.415,
           "low": 157.11,
-          "close": 160.985,
-          "vwap": 160.053284,
-          "volume": 138011,
-          "daily_change_pct": 4.008915880604738,
-          "price_vs_vwap_pct": 0.582128636610807,
+          "close": 159.89,
+          "vwap": 160.060523,
+          "volume": 151847,
+          "daily_change_pct": 3.301460136968591,
+          "price_vs_vwap_pct": -0.10653657554274196,
           "high_low_range_pct": 3.376615110432167
         },
-        "scored_at": "2026-03-18 18:50:25"
+        "scored_at": "2026-03-18 19:30:18"
       }
     },
     "NVDA": {
@@ -3216,20 +3488,20 @@
       },
       "financial": {
         "score": 45,
-        "explanation": "NVDA shows mixed technical signals with a slight intraday decline (-0.15%) and price trading 33 basis points below VWAP, suggesting mild selling pressure. The narrow daily range (1.47%) indicates low volatility and lack of directional conviction, while the absence of momentum data (RSI, moving averages, volume ratio) limits confirmation of trend strength. Positive macro context around memory supercycles and supply chain acceleration provides fundamental support, but near-term technicals lack the clarity needed for a strong buy; this is a hold-worthy position pending clearer directional breakout.",
+        "explanation": "NVDA shows mixed near-term signals with a modest -0.39% daily decline and price trading 0.51% below VWAP, suggesting mild intraday weakness and lack of conviction. The narrow intraday range (1.47%) and absence of strong volume metrics indicate low momentum energy, while recent news around supply chain recovery and AI partnerships provide positive fundamental context but insufficient technical confirmation for a strong buy at current price. Hold rather than buy until a clear directional breakout materializes.",
         "metrics": {
-          "price": 181.68,
+          "price": 181.245,
           "open": 182.395,
           "high": 183.37,
           "low": 180.72,
-          "close": 181.73,
-          "vwap": 182.274964,
-          "volume": 2672302,
-          "daily_change_pct": -0.15387997362057657,
-          "price_vs_vwap_pct": -0.326410159104464,
+          "close": 181.245,
+          "vwap": 182.166849,
+          "volume": 3003167,
+          "daily_change_pct": -0.3929435040668297,
+          "price_vs_vwap_pct": -0.5060465200229756,
           "high_low_range_pct": 1.466356795042057
         },
-        "scored_at": "2026-03-18 18:50:17"
+        "scored_at": "2026-03-18 19:30:08"
       }
     },
     "NWSA": {
@@ -3284,20 +3556,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "O shows mixed short-to-medium term signals. The stock is down 1.05% today and trading slightly above VWAP, suggesting modest selling pressure without a clear directional conviction. However, multiple analyst upgrades with price targets ranging from $65–$69 (3–9% upside) and a dividend increase provide fundamental support. The narrow intraday range (1.63%) and lack of volume data on this down day leave momentum unclear, placing this in neutral-to-hold territory rather than a compelling buy.",
+        "explanation": "O shows mixed technical signals with a down day (-1.47%) and price trading slightly below VWAP, but benefits from multiple analyst upgrades with price targets clustered $4-6 above current price, signaling analyst confidence in upside. The tight intraday range (1.63%) and modest volume lack conviction, but the convergence of bullish analyst revisions and a recent dividend increase provide a hold-to-modest-buy case for patient capital seeking income with near-term appreciation potential.",
         "metrics": {
-          "price": 63.43,
+          "price": 63.16,
           "open": 63.75,
           "high": 63.8,
           "low": 62.775,
-          "close": 63.41,
-          "vwap": 63.355205,
-          "volume": 311378,
-          "daily_change_pct": -1.0452418096723786,
-          "price_vs_vwap_pct": 0.11805659850678682,
+          "close": 63.16,
+          "vwap": 63.339163,
+          "volume": 367427,
+          "daily_change_pct": -1.4664586583463304,
+          "price_vs_vwap_pct": -0.28286291058188223,
           "high_low_range_pct": 1.6328156113102326
         },
-        "scored_at": "2026-03-18 18:50:17"
+        "scored_at": "2026-03-18 19:30:08"
       }
     },
     "ON": {
@@ -3351,21 +3623,21 @@
         "scored_at": "2026-03-18 14:45:10"
       },
       "financial": {
-        "score": 72,
-        "explanation": "OXY shows solid intraday momentum with a +1.44% daily gain and price trading above VWAP, supported by analyst upgrades (Mizuho target $72 vs current $58.55) and favorable oil/gas sentiment from crude tailwinds and pro-drilling policy commentary. However, without historical volatility, RSI, moving average positioning, and volume context, the score reflects moderate conviction rather than exceptional strength—the stock is in a constructive setup but lacks confirming breadth metrics for a higher allocation.",
+        "score": 62,
+        "explanation": "OXY shows modest intraday strength with +1.44% daily gain and price holding slightly above VWAP, supported by analyst optimism (Mizuho's $72 target represents ~23% upside from current $58.55). However, the lack of longer-term momentum data, mixed analyst sentiment (Barclays maintaining Equal-Weight despite raising target), and tight intraday range (1.49%) limit conviction; the stock appears fairly valued near the midpoint of recent guidance but requires confirmation of sustained breakout behavior and broader commodity tailwinds.",
         "metrics": {
           "price": 58.55,
           "open": 58.185,
           "high": 58.81,
           "low": 57.945,
-          "close": 58.55,
-          "vwap": 58.368224,
-          "volume": 367770,
+          "close": 58.53,
+          "vwap": 58.392374,
+          "volume": 437280,
           "daily_change_pct": 1.437976437976435,
-          "price_vs_vwap_pct": 0.3114297258727613,
+          "price_vs_vwap_pct": 0.26994278396696203,
           "high_low_range_pct": 1.4927948917076572
         },
-        "scored_at": "2026-03-18 18:50:30"
+        "scored_at": "2026-03-18 19:30:22"
       }
     },
     "PANW": {
@@ -3386,20 +3658,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "PANW shows solid near-term momentum with a +0.50% daily gain, price trading above VWAP (+0.07%), and recent insider buying signals from institutional investors (Simpson, Link both buying). The cybersecurity narrative is tailwind-strong with AI-powered hacks surging 89% and cloud attacks up 266%, directly supporting PANW's market thesis. The $1B buyback authorization is accretive but the single-day metrics alone don't confirm sustained breakout strength—volume data is absent, and the 2.4% intraday range suggests contained volatility. Score reflects good momentum and favorable sector/insider signals without overwhelming technical confirmation.",
+        "explanation": "PANW shows solid near-term momentum with a +0.18% daily gain and intraday strength (trading near session highs at 171.81), supported by positive institutional activity (prominent analyst buys via CNBC and a $1B buyback authorization). However, the stock is trading slightly below VWAP (-0.25%) and lacks exceptionally strong conviction signals; volume metrics are moderate, and the lack of longer-term momentum data prevents a higher score. The cybersecurity sector tailwinds (cloud attacks up 266%, AI-driven hacks surging) provide thematic support for a medium-term hold.",
         "metrics": {
-          "price": 170.06,
+          "price": 169.52,
           "open": 167.765,
           "high": 171.805,
           "low": 167.765,
-          "close": 170.17,
-          "vwap": 169.94479,
-          "volume": 149937,
-          "daily_change_pct": 0.4963952251506934,
-          "price_vs_vwap_pct": 0.0677926048806736,
+          "close": 169.52,
+          "vwap": 169.949003,
+          "volume": 166930,
+          "daily_change_pct": 0.1772840089823965,
+          "price_vs_vwap_pct": -0.2524304305568621,
           "high_low_range_pct": 2.408130420528728
         },
-        "scored_at": "2026-03-18 18:50:39"
+        "scored_at": "2026-03-18 19:30:30"
       }
     },
     "PCG": {
@@ -3420,20 +3692,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "PCG shows strong fundamental support with recent upgrades from JPMorgan (target $24) and UBS (target $23), implying 31–26% upside from current levels. Today's modest -0.41% decline on low volume (536k shares) with price holding near VWAP suggests consolidation rather than capitulation. The stock trades below analyst targets with institutional backing, positioning it as a solid buy for medium-term holding; however, the lack of positive intraday momentum and absence of accelerating volume prevent a higher score.",
+        "explanation": "PCG shows solid upside potential driven by recent analyst upgrades (JP Morgan to $24, UBS to $23) against a current price of $18.26, implying 25-31% upside. While today's session shows minor weakness (-0.63%), the stock is trading near session highs and VWAP, with modest intraday range, suggesting consolidation rather than breakdown. The strong institutional interest reflected in analyst upgrades combined with meaningful valuation gap to targets supports a near-term buy case, though the lack of strong momentum data and absence of volume confirmation on up-days prevents a higher score.",
         "metrics": {
-          "price": 18.295,
+          "price": 18.255,
           "open": 18.385,
           "high": 18.465,
           "low": 18.225,
-          "close": 18.295,
-          "vwap": 18.319767,
-          "volume": 536708,
-          "daily_change_pct": -0.40827436037016485,
-          "price_vs_vwap_pct": -0.13519276746258344,
+          "close": 18.265,
+          "vwap": 18.313452,
+          "volume": 620276,
+          "daily_change_pct": -0.6260206859009362,
+          "price_vs_vwap_pct": -0.31917521611983696,
           "high_low_range_pct": 1.3168724279835304
         },
-        "scored_at": "2026-03-18 18:50:45"
+        "scored_at": "2026-03-18 19:30:37"
       }
     },
     "PFE": {
@@ -3454,20 +3726,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "PFE shows mixed short-to-medium term signals. The stock is down 0.87% today with modest intraday range (2.01%), trading slightly above VWAP, which suggests neither strong institutional accumulation nor distribution. However, positive clinical data (FOURLIGHT-1 primary endpoint met, breast cancer trial progress) and HSBC's recent Buy rating with $32 price target (17% upside from current $27.24) provide fundamental support. The lack of volume context and recent momentum data prevents a stronger score, but the favorable news flow and analyst upgrade indicate reasonable near-term catalysts.",
+        "explanation": "PFE shows mixed technical signals with modest weakness today (−0.78%) but trades slightly above VWAP with a tight intraday range, suggesting consolidation rather than breakdown. The stock is supported by multiple positive clinical catalysts (FOURLIGHT-1 phase 2 endpoint met, advanced breast cancer data), analyst upside (HSBC $32 target implies ~17% upside), and regulatory tailwinds (vaccine panel litigation favoring standard protocols). However, without longer-term momentum data or volume context, and given the modest daily decline, this is a hold-to-accumulate setup rather than an immediate strong buy.",
         "metrics": {
-          "price": 27.235,
+          "price": 27.26,
           "open": 27.23,
           "high": 27.38,
           "low": 26.84,
-          "close": 27.235,
-          "vwap": 27.162779,
-          "volume": 1451365,
-          "daily_change_pct": -0.8735213830755304,
-          "price_vs_vwap_pct": 0.2658822206667402,
+          "close": 27.26,
+          "vwap": 27.17787,
+          "volume": 1782794,
+          "daily_change_pct": -0.782529572338489,
+          "price_vs_vwap_pct": 0.30219439566089223,
           "high_low_range_pct": 2.011922503725779
         },
-        "scored_at": "2026-03-18 18:50:23"
+        "scored_at": "2026-03-18 19:30:15"
       }
     },
     "PLTR": {
@@ -3589,21 +3861,21 @@
         "scored_at": "2026-03-18 18:15:26"
       },
       "financial": {
-        "score": 62,
-        "explanation": "PSX shows modest positive momentum with a +1.3% daily gain and trades slightly above VWAP, indicating near-term buying interest. However, the lack of exceptional volume context, absence of clear technical breakout levels, and mixed analyst sentiment (Mizuho neutral with a $170 target vs. current $174.91) create a neutral-to-mildly-bullish setup rather than a compelling short-to-medium term trade. The energy sector tailwinds from geopolitical risk are priced in; this is a hold-worthy position but lacks the confirming metrics for a strong buy.",
+        "score": 52,
+        "explanation": "PSX shows mixed signals with a modest positive day (+0.68%) but trades slightly below VWAP (-0.33%), indicating mild selling pressure despite the intraday gain. The stock is holding in the middle of its daily range (2.55% span) with no clear directional conviction, while recent analyst action (Mizuho neutral, $170 PT) and geopolitical energy market turmoil create uncertainty; the executive commentary suggests relative stability, but this is insufficient to drive a strong buy conviction without momentum confirmation or a clearer technical setup.",
         "metrics": {
-          "price": 174.91,
+          "price": 173.835,
           "open": 175.09,
           "high": 177.415,
           "low": 173.01,
-          "close": 174.87,
-          "vwap": 174.430435,
-          "volume": 244461,
-          "daily_change_pct": 1.3031391173404379,
-          "price_vs_vwap_pct": 0.2749319520988456,
+          "close": 173.885,
+          "vwap": 174.417414,
+          "volume": 294861,
+          "daily_change_pct": 0.6805282057222353,
+          "price_vs_vwap_pct": -0.3339196394690268,
           "high_low_range_pct": 2.546095601410324
         },
-        "scored_at": "2026-03-18 18:50:31"
+        "scored_at": "2026-03-18 19:30:27"
       }
     },
     "PYPL": {
@@ -3624,20 +3896,20 @@
       },
       "financial": {
         "score": 42,
-        "explanation": "PYPL shows mixed technical signals with a -2.9% daily decline and price trading 0.7% below VWAP, suggesting intraday seller pressure. The stock is positioned in the lower-middle portion of its daily range and lacks immediate bullish momentum. However, recent news regarding stablecoin expansion to 70 countries and global digital dollar initiatives represents a meaningful strategic development that could drive medium-term institutional interest, partially offsetting near-term weakness and warranting monitoring rather than immediate avoidance.",
+        "explanation": "PYPL shows weak near-term momentum with a -3.09% daily decline and trading 0.74% below VWAP, indicating seller pressure despite positive fundamental developments (stablecoin expansion to 70 countries). The stock is trading in the lower portion of today's range and below open, suggesting intraday weakness that outweighs the constructive strategic news. Volume and volatility data are insufficient for confirmation, but the technical deterioration combined with the lack of price follow-through on expansion announcements suggests caution—this warrants a hold or wait for stabilization rather than an immediate buy.",
         "metrics": {
-          "price": 44.79,
+          "price": 44.705,
           "open": 45.62,
           "high": 46.06,
           "low": 44.61,
-          "close": 44.81,
-          "vwap": 45.099478,
-          "volume": 480603,
-          "daily_change_pct": -2.9048341643182383,
-          "price_vs_vwap_pct": -0.6862119335394494,
+          "close": 44.705,
+          "vwap": 45.037195,
+          "volume": 573197,
+          "daily_change_pct": -3.0890960329503665,
+          "price_vs_vwap_pct": -0.7376014425409902,
           "high_low_range_pct": 3.250392288724507
         },
-        "scored_at": "2026-03-18 18:50:18"
+        "scored_at": "2026-03-18 19:30:09"
       }
     },
     "QCOM": {
@@ -3692,20 +3964,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "RF shows mixed signals typical of a financial stock in transition. The stock is trading slightly below VWAP (-0.52%) with modest intraday weakness (-0.79%), but analyst coverage remains constructive with multiple price target raises post-earnings (Cantor at $32, JP Morgan at $31.5), suggesting 26–27% upside from current levels. However, the narrow daily range (1.47%), modest volume (275k shares), and lack of clear momentum indicators prevent a stronger buy rating; the stock appears fairly valued but lacks the acceleration needed for a high-conviction short-to-medium term trade.",
+        "explanation": "RF shows mixed signals with a modest negative day (-0.98%) but is trading slightly below VWAP and holding within a tight intraday range (1.81%), suggesting consolidation rather than breakdown. Analyst sentiment is constructively mixed—Cantor Fitzgerald maintains an Overweight with a $32 price target (27% upside from current price), while JP Morgan's Neutral stance with a $31.5 target suggests moderate upside potential; the recent Q4 earnings revisions indicate active institutional reassessment. Volume and momentum data are insufficient to confirm a strong directional move, placing RF in the hold-worthy but non-compelling territory pending additional confirmation of a breakout above $25.62.",
         "metrics": {
-          "price": 25.24,
+          "price": 25.19,
           "open": 25.26,
           "high": 25.62,
-          "low": 25.25,
-          "close": 25.255,
-          "vwap": 25.373144,
-          "volume": 275795,
-          "daily_change_pct": -0.7861635220125898,
-          "price_vs_vwap_pct": -0.5247437999800162,
-          "high_low_range_pct": 1.4653465346534693
+          "low": 25.165,
+          "close": 25.2,
+          "vwap": 25.349287,
+          "volume": 342193,
+          "daily_change_pct": -0.9827044025157232,
+          "price_vs_vwap_pct": -0.6283687584585675,
+          "high_low_range_pct": 1.8080667593880464
         },
-        "scored_at": "2026-03-18 18:50:46"
+        "scored_at": "2026-03-18 19:30:37"
       }
     },
     "SLB": {
@@ -3794,20 +4066,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "SNDK shows strong intraday momentum with a +4.93% daily gain and price trading 2.21% above VWAP, indicating institutional accumulation in a memory supercycle tailwind. However, the stock is priced near the top of its daily range (755.64 near high of 759.5) with limited 52-week context provided, and recent analyst commentary warns memory stocks are 'cooling off' after a strong run—suggesting momentum may be overextended. Whale activity and sector tailwinds support a buy bias, but elevated positioning and warnings from Morgan Stanley warrant caution on aggressive entry here.",
+        "explanation": "SNDK shows solid short-term momentum with a +4.89% daily gain and price trading 1.97% above VWAP, indicating institutional accumulation. Whale activity and a memory supercycle narrative support the bull case, though recent analyst warnings that memory stocks are 'cooling off' and elevated volatility (5.99% daily range) suggest caution—the stock is near its intraday high and momentum may be vulnerable to pullback if breadth fails. Trade-worthy but not exceptional; suitable for tactical positioning with defined risk.",
         "metrics": {
-          "price": 755.64,
+          "price": 755.36,
           "open": 736.3,
           "high": 759.5,
           "low": 716.61,
-          "close": 755.64,
-          "vwap": 739.272128,
-          "volume": 225828,
-          "daily_change_pct": 4.926682959342371,
-          "price_vs_vwap_pct": 2.2140523604320212,
+          "close": 755.575,
+          "vwap": 740.774413,
+          "volume": 249612,
+          "daily_change_pct": 4.887802710508782,
+          "price_vs_vwap_pct": 1.9689647406868565,
           "high_low_range_pct": 5.985124405185524
         },
-        "scored_at": "2026-03-18 18:50:19"
+        "scored_at": "2026-03-18 19:30:10"
       }
     },
     "STX": {
@@ -3844,6 +4116,74 @@
         "scored_at": "2026-03-18 13:30:48"
       }
     },
+    "STZ": {
+      "ticker": "STZ",
+      "company": "Constellation Brands",
+      "sector": "Consumer Staples",
+      "woke": {
+        "score": 62,
+        "explanation": "Constellation Brands operates primarily in beer and wine production—legal products with established markets, but the core business carries inherent harm considerations around alcohol-related health and social costs, particularly given aggressive marketing in developing markets. Environmental performance is mixed: the company has set water reduction targets and renewable energy commitments relevant to beverage production, but faces ongoing scrutiny over water usage in water-stressed regions of Mexico (where significant production occurs) and has had environmental violations. Labor conditions are moderate—no widespread documented OSHA violations at the scale of warehousing companies, but the company operates in complex supply chains with agricultural and manufacturing components where oversight can be inconsistent. Governance is reasonably strong with a diverse board and independent structure, though CEO compensation has drawn shareholder criticism. Political spending is relatively restrained compared to peers, with no major documented regulatory capture or anti-democratic activity, though like most large beverage companies it maintains an active lobbying presence to influence alcohol regulation and trade policy.",
+        "breakdown": {
+          "environmental": 58,
+          "labor": 60,
+          "diversity_governance": 65,
+          "harm_avoidance": 45,
+          "political": 72
+        },
+        "scored_at": "2026-03-18 19:30:26"
+      },
+      "financial": {
+        "score": 72,
+        "explanation": "STZ shows solid near-term momentum with a +1.09% daily gain and price trading above VWAP, supported by a fresh Citigroup upgrade to Buy with a $175 price target (14% upside from current levels). The intraday range is tight (2.1%), indicating controlled volatility and price stability in the upper portion of the daily range. However, the lack of longer-term return metrics (5d, 20d, 52-week positioning) and moderate volume (102k shares) prevent a higher score; the positive technical setup combined with institutional analyst conviction warrants a strong buy-leaning position but not exceptional momentum territory.",
+        "metrics": {
+          "price": 153.36,
+          "open": 151.45,
+          "high": 154.01,
+          "low": 150.83,
+          "close": 153.36,
+          "vwap": 152.647484,
+          "volume": 102332,
+          "daily_change_pct": 1.0942649967040377,
+          "price_vs_vwap_pct": 0.46677218734900483,
+          "high_low_range_pct": 2.108333885831717
+        },
+        "scored_at": "2026-03-18 19:30:25"
+      }
+    },
+    "SWKS": {
+      "ticker": "SWKS",
+      "company": "Skyworks Solutions",
+      "sector": "Information Technology",
+      "woke": {
+        "score": 72,
+        "explanation": "Skyworks Solutions is a semiconductor designer with a relatively benign harm profile—its RF front-end and connectivity chips are components in consumer and industrial electronics with no direct human harm. Environmental performance is moderate: the company has set emissions targets and reports GHG data, but as a fabless semiconductor firm it outsources manufacturing, limiting direct control over supply chain environmental impact. Labor practices are mixed; the company maintains reasonable wage standards for technical workers but has faced occasional OSHA citations and provides less transparency on contractor treatment than peers. Board diversity is present but not exceptional for a tech company, and executive compensation is market-typical without major red flags. Political spending is modest relative to revenue, though the company engages standard industry lobbying around trade and IP policy. The lack of recent major scandals or regulatory violations keeps the score from being penalized, but absence of leading-edge commitments on sustainability, supply chain labor accountability, and board independence prevents a higher rating.",
+        "breakdown": {
+          "environmental": 75,
+          "labor": 70,
+          "diversity_governance": 68,
+          "harm_avoidance": 82,
+          "political": 67
+        },
+        "scored_at": "2026-03-18 19:15:21"
+      },
+      "financial": {
+        "score": 42,
+        "explanation": "SWKS shows weak intraday momentum with a negligible daily gain of +0.15% and minimal price movement within a tight range (1.83%). While the stock is trading near VWAP and there are positive catalysts around 6G technology partnerships, the JP Morgan downgrade to Neutral with a $65 price target (just 21% upside from current levels) and lack of confirming volume or technical strength suggest limited near-term attractiveness. The merger-mania narrative provides some support, but without clear breakout momentum or compelling valuation signals, the risk/reward is unfavorable for short-to-medium term trading.",
+        "metrics": {
+          "price": 53.805,
+          "open": 53.3,
+          "high": 54.275,
+          "low": 53.3,
+          "close": 53.805,
+          "vwap": 53.796786,
+          "volume": 102545,
+          "daily_change_pct": 0.14890646812470598,
+          "price_vs_vwap_pct": 0.01526857013354364,
+          "high_low_range_pct": 1.8292682926829296
+        },
+        "scored_at": "2026-03-18 19:15:20"
+      }
+    },
     "SYF": {
       "ticker": "SYF",
       "company": "Synchrony Financial",
@@ -3862,20 +4202,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "SYF demonstrates solid upside momentum with a +0.99% daily gain and price trading 0.43% above VWAP, indicating intraday strength and buyer conviction. BTIG's reiterated Buy rating with a $96 price target (46% upside from current $65.79) provides a compelling fundamental catalyst, while recent partnership announcements (Polaris financing, CareCredit integration) support business growth narratives. However, the lack of longer-term momentum data (5d/20d returns), absence of volume confirmation on the move, and limited distance from intraday range constrain the score from higher levels—this is a quality name with near-term tailwinds but not yet exhibiting the exceptional setup or volume acceleration typical of 80+ scores.",
+        "explanation": "SYF shows solid upside momentum with a +0.48% daily gain and BTIG's maintained $96 price target (47% above current price), providing a compelling risk/reward setup. The stock is trading near intraday highs with positive recent returns, supported by strategic partnership announcements (Polaris financing renewal, CareCredit integration) that validate operational momentum. However, the lack of broader market context (52-week positioning, longer-term return trends, and RSI readings) and modest daily volume (138k) prevent a higher score, though the fundamental catalyst narrative and analyst conviction support a strong buy thesis.",
         "metrics": {
-          "price": 65.785,
+          "price": 65.45,
           "open": 64.995,
           "high": 65.99,
           "low": 64.965,
-          "close": 65.785,
-          "vwap": 65.503074,
-          "volume": 108743,
-          "daily_change_pct": 0.9901750076757692,
-          "price_vs_vwap_pct": 0.430401174760132,
+          "close": 65.43,
+          "vwap": 65.493424,
+          "volume": 138171,
+          "daily_change_pct": 0.47589806570463966,
+          "price_vs_vwap_pct": -0.06630283980877481,
           "high_low_range_pct": 1.5777726468098072
         },
-        "scored_at": "2026-03-18 18:40:11"
+        "scored_at": "2026-03-18 19:15:19"
       }
     },
     "T": {
@@ -3896,20 +4236,20 @@
       },
       "financial": {
         "score": 42,
-        "explanation": "AT&T shows mixed short-to-medium term signals. The stock is down 1.24% intraday, trading slightly below VWAP with no momentum confirmation, and the single-day data provides insufficient directional clarity. While recent news highlights product innovation (new AI app, simplified UX, competitive pricing) and potential regulatory tailwinds, these are structural rather than momentum catalysts. The tight intraday range (1.33%) and lack of volume context suggest low conviction—hold-worthy on fundamentals but not attractive for active trading without bullish technical confirmation or broader positive momentum.",
+        "explanation": "T shows weak short-term momentum with a -1.08% daily decline and lacks clear technical setup; the stock is trading near VWAP with a modest intraday range (1.33%), indicating consolidation without directional conviction. While recent news highlights product innovation (AI app, new wireless plans) and strategic positioning, the price action is neutral-to-slightly-negative, and without additional data on moving averages, volume ratios, or distance from key support/resistance levels, the technical case remains tepid. This is hold territory at best until clearer momentum emerges.",
         "metrics": {
-          "price": 27.505,
+          "price": 27.55,
           "open": 27.67,
           "high": 27.775,
           "low": 27.41,
-          "close": 27.5,
-          "vwap": 27.548972,
-          "volume": 1394566,
-          "daily_change_pct": -1.2387791741472258,
-          "price_vs_vwap_pct": -0.15961394131149476,
+          "close": 27.55,
+          "vwap": 27.542565,
+          "volume": 1693471,
+          "daily_change_pct": -1.0771992818671479,
+          "price_vs_vwap_pct": 0.026994580933188204,
           "high_low_range_pct": 1.3316307916818622
         },
-        "scored_at": "2026-03-18 18:50:26"
+        "scored_at": "2026-03-18 19:30:17"
       }
     },
     "TFC": {
@@ -3930,20 +4270,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "TFC shows mixed but cautiously bullish signals. The stock is down 1.27% today and trading slightly below VWAP (-0.51%), indicating modest intraday weakness, but recent analyst upgrades (Baird to Outperform with $52 target, plus a noted analyst turning bullish) and insider buying by Stephanie Link suggest accumulation at current levels. The tight intraday range (1.38%) and modest volume provide limited directional confirmation, placing this in hold-to-accumulate territory rather than a strong buy, but the convergence of fundamental upgrades and insider activity warrants a neutral-to-positive stance for medium-term positioning.",
+        "explanation": "TFC shows mixed but moderately positive signals. Today's -1.27% decline and price trading 0.45% below VWAP suggest intraday weakness, but recent analyst upgrades (notably Baird's outperform rating with a $52 price target, implying 18% upside) and insider accumulation by Stephanie Link provide fundamental support. The tight intraday range (1.43%) and modest volume suggest consolidation rather than panic selling, positioning the stock as a hold-to-modest-buy on conviction from institutional activity rather than pure technical momentum.",
         "metrics": {
           "price": 44.035,
           "open": 44.295,
           "high": 44.545,
-          "low": 43.94,
-          "close": 44.065,
-          "vwap": 44.262842,
-          "volume": 448210,
+          "low": 43.915,
+          "close": 44.04,
+          "vwap": 44.235689,
+          "volume": 520237,
           "daily_change_pct": -1.2668161434977687,
-          "price_vs_vwap_pct": -0.5147477877719704,
-          "high_low_range_pct": 1.3768775603095222
+          "price_vs_vwap_pct": -0.45368118941247665,
+          "high_low_range_pct": 1.4345895479904418
         },
-        "scored_at": "2026-03-18 18:50:45"
+        "scored_at": "2026-03-18 19:30:37"
       }
     },
     "TSLA": {
@@ -3998,20 +4338,20 @@
       },
       "financial": {
         "score": 28,
-        "explanation": "TTD is showing significant bearish pressure with a -5.7% daily decline and trading below its VWAP, signaling intraday weakness and selling dominance. Multiple analyst downgrades from Rosenblatt and Stifel (both cutting to Neutral/Hold with price targets of $25-$26) add meaningful fundamental headwinds, suggesting institutional conviction in the bullish case is eroding. While the stock is near its intraday low with some potential for a short-term bounce, the combination of negative momentum, analyst downgrades, and below-VWAP pricing makes this an unattractive short-to-medium term entry.",
+        "explanation": "TTD is showing significant bearish pressure with a -4.6% daily decline and a recent analyst downgrade (Rosenblatt to Neutral with $25 PT, implying further downside from current $23.91). The stock is trading near the lower end of today's range and below VWAP, indicating selling pressure has control. Without positive momentum catalysts or oversold technical bounce signals, the risk/reward is skewed to the downside in the near term.",
         "metrics": {
-          "price": 23.63,
+          "price": 23.915,
           "open": 23.26,
           "high": 24.49,
           "low": 23,
-          "close": 23.635,
-          "vwap": 23.991391,
-          "volume": 329266,
-          "daily_change_pct": -5.725114701775393,
-          "price_vs_vwap_pct": -1.5063361686698413,
+          "close": 23.91,
+          "vwap": 23.770442,
+          "volume": 1148967,
+          "daily_change_pct": -4.588071015360072,
+          "price_vs_vwap_pct": 0.608141825886115,
           "high_low_range_pct": 6.4782608695652115
         },
-        "scored_at": "2026-03-18 14:15:56"
+        "scored_at": "2026-03-18 19:30:28"
       }
     },
     "UAL": {
@@ -4065,21 +4405,21 @@
         "scored_at": "2026-03-18 13:30:22"
       },
       "financial": {
-        "score": 62,
-        "explanation": "UBER shows mixed near-term technical signals with a modest -1.0% daily decline and price trading slightly below VWAP, suggesting mild selling pressure. However, the stock remains within a tight intraday range (1.35%), and recent analyst coverage (BTIG Buy at $100 target) provides fundamental support; the current $77 price sits ~23% below the $100 target, offering meaningful upside if momentum stabilizes. The volume and volatility data lack confirming strength, placing this in a neutral-to-slightly-positive hold zone rather than a strong buy.",
+        "score": 45,
+        "explanation": "UBER shows mixed technical signals with a -1.07% daily decline and price trading slightly below VWAP, indicating mild seller pressure. The stock is holding near the middle of its intraday range (76.65–77.68) with modest volume (614K), offering neither momentum confirmation nor distribution signs. While recent news mentions Uber's AI fleet developments and the stock appeared in CNBC final trades, there is insufficient technical evidence of a compelling short-to-medium term entry—no clear breakout structure, no volume surge, and negative daily momentum. Hold-worthy but not actionable.",
         "metrics": {
-          "price": 77,
+          "price": 76.97,
           "open": 77.31,
           "high": 77.68,
           "low": 76.645,
-          "close": 77.035,
-          "vwap": 77.065053,
-          "volume": 560918,
-          "daily_change_pct": -1.0346378767431486,
-          "price_vs_vwap_pct": -0.08441309967049009,
+          "close": 76.93,
+          "vwap": 77.056377,
+          "volume": 614735,
+          "daily_change_pct": -1.0731958100379255,
+          "price_vs_vwap_pct": -0.11209584899118578,
           "high_low_range_pct": 1.3503816295909856
         },
-        "scored_at": "2026-03-18 18:50:48"
+        "scored_at": "2026-03-18 19:30:37"
       }
     },
     "USB": {
@@ -4099,21 +4439,21 @@
         "scored_at": "2026-03-18 14:30:07"
       },
       "financial": {
-        "score": 58,
-        "explanation": "USB shows mixed signals typical of a neutral-to-slightly-positive setup. The stock is down 0.31% intraday and trading 0.85% below VWAP, suggesting modest selling pressure, but recent analyst upgrades and whale activity in the financial sector provide constructive fundamental backdrop. Without access to moving averages, volume ratios, or multi-day momentum data, the intraday weakness and below-VWAP position prevent a stronger score, though the news flow and financial sector tailwinds keep this in the 50–70 hold range rather than decisively bearish.",
+        "score": 45,
+        "explanation": "USB shows mixed signals with a modest negative daily return (-0.50%) and price trading 0.93% below VWAP, suggesting mild selling pressure. However, recent analyst upgrades and a bullish stance from a major analyst provide fundamental support, while whale alerts indicate institutional interest. The tight intraday range (2.04%) and lack of momentum data prevents a higher score, but the positive sentiment around record tax credit syndication and analyst improvements suggest this is a hold rather than a sell—appropriate for transition conditions in what appears to be a consolidation phase.",
         "metrics": {
-          "price": 51.44,
+          "price": 51.34,
           "open": 51.63,
           "high": 52.325,
-          "low": 51.475,
-          "close": 51.475,
-          "vwap": 51.883037,
-          "volume": 371901,
-          "daily_change_pct": -0.3100775193798521,
-          "price_vs_vwap_pct": -0.8539149317724093,
-          "high_low_range_pct": 1.6512870325400708
+          "low": 51.28,
+          "close": 51.36,
+          "vwap": 51.824079,
+          "volume": 429360,
+          "daily_change_pct": -0.5038759689922442,
+          "price_vs_vwap_pct": -0.9340812404982521,
+          "high_low_range_pct": 2.037831513260534
         },
-        "scored_at": "2026-03-18 18:50:48"
+        "scored_at": "2026-03-18 19:30:39"
       }
     },
     "VLO": {
@@ -4134,20 +4474,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "VLO shows mixed but moderately positive signals. The stock is trading near VWAP with a solid +1.06% daily gain and an intraday range of 2.28%, indicating modest momentum without extreme volatility. The positive news backdrop around oil disruption risks and elevated diesel prices supports refiner margins and pricing power in the medium term. However, the lack of broader momentum metrics (52-week positioning, volume ratio, moving average structure) and absence of confirmatory technical strength prevent a stronger score; the trade appears situationally attractive rather than technically compelling.",
+        "explanation": "VLO shows modest positive momentum with a +1.35% daily gain and tight trading near VWAP, indicating steady institutional interest without excessive volatility. The geopolitical backdrop (Iran tensions, diesel price spikes above $5) supports refiner margins and energy security premiums, though the stock trades slightly below VWAP and lacks the volume confirmation or technical breakout needed for a stronger conviction signal. Mixed signals warrant a hold-to-accumulate stance rather than aggressive buying.",
         "metrics": {
-          "price": 238.455,
+          "price": 239.14,
           "open": 239.87,
           "high": 242.405,
           "low": 237.01,
-          "close": 238.455,
-          "vwap": 239.783311,
-          "volume": 124800,
-          "daily_change_pct": 1.0573826072215649,
-          "price_vs_vwap_pct": -0.5539630737687099,
+          "close": 239.26,
+          "vwap": 239.641448,
+          "volume": 144976,
+          "daily_change_pct": 1.3476860484827844,
+          "price_vs_vwap_pct": -0.20924927811319627,
           "high_low_range_pct": 2.27627526264715
         },
-        "scored_at": "2026-03-18 18:50:34"
+        "scored_at": "2026-03-18 19:30:23"
       }
     },
     "VST": {
@@ -4168,20 +4508,20 @@
       },
       "financial": {
         "score": 72,
-        "explanation": "VST shows strong intraday momentum with a +4.38% daily gain and price holding above VWAP, indicating institutional accumulation. The stock is trading near its daily high and within the upper portion of today's range, supported by positive sector sentiment around nuclear energy and an Overweight rating from Wells Fargo. However, without access to longer-term technicals (52-week levels, volume ratios, moving averages), the score is tempered—the single-day strength alone doesn't confirm a sustained uptrend, though the confluence of bullish price action, elevated volume, and supportive analyst commentary supports a solid buy case for short-to-medium term positioning.",
+        "explanation": "VST shows strong intraday momentum with a +3.73% daily gain and price holding near session highs, indicating buying pressure through the close. The stock is trading slightly below VWAP with elevated volume (145,400 shares), suggesting institutional interest, and analyst support from Wells Fargo's overweight rating provides fundamental backing. However, the lack of longer-term momentum data and absence of technical confirmation from moving averages or RSI prevents a higher score; the single-day strength needs validation over the next 5–20 days to confirm a sustained uptrend.",
         "metrics": {
-          "price": 171.47,
+          "price": 170.39,
           "open": 166.14,
           "high": 172.88,
           "low": 166.14,
-          "close": 171.665,
-          "vwap": 170.588976,
-          "volume": 130239,
-          "daily_change_pct": 4.383027941803122,
-          "price_vs_vwap_pct": 0.516460102322202,
+          "close": 170.39,
+          "vwap": 170.630687,
+          "volume": 145400,
+          "daily_change_pct": 3.725573750532645,
+          "price_vs_vwap_pct": -0.14105727652612002,
           "high_low_range_pct": 4.056819549777302
         },
-        "scored_at": "2026-03-18 18:50:24"
+        "scored_at": "2026-03-18 19:30:18"
       }
     },
     "VTRS": {
@@ -4202,20 +4542,20 @@
       },
       "financial": {
         "score": 52,
-        "explanation": "VTRS shows mixed signals with a near-flat daily close (0% change) and minimal intraday range (1.61%), indicating low conviction in either direction. While Q4 earnings beat estimates and the GoodRx partnership adds operational credibility, FY2026 guidance ($2.33–$2.47 EPS) is disappointing relative to consensus ($2.49), and the Indore facility overhang remains unresolved with timing uncertain. Volume is moderate but unremarkable; price is holding near VWAP with no clear momentum catalyst, placing this in a neutral hold zone rather than an attractive entry point.",
+        "explanation": "VTRS shows mixed technical signals with a slight negative close (-0.36%) and price trading just below VWAP, indicating modest selling pressure despite a narrow intraday range. The recent earnings beat and positive guidance (sales guidance above consensus) provide fundamental support, but the weak daily momentum, modest volume (620k), and lack of follow-through buying after earnings results in a neutral-to-slightly-bullish setup. The company's operational headwinds (Indore facility uncertainty, cost-cutting dependency) and guidance range centered below consensus EPS ($2.33-$2.47 vs. $2.49 est.) temper enthusiasm for a strong near-term trade.",
         "metrics": {
-          "price": 13.8,
+          "price": 13.75,
           "open": 13.72,
           "high": 13.88,
           "low": 13.66,
-          "close": 13.8,
-          "vwap": 13.795314,
-          "volume": 513032,
-          "daily_change_pct": 0,
-          "price_vs_vwap_pct": 0.03396805610949704,
+          "close": 13.75,
+          "vwap": 13.790127,
+          "volume": 620189,
+          "daily_change_pct": -0.36231884057971525,
+          "price_vs_vwap_pct": -0.29098354206600147,
           "high_low_range_pct": 1.6105417276720397
         },
-        "scored_at": "2026-03-18 18:50:42"
+        "scored_at": "2026-03-18 19:30:40"
       }
     },
     "VZ": {
@@ -4236,20 +4576,20 @@
       },
       "financial": {
         "score": 62,
-        "explanation": "VZ shows mixed near-term signals with a modest downside move (-1.89% daily) and price below VWAP, but benefits from recent Scotiabank upgrade to Sector Outperform with a $54.50 target (9.8% upside from current) and unusual options activity suggesting institutional interest. The stock trades within a tight intraday range (1.88%) after opening near the high, indicating consolidation rather than conviction; without confirmed volume surge or clear technical breakout above resistance, the case remains hold-worthy but not a strong buy.",
+        "explanation": "VZ shows mixed signals typical of a utility-telecom hold. The stock is trading near VWAP with a modest -1.98% daily decline and sits within a tight 1.88% intraday range, suggesting consolidation rather than directional conviction. The Scotiabank upgrade to Sector Outperform with a $54.50 target (9.8% upside from current) provides fundamental support, but the insider selling (Rep. Sessions) and reported pullback on NFL sponsorship signal management caution. Volume appears average with no unusual accumulation or distribution spike, and the stock lacks momentum catalysts for short-to-medium term outperformance. This is a reasonable hold for income/stability, but lacks the technical or momentum setup for a strong buy.",
         "metrics": {
-          "price": 49.575,
+          "price": 49.53,
           "open": 50.25,
           "high": 50.37,
           "low": 49.44,
-          "close": 49.575,
-          "vwap": 49.762735,
-          "volume": 1020502,
-          "daily_change_pct": -1.8899663566198261,
-          "price_vs_vwap_pct": -0.37726021288821127,
+          "close": 49.51,
+          "vwap": 49.742671,
+          "volume": 1141929,
+          "daily_change_pct": -1.9790223629527013,
+          "price_vs_vwap_pct": -0.4275423810675552,
           "high_low_range_pct": 1.881067961165048
         },
-        "scored_at": "2026-03-18 18:40:08"
+        "scored_at": "2026-03-18 19:15:13"
       }
     },
     "WAT": {
@@ -4304,20 +4644,20 @@
       },
       "financial": {
         "score": 42,
-        "explanation": "WBD shows weak intraday momentum with a -0.11% daily decline and price trading slightly below VWAP, indicating mild selling pressure. The narrow high-low range (1.24%) and lack of volume context suggest a consolidation phase without conviction. While recent news includes Oscar wins and a potential Paramount deal that could create strategic value, near-term technical setup lacks bullish confirmation—the stock is neither in clear uptrend nor showing accumulation signals, warranting a hold rather than buy stance.",
+        "explanation": "WBD shows weak intraday momentum with a -0.65% daily decline and price trading 0.54% below VWAP, indicating selling pressure. The narrow high-low range (1.24%) and modest volume (1.88M) lack conviction. While the Paramount merger news and Oscar success provide positive strategic narrative, these are longer-term catalysts; near-term technicals lack bullish setup with no clear support level or reversal signal. Risk/reward is mixed without stronger momentum confirmation.",
         "metrics": {
-          "price": 27.625,
+          "price": 27.475,
           "open": 27.525,
           "high": 27.775,
           "low": 27.435,
-          "close": 27.625,
-          "vwap": 27.638922,
-          "volume": 1593095,
-          "daily_change_pct": -0.10847947929850346,
-          "price_vs_vwap_pct": -0.050370994932439406,
+          "close": 27.475,
+          "vwap": 27.624988,
+          "volume": 1878069,
+          "daily_change_pct": -0.6508768757909952,
+          "price_vs_vwap_pct": -0.5429432222739677,
           "high_low_range_pct": 1.2392928740659737
         },
-        "scored_at": "2026-03-18 18:50:24"
+        "scored_at": "2026-03-18 19:30:14"
       }
     },
     "WDC": {
@@ -4371,21 +4711,21 @@
         "scored_at": "2026-03-18 14:30:08"
       },
       "financial": {
-        "score": 58,
-        "explanation": "WFC shows mixed signals with modest positive momentum (+0.06% daily, trading slightly below VWAP) but lacks clear directional conviction. Truist's maintained buy rating with $94 price target provides fundamental support, and unusual options/whale activity suggests institutional interest; however, the tight intraday range (1.41%) and modest volume indicate low momentum continuation. Without historical price context (52-week positioning, moving averages, volume ratio clarity) the stock appears consolidating rather than breaking out—a hold-worthy position but not compelling for short-to-medium term entry.",
+        "score": 35,
+        "explanation": "WFC shows weak near-term momentum with a flat-to-slightly-negative daily return and price trading below VWAP, suggesting lack of institutional conviction at current levels. While analyst support (Truist Buy rating at $94 target implies ~23% upside) and whale/options activity hint at potential interest, the absence of strong volume confirmation on today's move, combined with a tight intraday range and no clear breakout setup, indicates insufficient near-term catalysts to justify a strong position. The stock lacks the technical strength needed for a short-to-medium term trade despite medium-term fundamental appeal.",
         "metrics": {
-          "price": 76.29,
+          "price": 76.215,
           "open": 75.81,
           "high": 76.88,
           "low": 75.81,
-          "close": 76.305,
-          "vwap": 76.449171,
-          "volume": 433029,
-          "daily_change_pct": 0.05902026362384642,
-          "price_vs_vwap_pct": -0.20820500460364783,
+          "close": 76.195,
+          "vwap": 76.410076,
+          "volume": 510471,
+          "daily_change_pct": -0.039346842415897615,
+          "price_vs_vwap_pct": -0.25530140815460023,
           "high_low_range_pct": 1.4114232950797956
         },
-        "scored_at": "2026-03-18 18:50:39"
+        "scored_at": "2026-03-18 19:30:33"
       }
     },
     "WMT": {
@@ -4439,21 +4779,21 @@
         "scored_at": "2026-03-18 18:16:22"
       },
       "financial": {
-        "score": 72,
-        "explanation": "WSM demonstrates strong short-term momentum with a +5% daily gain, trading above VWAP and near the top of its intraday range, supported by a dividend hike and beat on Q4 earnings. However, FY2026 guidance coming in below consensus ($8.017B–$8.330B vs. $8.144B est.) and elevated macroeconomic uncertainty (stagflation concerns, oil spike) temper the bullish case; the stock is near session highs, leaving limited margin of safety for new entries.",
+        "score": 62,
+        "explanation": "WSM shows mixed but moderately positive signals. The +1.96% daily gain with above-average volume and a dividend hike to $0.76/share signal management confidence and shareholder-friendly capital allocation. However, the stock trades 2.48% below VWAP and FY2026 guidance ($8.017B–$8.330B) implies modest growth, while the 6.1% intraday range and price near the lower end of recent trading suggest near-term consolidation rather than breakout momentum. The setup is hold-worthy with modest upside potential, but lacks the acceleration or technical confirmation for a strong buy.",
         "metrics": {
-          "price": 191.435,
+          "price": 185.84,
           "open": 185.735,
           "high": 194.61,
           "low": 183.39,
-          "close": 191.435,
-          "vwap": 191.199963,
-          "volume": 105345,
-          "daily_change_pct": 5.028254786854661,
-          "price_vs_vwap_pct": 0.12292732504347059,
+          "close": 185.84,
+          "vwap": 190.573107,
+          "volume": 128126,
+          "daily_change_pct": 1.958632797498213,
+          "price_vs_vwap_pct": -2.4836174812430327,
           "high_low_range_pct": 6.118108948143316
         },
-        "scored_at": "2026-03-18 18:50:20"
+        "scored_at": "2026-03-18 19:30:11"
       }
     },
     "WYNN": {
