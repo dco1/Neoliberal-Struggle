@@ -11,6 +11,11 @@ const WS_RECONNECT_MAX_MS    = 30000;          // cap reconnect delay at 30s
 const charts = {};
 const activeTab = { index: 'holdings', screener: 'holdings' };
 
+// Per-book sort state for the holdings table — persists across tab switches
+const holdingsSort  = { index: { col: null, dir: 1 }, screener: { col: null, dir: 1 } };
+// Last-fetched holdings per book — allows re-sorting without a network round-trip
+const holdingsCache = { index: [], screener: [] };
+
 // --- Fetch helpers ---
 
 async function apiFetch(path) {
@@ -176,7 +181,8 @@ async function loadTab(bookId, tab) {
   try {
     if (tab === 'holdings') {
       const { holdings } = await apiFetch(`/books/${bookId}`);
-      content.innerHTML = renderHoldings(holdings);
+      holdingsCache[bookId] = holdings || [];
+      content.innerHTML = renderHoldings(holdingsCache[bookId], bookId);
     } else if (tab === 'trades') {
       const trades = await apiFetch(`/books/${bookId}/trades?limit=50`);
       content.innerHTML = renderTrades(trades);
@@ -189,30 +195,53 @@ async function loadTab(bookId, tab) {
   }
 }
 
-function renderHoldings(holdings) {
+// Column definitions for the holdings table — key matches holding object fields
+const HOLDINGS_COLS = [
+  { key: 'ticker',          label: 'Ticker',    numeric: false },
+  { key: 'net_shares',      label: 'Shares',    numeric: true  },
+  { key: 'avg_cost',        label: 'Avg Cost',  numeric: true  },
+  { key: 'woke_score',      label: 'Woke',      numeric: true  },
+  { key: 'financial_score', label: 'Financial', numeric: true  },
+];
+
+function sortHoldings(holdings, col, dir) {
+  if (!col) return [...holdings]; // unsorted — preserve original order
+  return [...holdings].sort((a, b) => {
+    const av = a[col] ?? (typeof a[col] === 'number' ? -Infinity : '');
+    const bv = b[col] ?? (typeof b[col] === 'number' ? -Infinity : '');
+    if (av < bv) return -dir;
+    if (av > bv) return  dir;
+    return 0;
+  });
+}
+
+function renderHoldings(holdings, bookId) {
   if (!holdings.length) return '<div style="padding:16px;color:var(--text-dim)">No holdings yet.</div>';
+
+  const { col, dir } = holdingsSort[bookId] || { col: null, dir: 1 };
+  const sorted = sortHoldings(holdings, col, dir);
+
+  const headerCells = HOLDINGS_COLS.map(c => {
+    const active  = c.key === col;
+    const arrow   = active ? (dir === 1 ? ' ↑' : ' ↓') : ' ⇅';
+    const cls     = `sortable-th${active ? ' sort-active' : ''}`;
+    return `<th class="${cls}" data-col="${c.key}">${c.label}<span class="sort-arrow">${arrow}</span></th>`;
+  }).join('');
+
+  const rows = sorted.map(h => `
+    <tr>
+      <td><strong>${h.ticker}</strong></td>
+      <td>${Number(h.net_shares).toFixed(4)}</td>
+      <td>${fmt.dollar(h.avg_cost)}</td>
+      <td>${scoreBar(h.woke_score, 'score-woke')}</td>
+      <td>${scoreBar(h.financial_score, 'score-fin')}</td>
+    </tr>
+  `).join('');
+
   return `
     <table class="holdings-table">
-      <thead>
-        <tr>
-          <th>Ticker</th>
-          <th>Shares</th>
-          <th>Avg Cost</th>
-          <th>Woke</th>
-          <th>Financial</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${holdings.map(h => `
-          <tr>
-            <td><strong>${h.ticker}</strong></td>
-            <td>${Number(h.net_shares).toFixed(4)}</td>
-            <td>${fmt.dollar(h.avg_cost)}</td>
-            <td>${scoreBar(h.woke_score, 'score-woke')}</td>
-            <td>${scoreBar(h.financial_score, 'score-fin')}</td>
-          </tr>
-        `).join('')}
-      </tbody>
+      <thead><tr>${headerCells}</tr></thead>
+      <tbody>${rows}</tbody>
     </table>
   `;
 }
@@ -335,6 +364,26 @@ function initTabs() {
 
       activeTab[bookId] = tabName;
       loadTab(bookId, tabName);
+    });
+  });
+
+  // Sort click delegation — one listener per tab-content container
+  ['index', 'screener'].forEach(bookId => {
+    const container = document.getElementById(`${bookId}-tab-content`);
+    if (!container) return;
+    container.addEventListener('click', e => {
+      const th = e.target.closest('th[data-col]');
+      if (!th) return;
+      const col = th.dataset.col;
+      const state = holdingsSort[bookId];
+      if (state.col === col) {
+        state.dir = -state.dir;        // toggle direction
+      } else {
+        state.col = col;
+        state.dir = 1;                 // new column: default ascending
+      }
+      // Re-render in place — no network fetch needed
+      container.innerHTML = renderHoldings(holdingsCache[bookId], bookId);
     });
   });
 }
