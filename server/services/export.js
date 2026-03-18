@@ -25,7 +25,7 @@ const GITHUB_API  = 'https://api.github.com';
 const OWNER       = process.env.GITHUB_OWNER;
 const REPO        = process.env.GITHUB_REPO;
 const TOKEN       = process.env.GITHUB_TOKEN;
-const FILE_PATH   = process.env.GITHUB_SCORES_PATH  || 'public/scores.json';
+const FILE_PATH   = process.env.GITHUB_SCORES_PATH  || 'docs/scores.json';
 const BRANCH      = process.env.GITHUB_SCORES_BRANCH || 'main';
 
 const EXPORT_ENABLED = !!(TOKEN && OWNER && REPO);
