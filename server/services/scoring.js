@@ -3,17 +3,20 @@
  * Calls Claude API to produce woke scores and financial scores per ticker.
  * Falls back to deterministic mock scores when ANTHROPIC_API_KEY is not set.
  *
- * Cache TTLs:
- *   - Woke scores: 24 hours
- *   - Financial scores: 30 minutes
+ * Model: claude-haiku-4-5 for all scoring calls (high volume, structured output).
+ * Prompt caching: the scoring rubric / system prompt is identical across all tickers
+ * and is marked with cache_control so Anthropic caches it server-side. Only the
+ * ticker-specific user message changes per call. Cache hits cost 10% of input price.
  *
- * compositeScore() now accepts per-book weights as arguments rather than
- * reading global settings — each book passes its own woke_weight/financial_weight.
+ * Cache TTLs (SQLite):
+ *   - Woke scores:      24 hours (configurable via settings)
+ *   - Financial scores: 30 minutes (configurable via settings)
  */
 
 const { getDb } = require('../db/index');
 
 const DEMO_MODE = !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here';
+const SCORING_MODEL = 'claude-haiku-4-5';
 
 // Lazy-init Anthropic client — only instantiated when a real API call is needed
 let anthropicClient = null;
@@ -28,6 +31,143 @@ function getClient() {
 if (DEMO_MODE) {
   console.log('[scoring] No Anthropic key — running in demo mode with mock scores.');
 }
+
+// ─── Cacheable system prompts ─────────────────────────────────────────────────
+// These are sent as system messages with cache_control: { type: 'ephemeral' }.
+// Anthropic caches the system prompt server-side for 5 minutes (reset on each use).
+// Must be >= 1024 tokens to qualify. Cache hits cost 10% of normal input price.
+//
+// The rubrics are intentionally detailed — better guidance = better scores,
+// and the length also ensures caching is triggered.
+
+const WOKE_SYSTEM_PROMPT = `You are an ethical investment scoring engine for an autonomous trading system called Neoliberal Struggle. Your job is to evaluate publicly traded companies on their ethical, environmental, and social record and return a structured JSON score.
+
+You score each company on five dimensions, each 0–100 where 100 is most ethical and 0 is worst. You then provide a composite score (simple average of the five, or your best overall judgment if the dimensions are weighted differently in context).
+
+SCORING DIMENSIONS
+
+1. Environmental (0–100)
+Evaluate the company's relationship with the natural environment. Consider:
+- Direct carbon emissions (Scope 1 and 2) and whether the company has set science-based targets
+- Fossil fuel exposure: does the company extract, refine, or primarily sell fossil fuels? Companies whose core business IS fossil fuels score near zero here
+- Environmental violations, fines, and spills in the past five years
+- Renewable energy commitments: is the company transitioning, or has it already transitioned?
+- Water usage, biodiversity impact, and waste practices
+- Greenwashing: companies with aggressive green marketing but no substantive action should be penalised
+High scorers: NextEra Energy (clean energy producer), companies with verified net-zero plans and substantive progress
+Low scorers: ExxonMobil, Chevron, coal producers, any company with a documented history of funding climate denial
+
+2. Labor (0–100)
+Evaluate how the company treats its workers — direct employees and contractors. Consider:
+- Wage levels relative to living wage in their region and industry
+- Injury rates and workplace safety record (OSHA violations are a strong negative signal)
+- Union relations: active union-busting is severely penalised; constructive collective bargaining is rewarded
+- Contractor and gig worker treatment: companies that misclassify workers or provide inferior conditions to contractors should be penalised
+- CEO pay ratio relative to median worker
+- Layoff practices: were mass layoffs handled with appropriate severance and support?
+- Diversity in senior leadership as a proxy for equitable promotion practices
+High scorers: Costco (known for above-market wages and benefits), companies with genuine profit-sharing
+Low scorers: Amazon (documented warehouse injury rates, union suppression), companies with numerous OSHA violations
+
+3. Diversity & Governance (0–100)
+Evaluate board composition, ownership structure, and executive accountability. Consider:
+- Board gender, racial, and ethnic diversity
+- Dual-class share structures that entrench founder control (significant negative)
+- Executive compensation: is it aligned with long-term shareholder and stakeholder value?
+- Independence of the board from management
+- Audit committee quality and accounting restatements
+- Executive misconduct, fraud convictions, or SEC enforcement actions
+- Pay equity: documented gender and racial pay gaps are penalised
+High scorers: companies with diverse, independent boards and aligned compensation structures
+Low scorers: companies with controlling founders who face no accountability (Meta, Tesla), companies with fraud histories
+
+4. Harm Avoidance (0–100)
+Evaluate whether the company's core business activities cause direct harm to people or society. Consider:
+- Weapons manufacturing: companies whose primary business is weapons systems, munitions, or nuclear components score near zero
+- Private prison operation or provision of services that are central to mass incarceration
+- Tobacco production and marketing (especially to youth or in developing markets)
+- Surveillance capitalism: companies that monetise personal data in ways that compromise user autonomy
+- Predatory financial products: payday lending, high-fee financial products targeting vulnerable populations
+- Gambling operations
+- Opioid manufacturing or distribution with documented negligent practices
+- Alcohol (minor negative only — legal product)
+High scorers: companies whose products are straightforwardly beneficial (healthcare, education, clean energy)
+Low scorers: Lockheed Martin (weapons systems), private prison operators, tobacco companies
+
+5. Political (0–100)
+Evaluate the company's political footprint and relationship with democratic institutions. Consider:
+- Total lobbying expenditure as a proportion of revenue and relative to peers
+- Political action committee donations and to which parties or causes
+- History of regulatory capture: has the company been caught influencing agencies that are supposed to oversee it?
+- Revolving door: do executives cycle between the company and regulatory agencies in ways that compromise oversight?
+- Funding of groups that spread misinformation or undermine democratic processes
+- Legal challenges to environmental, labor, or consumer protection regulations
+High scorers: companies with minimal political spending and transparent governance
+Low scorers: companies with large PACs, documented regulatory capture, or funding of anti-democratic causes
+
+OUTPUT FORMAT
+
+Return only valid JSON with this exact structure. No preamble, no explanation outside the JSON:
+{
+  "composite": <integer 0-100>,
+  "breakdown": {
+    "environmental": <integer 0-100>,
+    "labor": <integer 0-100>,
+    "diversity_governance": <integer 0-100>,
+    "harm_avoidance": <integer 0-100>,
+    "political": <integer 0-100>
+  },
+  "explanation": "<2-3 sentences naming the specific strengths or concerns that drove this score. Be direct. Name the actual issues.>"
+}
+
+SCORING PHILOSOPHY
+Be honest and direct. Do not hedge. Do not refuse to score a company because the question is difficult. Use your best judgment based on public record. A company with a documented history of harm should receive a low score even if it has improved recently. Improvement over time can be noted in the explanation but should be reflected modestly in the score. A company cannot buy a high score with a press release.`;
+
+const FINANCIAL_SYSTEM_PROMPT = `You are a financial scoring engine for an autonomous trading system. Your job is to evaluate stocks for short-to-medium term trading attractiveness based on quantitative market metrics and return a structured JSON score.
+
+You score each stock 0–100 on financial attractiveness for a short-to-medium term position:
+- 90–100: Exceptional momentum, very strong buy signal, multiple confirming indicators
+- 70–89: Strong positive momentum, good risk/reward, clear buy case
+- 50–69: Mixed signals or neutral; hold-worthy but not a strong buy
+- 30–49: Weakening momentum or concerning indicators; consider reducing exposure
+- 10–29: Strong sell signals, deteriorating metrics, or significant downside risk
+- 0–9: Avoid entirely; severe deterioration or breakdown
+
+METRIC INTERPRETATION GUIDE
+
+Price momentum
+- recent_return_1d, recent_return_5d, recent_return_20d: positive and accelerating = bullish; negative and steepening = bearish
+- Distance from 52-week high: closer to high with positive momentum = strength; far below high with negative momentum = weakness
+- Distance from 52-week low: very close to low is a warning signal unless there is a clear reversal
+
+Volume analysis
+- volume_ratio (current volume / average volume): > 1.5 on up days = institutional accumulation (bullish); > 1.5 on down days = distribution (bearish)
+- Unusual volume on a breakout above a key level is a confirming signal
+
+Volatility
+- Higher volatility increases both upside and downside potential
+- Volatility contraction (lower than recent average) before a breakout is often a setup signal
+- Extreme volatility spikes without directional clarity are a neutral-to-negative signal
+
+Technical structure
+- price_vs_sma20, price_vs_sma50: price above both moving averages = uptrend; below both = downtrend; between the two = transition
+- RSI (if available): oversold < 30 (potential reversal), overbought > 70 (momentum may be exhausted, but strong trends can stay overbought)
+- Price relative to recent range: consistently holding upper third of range = strength; consistently in lower third = weakness
+
+CONTEXT
+This score will be used alongside an ethics score to compute a composite investment score. The financial score determines whether a stock is worth holding from a returns perspective. You are not the only filter — ethics is applied separately.
+
+OUTPUT FORMAT
+
+Return only valid JSON with this exact structure. No preamble, no explanation outside the JSON:
+{
+  "score": <integer 0-100>,
+  "explanation": "<2-3 sentences summarising the financial case. Be specific about which metrics drove the score.>"
+}
+
+Be direct and confident. Do not hedge with excessive caveats. If the data clearly points in a direction, say so.`;
+
+// ─── Mock data (demo mode) ────────────────────────────────────────────────────
 
 // Deterministic mock scores so the same ticker always gets the same score in a session.
 // Woke floor is 30 — anything below is blocked by both books.
@@ -84,7 +224,7 @@ function mockFinancialScore(ticker, metrics) {
   };
 }
 
-// --- Helpers ---
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getSetting(key) {
   const db = getDb();
@@ -122,7 +262,25 @@ function saveFinancialScore(db, ticker, score, explanation, metrics) {
   `).run(ticker, score, safeExplanation, safeMetrics);
 }
 
-// --- Woke Score ---
+/**
+ * Log Anthropic API usage including cache performance.
+ * cache_creation_input_tokens = tokens written to cache (charged at 1.25x)
+ * cache_read_input_tokens      = tokens read from cache (charged at 0.10x)
+ */
+function logUsage(label, ticker, usage) {
+  const cached  = usage.cache_read_input_tokens      || 0;
+  const written = usage.cache_creation_input_tokens  || 0;
+  const fresh   = usage.input_tokens                 || 0;
+  const out     = usage.output_tokens                || 0;
+
+  const cacheNote = cached  > 0 ? ` | cache hit: ${cached} tokens (saved ~${((cached * 0.9) / 1e6 * 1).toFixed(4)}¢)`
+                  : written > 0 ? ` | cache write: ${written} tokens`
+                  : '';
+
+  console.log(`[scoring] [anthropic] ${label} — ticker: ${ticker}, model: ${SCORING_MODEL}, tokens: ${fresh} in / ${out} out${cacheNote}`);
+}
+
+// ─── Woke Score ───────────────────────────────────────────────────────────────
 
 async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
   const db = getDb();
@@ -141,7 +299,7 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
     return { ticker, score: mock.score, explanation: mock.explanation, breakdown: JSON.stringify(mock.breakdown) };
   }
 
-  // News injection — if enabled, fetch recent headlines and add context to the prompt
+  // News injection — fetch recent headlines and add to user message if enabled
   let newsContext = '';
   if (getSetting('news_enabled') === 'true') {
     try {
@@ -150,7 +308,7 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
       const articles = await alpaca.getNews([ticker], 5);
       if (articles.length > 0) {
         const lines = articles.map(a => `  - ${a.headline} (${a.source})`).join('\n');
-        newsContext = `\nRecent news about this company (use this to adjust your score if relevant):\n${lines}\n`;
+        newsContext = `\n\nRecent news (factor into your score if relevant):\n${lines}`;
         console.log(`[scoring] [news] ${ticker} — ${articles.length} headline(s) injected into woke score prompt`);
       } else {
         console.log(`[scoring] [news] ${ticker} — no headlines found`);
@@ -161,38 +319,20 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
   }
 
   const name = companyName || ticker;
-  const prompt = `You are evaluating ${name} (ticker: ${ticker}) for an ethical investment scoring system.
-${newsContext}
-Score this company 0–100 on each of the following dimensions, where 100 is best/most ethical and 0 is worst:
 
-1. Environmental: Carbon footprint, fossil fuel exposure, environmental record
-2. Labor: Worker treatment, wages, union relations, contractor practices
-3. Diversity & Governance: Board diversity, pay equity, executive compensation ratios
-4. Harm avoidance: Weapons/defense exposure, prison industry, surveillance, tobacco, gambling
-5. Political: Political donations, lobbying spend, regulatory capture
-
-Return a JSON object with this exact structure:
-{
-  "composite": <number 0-100>,
-  "breakdown": {
-    "environmental": <number>,
-    "labor": <number>,
-    "diversity_governance": <number>,
-    "harm_avoidance": <number>,
-    "political": <number>
-  },
-  "explanation": "<2-3 sentence plain English summary of why this score was given, naming specific concerns or strengths>"
-}
-
-Be direct and specific. Do not hedge or refuse to score — give your best assessment based on what is publicly known about this company.`;
-
-  console.log(`[scoring] [anthropic] woke score — ticker: ${ticker}, model: claude-sonnet-4-6`);
+  // System prompt is cached — identical rubric across all ticker calls.
+  // User message contains ticker-specific context and changes each call.
   const message = await getClient().messages.create({
-    model: 'claude-sonnet-4-6',
+    model: SCORING_MODEL,
     max_tokens: 500,
-    messages: [{ role: 'user', content: prompt }],
+    system: [{ type: 'text', text: WOKE_SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+    messages: [{
+      role: 'user',
+      content: `Score ${name} (ticker: ${ticker}) on all five ethical dimensions.${newsContext}`,
+    }],
   });
-  console.log(`[scoring] [anthropic] woke score done — ticker: ${ticker}, tokens: ${message.usage.input_tokens} in / ${message.usage.output_tokens} out`);
+
+  logUsage('woke score', ticker, message.usage);
 
   const raw = message.content[0].text;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
@@ -203,7 +343,7 @@ Be direct and specific. Do not hedge or refuse to score — give your best asses
   return { ticker, score: parsed.composite, explanation: parsed.explanation, breakdown: JSON.stringify(parsed.breakdown) };
 }
 
-// --- Financial Score ---
+// ─── Financial Score ──────────────────────────────────────────────────────────
 
 async function getFinancialScore(ticker, metrics, forceRefresh = false) {
   const db = getDb();
@@ -222,7 +362,7 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
     return { ticker, score: mock.score, explanation: mock.explanation };
   }
 
-  // News injection — if enabled, fetch recent headlines and add context to the prompt
+  // News injection — fetch recent headlines and add to user message if enabled
   let newsContext = '';
   if (getSetting('news_enabled') === 'true') {
     try {
@@ -231,7 +371,7 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
       const articles = await alpaca.getNews([ticker], 5);
       if (articles.length > 0) {
         const lines = articles.map(a => `  - ${a.headline} (${a.source})`).join('\n');
-        newsContext = `\nRecent news about this company (use this to adjust your score if relevant):\n${lines}\n`;
+        newsContext = `\n\nRecent news (factor into your score if relevant):\n${lines}`;
         console.log(`[scoring] [news] ${ticker} — ${articles.length} headline(s) injected into financial score prompt`);
       } else {
         console.log(`[scoring] [news] ${ticker} — no headlines found`);
@@ -241,28 +381,19 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
     }
   }
 
-  const prompt = `You are evaluating the financial attractiveness of ${ticker} for a short-to-medium term position.
-
-Here are the current market metrics:
-${JSON.stringify(metrics, null, 2)}
-${newsContext}
-Score this stock 0–100 on financial attractiveness, where 100 = very strong buy signal and 0 = very strong sell signal.
-
-Consider: price momentum, volume trends, volatility, distance from recent highs/lows, and any notable patterns in the data.
-
-Return a JSON object with this exact structure:
-{
-  "score": <number 0-100>,
-  "explanation": "<2-3 sentence plain English summary of the financial case>"
-}`;
-
-  console.log(`[scoring] [anthropic] financial score — ticker: ${ticker}, model: claude-sonnet-4-6`);
+  // System prompt is cached — identical rubric across all ticker calls.
+  // User message contains ticker-specific metrics and changes each call.
   const message = await getClient().messages.create({
-    model: 'claude-sonnet-4-6',
+    model: SCORING_MODEL,
     max_tokens: 300,
-    messages: [{ role: 'user', content: prompt }],
+    system: [{ type: 'text', text: FINANCIAL_SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+    messages: [{
+      role: 'user',
+      content: `Score ${ticker} for financial attractiveness.\n\nCurrent market metrics:\n${JSON.stringify(metrics, null, 2)}${newsContext}`,
+    }],
   });
-  console.log(`[scoring] [anthropic] financial score done — ticker: ${ticker}, tokens: ${message.usage.input_tokens} in / ${message.usage.output_tokens} out`);
+
+  logUsage('financial score', ticker, message.usage);
 
   const raw = message.content[0].text;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
@@ -273,22 +404,20 @@ Return a JSON object with this exact structure:
   return { ticker, score: parsed.score, explanation: parsed.explanation };
 }
 
-// --- Composite Score ---
+// ─── Composite Score ──────────────────────────────────────────────────────────
 
 /**
  * Compute a weighted composite of woke and financial scores.
- * Weights are now passed explicitly by each book from its own stored values,
- * rather than being read from a global setting.
+ * Weights are passed explicitly by each book from its own stored values.
  *
- * @param {number} wokeScore      - 0–100
- * @param {number} financialScore - 0–100
- * @param {number} wokeWeight     - e.g. 0.65 for Book A, 0.25 for Book B
+ * @param {number} wokeScore       - 0–100
+ * @param {number} financialScore  - 0–100
+ * @param {number} wokeWeight      - e.g. 0.65 for Book A, 0.25 for Book B
  * @param {number} financialWeight - e.g. 0.35 for Book A, 0.75 for Book B
  * @returns {number}
  */
 function compositeScore(wokeScore, financialScore, wokeWeight, financialWeight) {
-  // Validate that weights are sensible; fall back to equal weighting if missing
-  const ww = typeof wokeWeight === 'number' && isFinite(wokeWeight) ? wokeWeight : 0.5;
+  const ww = typeof wokeWeight     === 'number' && isFinite(wokeWeight)     ? wokeWeight     : 0.5;
   const fw = typeof financialWeight === 'number' && isFinite(financialWeight) ? financialWeight : 0.5;
   return (wokeScore * ww) + (financialScore * fw);
 }
