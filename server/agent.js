@@ -14,6 +14,7 @@ const cron = require('node-cron');
 const alpaca = require('./services/alpaca');
 const market = require('./services/market');
 const { generateDailySummaries } = require('./services/summaries');
+const { exportScores }          = require('./services/export');
 const { getDb } = require('./db/index');
 const ws     = require('./services/ws');
 
@@ -102,7 +103,7 @@ async function runMarketOpenSetup() {
  * Each book reflects on its own day and comments on the other.
  */
 async function runEndOfDaySummary() {
-  console.log('[agent] Running end-of-day summary generation...');
+  console.log('[agent] Running end-of-day tasks...');
   try {
     await generateDailySummaries();
     console.log('[agent] End-of-day summaries complete.');
@@ -111,6 +112,14 @@ async function runEndOfDaySummary() {
     ws.broadcast('summary', { date: new Date().toISOString().slice(0, 10) });
   } catch (e) {
     console.error('[agent] Failed to generate end-of-day summaries:', e.message);
+  }
+
+  // Export scores.json to GitHub for the public Pages site.
+  // Runs after summaries — failure here is non-fatal.
+  try {
+    await exportScores();
+  } catch (e) {
+    console.error('[agent] Score export failed:', e.message);
   }
 }
 
