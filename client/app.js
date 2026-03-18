@@ -297,6 +297,11 @@ function renderLog(log) {
 // Book A reflects earnestly on its own ethics; Book B gives the numbers-first take.
 // Each writes a passive-aggressive-but-kind commentary on the other.
 
+// Convert newlines to <p> tags for readable multi-paragraph rendering
+const paras = text => text
+  ? text.split(/\n\n+/).map(p => `<p>${p.trim()}</p>`).join('')
+  : '';
+
 function renderSummaryDay(s) {
   return `
     <div class="summary-day">
@@ -315,9 +320,9 @@ function renderSummaryDay(s) {
             <span class="summary-book-label">Index Universe — Ethics First</span>
           </div>
           <div class="summary-body">
-            <div class="summary-self">${s.book_a_summary}</div>
+            <div class="summary-self">${paras(s.book_a_summary)}</div>
             <div class="summary-commentary-header">On Book B…</div>
-            <div class="summary-commentary">${s.book_a_commentary_on_b}</div>
+            <div class="summary-commentary">${paras(s.book_a_commentary_on_b)}</div>
           </div>
         </div>
         <div class="summary-col summary-col-b">
@@ -326,9 +331,9 @@ function renderSummaryDay(s) {
             <span class="summary-book-label">Screener Universe — Financials First</span>
           </div>
           <div class="summary-body">
-            <div class="summary-self">${s.book_b_summary}</div>
+            <div class="summary-self">${paras(s.book_b_summary)}</div>
             <div class="summary-commentary-header">On Book A…</div>
-            <div class="summary-commentary">${s.book_b_commentary_on_a}</div>
+            <div class="summary-commentary">${paras(s.book_b_commentary_on_a)}</div>
           </div>
         </div>
       </div>

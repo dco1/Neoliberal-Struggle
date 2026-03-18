@@ -471,6 +471,9 @@ canvas { margin-bottom: 16px; }
   line-height: 1.7;
   color: var(--text);
   margin-bottom: 16px;
+
+  & p { margin: 0 0 10px; }
+  & p:last-child { margin-bottom: 0; }
 }
 
 .summary-commentary-header {
@@ -489,6 +492,9 @@ canvas { margin-bottom: 16px; }
   line-height: 1.7;
   color: var(--text-dim);
   font-style: italic;
+
+  & p { margin: 0 0 10px; }
+  & p:last-child { margin-bottom: 0; }
 }
 
 /* ── Dev controls ────────────────────────────────────────────────── */
