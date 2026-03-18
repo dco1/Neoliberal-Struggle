@@ -143,7 +143,17 @@ function startAgent() {
 
   // End-of-day summaries: 4:15pm ET on weekdays (15 min after close)
   cron.schedule('15 16 * * 1-5', runEndOfDaySummary, { timezone: 'America/New_York' });
-  console.log('[agent] Scheduled: end-of-day summary at 16:15 ET weekdays.');
+  {
+    // Log the exact wall-clock time the next summary will fire so it's easy
+    // to confirm the cron was registered after a pm2 restart.
+    const now = new Date();
+    const next = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    next.setHours(16, 15, 0, 0);
+    if (next <= now) next.setDate(next.getDate() + 1); // already past today → tomorrow
+    // skip to Monday if it lands on a weekend
+    while (next.getDay() === 0 || next.getDay() === 6) next.setDate(next.getDate() + 1);
+    console.log(`[agent] Scheduled: end-of-day summary at 16:15 ET weekdays. Next run: ${next.toLocaleString('en-US', { timeZone: 'America/New_York' })} ET`);
+  }
 
   // Ensure the S&P 500 ticker universe is populated before the first cycle runs.
   // On first boot (or if the table was wiped), this fetches immediately rather
