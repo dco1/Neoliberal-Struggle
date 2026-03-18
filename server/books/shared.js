@@ -10,6 +10,7 @@
 
 const { getDb } = require('../db/index');
 const alpaca = require('../services/alpaca');
+const ws     = require('../services/ws');
 
 /**
  * Write a decision to the agent_log table.
@@ -20,6 +21,10 @@ function logDecision(bookId, cycle, action, ticker, reasoning) {
     INSERT INTO agent_log (book_id, cycle, action, ticker, reasoning)
     VALUES (?, ?, ?, ?, ?)
   `).run(bookId, cycle, action, ticker || null, reasoning);
+
+  // Push the new log entry to all connected dashboard clients in real-time.
+  // Clients append it directly to the log tab instead of waiting for a poll.
+  ws.broadcast('log_entry', { bookId, cycle, action, ticker: ticker || null, reasoning });
 }
 
 /**

@@ -15,6 +15,7 @@ const alpaca = require('./services/alpaca');
 const market = require('./services/market');
 const { generateDailySummaries } = require('./services/summaries');
 const { getDb } = require('./db/index');
+const ws     = require('./services/ws');
 
 const indexBook = require('./books/index-universe');
 const screenerBook = require('./books/screener-universe');
@@ -69,6 +70,10 @@ async function runAgentCycle() {
     // Run both books sequentially to avoid API rate limit issues
     await indexBook.runCycle(cycleCount);
     await screenerBook.runCycle(cycleCount);
+
+    // Push cycle_complete so connected dashboards update immediately
+    // instead of waiting for the next 30-second poll.
+    ws.broadcast('cycle_complete', { cycle: cycleCount });
   } catch (e) {
     console.error('[agent] Unhandled error in cycle:', e);
   } finally {
@@ -101,6 +106,9 @@ async function runEndOfDaySummary() {
   try {
     await generateDailySummaries();
     console.log('[agent] End-of-day summaries complete.');
+
+    // Push summary event so the dashboard refreshes the journal feed immediately
+    ws.broadcast('summary', { date: new Date().toISOString().slice(0, 10) });
   } catch (e) {
     console.error('[agent] Failed to generate end-of-day summaries:', e.message);
   }

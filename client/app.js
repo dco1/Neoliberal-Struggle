@@ -1,8 +1,13 @@
 // Neoliberal Struggle — Dashboard
 // Each book controls its own woke/greed balance autonomously.
 // The struggle dial is read-only — the books decide for themselves.
+// Real-time updates are pushed over WebSocket; a slow fallback poll
+// runs every 5 minutes in case the socket drops or is unavailable.
 
-const REFRESH_INTERVAL = 30000; // 30 seconds
+const FALLBACK_POLL_INTERVAL = 5 * 60 * 1000; // 5 minutes (safety net only)
+const WS_RECONNECT_BASE_MS   = 2000;           // initial reconnect delay
+const WS_RECONNECT_MAX_MS    = 30000;          // cap reconnect delay at 30s
+
 const charts = {};
 const activeTab = { index: 'holdings', screener: 'holdings' };
 
@@ -457,7 +462,7 @@ function initTrigger() {
   });
 }
 
-// --- Main refresh loop ---
+// --- Full refresh (initial load + fallback) ---
 
 async function refresh() {
   await Promise.all([
@@ -471,6 +476,136 @@ async function refresh() {
   ]);
 }
 
+// --- Partial refresh triggered by cycle_complete event ---
+// Skips summaries (only needed after market close) and re-uses the
+// already-fetched book data to redraw charts and the active tab.
+
+async function refreshOnCycle() {
+  await Promise.all([
+    refreshStatus(),
+    refreshBooks(),
+    refreshChart('index'),
+    refreshChart('screener'),
+    loadTab('index', activeTab.index),
+    loadTab('screener', activeTab.screener),
+  ]);
+  document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+}
+
+// --- Real-time log entry injection ---
+// When a log_entry WS event arrives and the log tab is visible for that book,
+// prepend the new row directly to the DOM without a full tab reload.
+
+function injectLogEntry(entry) {
+  const bookId = entry.bookId;
+  if (activeTab[bookId] !== 'log') return; // tab not visible, skip
+
+  const content = document.getElementById(`${bookId}-tab-content`);
+  if (!content) return;
+
+  // If the tab is still showing the "no entries" placeholder, replace it first
+  if (content.querySelector('.log-empty') || content.textContent.trim() === 'No log entries yet.') {
+    content.innerHTML = '';
+  }
+
+  const el = document.createElement('div');
+  el.className = 'log-entry log-entry-new'; // CSS can fade this in
+  el.innerHTML = `
+    <span class="log-action log-${entry.action}">${entry.action.toUpperCase()}</span>
+    ${entry.ticker ? `<span class="log-ticker">${entry.ticker}</span>` : ''}
+    <span class="log-time">${new Date().toLocaleTimeString()}</span>
+    <span class="log-reason">${entry.reasoning}</span>
+  `;
+  content.prepend(el);
+
+  // Remove the highlight class after the CSS transition ends so it
+  // doesn't keep triggering on re-renders.
+  el.addEventListener('animationend', () => el.classList.remove('log-entry-new'), { once: true });
+}
+
+// --- WebSocket client ---
+// Connects to the same origin as the page. Falls back gracefully if the
+// socket is unavailable. Reconnects with exponential back-off on drop.
+
+function initWebSocket() {
+  const wsUrl = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host;
+  let reconnectDelay = WS_RECONNECT_BASE_MS;
+  let ws = null;
+  let reconnectTimer = null;
+
+  const wsIndicator = document.getElementById('ws-indicator');
+
+  function setWsStatus(connected) {
+    if (!wsIndicator) return;
+    wsIndicator.title   = connected ? 'Live (WebSocket)' : 'Polling fallback';
+    wsIndicator.dataset.connected = connected ? 'true' : 'false';
+  }
+
+  function connect() {
+    ws = new WebSocket(wsUrl);
+
+    ws.addEventListener('open', () => {
+      console.log('[ws] Connected to server');
+      reconnectDelay = WS_RECONNECT_BASE_MS; // reset back-off on successful connect
+      setWsStatus(true);
+    });
+
+    ws.addEventListener('message', (evt) => {
+      let msg;
+      try { msg = JSON.parse(evt.data); } catch { return; }
+
+      const { event, data } = msg;
+      console.log(`[ws] ← ${event}`, data);
+
+      switch (event) {
+        case 'connected':
+          // Server hello — no action needed
+          break;
+
+        case 'cycle_complete':
+          // A full agent cycle just finished — refresh all live data
+          refreshOnCycle().catch(console.warn);
+          break;
+
+        case 'log_entry':
+          // A new log decision was written — inject it into the visible log tab
+          injectLogEntry(data);
+          break;
+
+        case 'summary':
+          // New end-of-day summary written — refresh the journal section
+          refreshSummaries().catch(console.warn);
+          break;
+
+        default:
+          console.log(`[ws] Unhandled event: ${event}`);
+      }
+    });
+
+    ws.addEventListener('close', () => {
+      console.warn(`[ws] Disconnected. Reconnecting in ${reconnectDelay / 1000}s…`);
+      setWsStatus(false);
+      reconnectTimer = setTimeout(() => {
+        reconnectDelay = Math.min(reconnectDelay * 2, WS_RECONNECT_MAX_MS);
+        connect();
+      }, reconnectDelay);
+    });
+
+    ws.addEventListener('error', () => {
+      // error event always precedes close; close handler does the reconnect
+      console.warn('[ws] Connection error');
+    });
+  }
+
+  connect();
+
+  // Return a cleanup fn (useful for testing)
+  return () => {
+    clearTimeout(reconnectTimer);
+    ws?.close();
+  };
+}
+
 // --- Init ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -478,6 +613,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initTrigger();
   initSettings();
 
+  // Initial full load
   refresh();
-  setInterval(refresh, REFRESH_INTERVAL);
+
+  // WebSocket for real-time push updates
+  initWebSocket();
+
+  // Slow fallback poll — keeps data fresh if WS is unavailable or
+  // if the server restarts mid-session without the client noticing.
+  setInterval(refresh, FALLBACK_POLL_INTERVAL);
 });
