@@ -16,7 +16,7 @@
  *
  * Results are saved to the daily_summaries table.
  */
-
+const { sendNotification } = require('my-little-home-server');
 const { getDb } = require('../db/index');
 
 const DEMO_MODE = !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here';
@@ -245,8 +245,12 @@ async function generateDailySummaries() {
     bookAOnB: bookAResult.commentary_on_other,
     bookBOnA: bookBResult.commentary_on_other,
   });
+  
 
   console.log(`[summaries] Summaries saved for ${today}.`);
+  
+  await sendNotification({ title: 'Market is Closed', body: 'Summaries have been saved for today.' })
+
 }
 
 /**
