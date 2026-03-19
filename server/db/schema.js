@@ -132,6 +132,20 @@ function initSchema() {
     if (!e.message.includes('duplicate column')) throw e;
   }
 
+  // Add day P&L columns to daily_summaries
+  try {
+    db.exec(`ALTER TABLE daily_summaries ADD COLUMN book_a_day_pnl_pct REAL`);
+    console.log('[db] Migration: added book_a_day_pnl_pct to daily_summaries.');
+  } catch (e) {
+    if (!e.message.includes('duplicate column')) throw e;
+  }
+  try {
+    db.exec(`ALTER TABLE daily_summaries ADD COLUMN book_b_day_pnl_pct REAL`);
+    console.log('[db] Migration: added book_b_day_pnl_pct to daily_summaries.');
+  } catch (e) {
+    if (!e.message.includes('duplicate column')) throw e;
+  }
+
   // Correction: if Book B got the wrong default weights from the migration
   // (ALTER TABLE applies the same DEFAULT to all existing rows), fix them now.
   const screener = db.prepare('SELECT woke_weight FROM books WHERE id = ?').get('screener');

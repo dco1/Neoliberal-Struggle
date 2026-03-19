@@ -86,20 +86,62 @@ async function refreshBooks() {
   }
 }
 
+// Recompute and display P&L for the currently selected range.
+// Called after every chart render and range change.
+function renderRangePnl(bookId) {
+  const range  = chartRange[bookId];
+  const all    = snapshotCache[bookId];
+  const pnlEl  = document.getElementById(`${bookId}-pnl`);
+  const lblEl  = document.getElementById(`${bookId}-pnl-range`);
+  if (!pnlEl) return;
+
+  if (lblEl) lblEl.textContent = range;
+
+  // For ALL, use the live snapshot values (already set by renderBookSummary)
+  if (range === 'ALL') {
+    const snap = liveSnapCache[bookId];
+    if (snap) {
+      pnlEl.textContent = `${fmt.dollar(snap.pnl)} (${fmt.pct(snap.pnl_pct)})`;
+      pnlEl.className = pnlClass(snap.pnl);
+    }
+    return;
+  }
+
+  if (!all.length) return;
+  const cutoff = Date.now() - RANGE_MS[range];
+  const filtered = all.filter(s => new Date(s.snapped_at.includes('T') ? s.snapped_at : s.snapped_at + 'Z').getTime() >= cutoff);
+  const src = filtered.length ? filtered : all;
+  if (src.length < 2) return;
+
+  const startVal = src[0].total_value;
+  const endVal   = src[src.length - 1].total_value;
+  const pnl      = endVal - startVal;
+  const pnlPct   = startVal > 0 ? (pnl / startVal) * 100 : 0;
+
+  pnlEl.textContent = `${fmt.dollar(pnl)} (${fmt.pct(pnlPct)})`;
+  pnlEl.className = pnlClass(pnl);
+}
+
 function renderBookSummary(book) {
   const id = book.id;
   const snap = book.snapshot;
+
+  // Cache live snap for ALL-range P&L fallback
+  if (snap) liveSnapCache[id] = snap;
 
   // Portfolio value
   const valEl = document.getElementById(`${id}-value`);
   if (valEl) valEl.textContent = snap ? fmt.dollar(snap.total_value) : fmt.dollar(book.capital);
 
-  // P&L
+  // P&L — rendered via renderRangePnl so range label stays consistent;
+  // seed it with the all-time values now, range buttons will update it.
   const pnlEl = document.getElementById(`${id}-pnl`);
   if (pnlEl && snap) {
     pnlEl.textContent = `${fmt.dollar(snap.pnl)} (${fmt.pct(snap.pnl_pct)})`;
     pnlEl.className = pnlClass(snap.pnl);
   }
+  const lblEl = document.getElementById(`${id}-pnl-range`);
+  if (lblEl) lblEl.textContent = chartRange[id];
 
   // Position count
   const posEl = document.getElementById(`${id}-positions`);
@@ -122,8 +164,9 @@ function renderBookSummary(book) {
 
 // --- Charts ---
 
-const chartRange = { index: '1D', screener: '1D' };
+const chartRange  = { index: '1D', screener: '1D' };
 const snapshotCache = { index: [], screener: [] };
+const liveSnapCache = { index: null, screener: null }; // stores live snap for ALL-time P&L
 
 const RANGE_MS = { '1D': 86400000, '1W': 604800000, '1M': 2592000000, '1Y': 31536000000, 'ALL': Infinity };
 
@@ -150,6 +193,8 @@ function renderChart(bookId) {
 
   const ctx = document.getElementById(`${bookId}-chart`);
   if (!ctx) return;
+
+  renderRangePnl(bookId);
 
   if (charts[bookId]) {
     charts[bookId].data.labels = labels;

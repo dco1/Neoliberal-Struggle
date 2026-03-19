@@ -118,11 +118,24 @@ function getBookDayData(bookId) {
     AND date(created_at) = date('now')
   `).get(bookId);
 
+  // Day P&L: how the session went (first snapshot → last snapshot today)
+  const firstSnapshot = db.prepare(`
+    SELECT total_value FROM portfolio_snapshots
+    WHERE book_id = ? AND date(snapped_at) = date('now')
+    ORDER BY snapped_at ASC LIMIT 1
+  `).get(bookId);
+
+  let dayPnlPct = null;
+  if (firstSnapshot && latestSnapshot && firstSnapshot.total_value > 0) {
+    dayPnlPct = ((latestSnapshot.total_value - firstSnapshot.total_value) / firstSnapshot.total_value) * 100;
+  }
+
   return {
     book,
     trades,
     latestSnapshot: latestSnapshot || null,
     avgWokeScore: wokeAvgRow?.avg || null,
+    dayPnlPct,
   };
 }
 
@@ -196,27 +209,33 @@ async function generateDailySummaries() {
 
   // Build the day-specific user messages — trades, P&L, and the other book's context.
   // Character voice lives in the cached system prompts above; only the daily data changes.
+  const fmtPnl = (day, allTime) => {
+    const d = day != null ? `${day >= 0 ? '+' : ''}${day.toFixed(2)}% today` : 'n/a today';
+    const a = allTime != null ? `${allTime >= 0 ? '+' : ''}${allTime.toFixed(2)}% all-time` : 'n/a all-time';
+    return `${d} / ${a}`;
+  };
+
   const bookAUserMsg =
     marketContext +
     `Your day:\n` +
-    `- P&L today: ${bookAData.latestSnapshot?.pnl_pct != null ? bookAData.latestSnapshot.pnl_pct.toFixed(2) + '%' : 'not yet snapshotted'}\n` +
+    `- P&L: ${fmtPnl(bookAData.dayPnlPct, bookAData.latestSnapshot?.pnl_pct)}\n` +
     `- Ethics weight: ${bookAData.book?.woke_weight ?? 0.65}\n` +
     `- Avg ethics score of today's buys: ${bookAData.avgWokeScore != null ? bookAData.avgWokeScore.toFixed(1) : 'n/a'}\n` +
     `- Today's trades:\n${formatTradesForPrompt(bookAData.trades)}\n\n` +
     `Book B today (treats ethics as a risk-management filter — the minimum viable conscience):\n` +
-    `- P&L today: ${bookBData.latestSnapshot?.pnl_pct != null ? bookBData.latestSnapshot.pnl_pct.toFixed(2) + '%' : 'not yet snapshotted'}\n` +
+    `- P&L: ${fmtPnl(bookBData.dayPnlPct, bookBData.latestSnapshot?.pnl_pct)}\n` +
     `- Ethics weight: ${bookBData.book?.woke_weight ?? 0.25}\n` +
     `- Trades:\n${formatTradesForPrompt(bookBData.trades)}`;
 
   const bookBUserMsg =
     marketContext +
     `Your day:\n` +
-    `- P&L today: ${bookBData.latestSnapshot?.pnl_pct != null ? bookBData.latestSnapshot.pnl_pct.toFixed(2) + '%' : 'not yet snapshotted'}\n` +
+    `- P&L: ${fmtPnl(bookBData.dayPnlPct, bookBData.latestSnapshot?.pnl_pct)}\n` +
     `- Ethics allocation: ${bookBData.book?.woke_weight ?? 0.25} (present, applied, but not the point)\n` +
     `- Avg ethics score of today's buys: ${bookBData.avgWokeScore != null ? bookBData.avgWokeScore.toFixed(1) : 'n/a'}\n` +
     `- Today's trades:\n${formatTradesForPrompt(bookBData.trades)}\n\n` +
     `Book A today (earnest, principled, occasionally a little much):\n` +
-    `- P&L today: ${bookAData.latestSnapshot?.pnl_pct != null ? bookAData.latestSnapshot.pnl_pct.toFixed(2) + '%' : 'not yet snapshotted'}\n` +
+    `- P&L: ${fmtPnl(bookAData.dayPnlPct, bookAData.latestSnapshot?.pnl_pct)}\n` +
     `- Ethics weight: ${bookAData.book?.woke_weight ?? 0.65}\n` +
     `- Trades:\n${formatTradesForPrompt(bookAData.trades)}`;
 
@@ -300,8 +319,9 @@ function saveSummary(db, today, bookAData, bookBData, { bookASummary, bookBSumma
   db.prepare(`
     INSERT INTO daily_summaries
       (date, book_a_summary, book_b_summary, book_a_commentary_on_b, book_b_commentary_on_a,
-       book_a_pnl_pct, book_b_pnl_pct, book_a_woke_avg, book_b_woke_avg)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+       book_a_pnl_pct, book_b_pnl_pct, book_a_day_pnl_pct, book_b_day_pnl_pct,
+       book_a_woke_avg, book_b_woke_avg)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     today,
     bookASummary,
@@ -310,6 +330,8 @@ function saveSummary(db, today, bookAData, bookBData, { bookASummary, bookBSumma
     bookBOnA,
     bookAData.latestSnapshot?.pnl_pct ?? null,
     bookBData.latestSnapshot?.pnl_pct ?? null,
+    bookAData.dayPnlPct ?? null,
+    bookBData.dayPnlPct ?? null,
     bookAData.avgWokeScore ?? null,
     bookBData.avgWokeScore ?? null,
   );

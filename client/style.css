@@ -186,6 +186,19 @@ main {
   @media (max-width: 480px)  { grid-template-columns: repeat(2, 1fr); }
 }
 
+.pnl-range-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-dim);
+  opacity: 0.6;
+  background: var(--surface2);
+  border-radius: 3px;
+  padding: 1px 4px;
+  vertical-align: middle;
+  margin-left: 4px;
+  letter-spacing: 0.3px;
+}
+
 .stat {
   & label {
     display: block;
