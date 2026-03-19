@@ -144,9 +144,11 @@ const REFLECTIONS_CSS = `
   a { color: var(--accent-a); text-decoration: none; }
   a:hover { text-decoration: underline; }
 
-  .site-header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: baseline; gap: 16px; }
+  .site-header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
   .site-header .wordmark { font-size: 17px; font-weight: 700; color: var(--text); }
-  .site-header .section { font-size: 13px; color: var(--text-dim); }
+  .site-header .section { font-size: 13px; color: var(--text-dim); flex: 1; }
+  .site-header .rss-link { color: var(--text-dim); opacity: 0.5; transition: opacity 0.15s; display: flex; }
+  .site-header .rss-link:hover { opacity: 1; color: #f26522; }
 
   .page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
 
@@ -262,6 +264,50 @@ function buildDayPageHtml(s, depth) {
 </html>`;
 }
 
+/** Build an RSS 2.0 feed for all reflection days */
+function buildRssFeed(summaries) {
+  const BASE = 'https://dco1.github.io/Neoliberal-Struggle';
+  const escXml = s => (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const items = summaries.slice(0, 50).map(s => {
+    const [y, m, d] = s.date.split('-');
+    const url = `${BASE}/reflections/${y}/${m}/${d}/`;
+    // RFC 822 date — treat each reflection as published at 4:15pm ET
+    const pubDate = new Date(`${s.date}T21:15:00Z`).toUTCString();
+    const title = fmtDate(s.date);
+
+    const descHtml = [
+      s.book_a_summary ? `<h3>Book A</h3><p>${escXml(s.book_a_summary)}</p>` : '',
+      s.book_a_commentary_on_b ? `<h4>On Book B…</h4><p><em>${escXml(s.book_a_commentary_on_b)}</em></p>` : '',
+      s.book_b_summary ? `<h3>Book B</h3><p>${escXml(s.book_b_summary)}</p>` : '',
+      s.book_b_commentary_on_a ? `<h4>On Book A…</h4><p><em>${escXml(s.book_b_commentary_on_a)}</em></p>` : '',
+    ].filter(Boolean).join('\n');
+
+    return `
+  <item>
+    <title>${escXml(title)}</title>
+    <link>${url}</link>
+    <guid isPermaLink="true">${url}</guid>
+    <pubDate>${pubDate}</pubDate>
+    <description><![CDATA[${descHtml}]]></description>
+  </item>`;
+  }).join('');
+
+  const lastBuild = new Date().toUTCString();
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Neoliberal Struggle — Daily Reflections</title>
+    <link>${BASE}/reflections/</link>
+    <description>Daily end-of-day reflections from two autonomous AI investment portfolios — one ethics-first, one performance-first — each commenting on the other's choices.</description>
+    <language>en-us</language>
+    <lastBuildDate>${lastBuild}</lastBuildDate>
+    <atom:link href="${BASE}/reflections/feed.xml" rel="self" type="application/rss+xml"/>
+${items}
+  </channel>
+</rss>`;
+}
+
 /** Build the index page listing all reflection days */
 function buildIndexPageHtml(summaries) {
   const items = summaries.map(s => {
@@ -284,12 +330,16 @@ function buildIndexPageHtml(summaries) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Reflections — Neoliberal Struggle</title>
+  <link rel="alternate" type="application/rss+xml" title="Neoliberal Struggle — Daily Reflections" href="feed.xml">
   <style>${REFLECTIONS_CSS}</style>
 </head>
 <body>
   <header class="site-header">
     <a class="wordmark" href="../index.html">Neoliberal Struggle</a>
     <span class="section">Daily Reflections</span>
+    <a class="rss-link" href="feed.xml" title="RSS feed">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+    </a>
   </header>
   <main class="page">
     <h1 class="index-title">Daily Reflections</h1>
@@ -345,6 +395,16 @@ async function exportReflections() {
     pushed++;
   } catch (e) {
     console.error('[export] Failed to push reflections index:', e.message);
+  }
+
+  // Regenerate the RSS feed
+  const feedXml = buildRssFeed(summaries);
+  try {
+    const status = await putFile('docs/reflections/feed.xml', feedXml, `chore: reflections feed — ${today}`);
+    console.log(`[export] reflections/feed.xml ${status}.`);
+    pushed++;
+  } catch (e) {
+    console.error('[export] Failed to push reflections feed.xml:', e.message);
   }
 
   // Push a lightweight data.json so the main scores page can list recent reflections
