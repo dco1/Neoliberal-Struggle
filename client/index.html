@@ -263,12 +263,8 @@
       <div class="admin-action">
         <div class="admin-action-info">
           <span class="admin-action-label">Fix Summary P&amp;L</span>
-          <span class="admin-action-desc">Override P&amp;L for a date. Leave values blank to pull from snapshots.</span>
-          <div class="admin-pnl-inputs">
-            <input class="admin-date-input" type="date" id="admin-fix-pnl-date">
-            <input class="admin-date-input" type="number" id="admin-fix-pnl-a" placeholder="Book A %" step="0.01">
-            <input class="admin-date-input" type="number" id="admin-fix-pnl-b" placeholder="Book B %" step="0.01">
-          </div>
+          <span class="admin-action-desc">Recompute P&amp;L from live Alpaca data and patch the reflection</span>
+          <input class="admin-date-input" type="date" id="admin-fix-pnl-date">
         </div>
         <button class="admin-run-btn" data-endpoint="/admin/fix-summary-pnl" data-action="fix-pnl">Run</button>
       </div>

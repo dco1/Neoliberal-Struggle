@@ -746,12 +746,7 @@ function initAdmin() {
 
     if (action === 'fix-pnl') {
       const date = document.getElementById('admin-fix-pnl-date')?.value.trim();
-      const a    = document.getElementById('admin-fix-pnl-a')?.value.trim();
-      const b    = document.getElementById('admin-fix-pnl-b')?.value.trim();
-      body = {};
-      if (date) body.date = date;
-      if (a !== '') body.book_a_pnl_pct = parseFloat(a);
-      if (b !== '') body.book_b_pnl_pct = parseFloat(b);
+      body = date ? { date } : {};
     }
 
     btn.disabled = true;

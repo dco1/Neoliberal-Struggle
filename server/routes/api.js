@@ -400,50 +400,68 @@ router.post('/admin/regenerate-summaries', async (req, res) => {
   }
 });
 
-// POST /api/admin/fix-summary-pnl — patch a past day's P&L in daily_summaries.
-// If book_a_pnl_pct / book_b_pnl_pct are provided in the body, use those directly.
-// Otherwise fall back to the best portfolio_snapshot for that date.
-// Body: { date: "2026-03-19", book_a_pnl_pct: 13.76, book_b_pnl_pct: 18.83 }
+// POST /api/admin/fix-summary-pnl — recompute P&L for a past day using live Alpaca
+// data (same calculation as GET /books) and patch daily_summaries + re-export.
+// Body: { date: "2026-03-19" }  (defaults to today if omitted)
 router.post('/admin/fix-summary-pnl', async (req, res) => {
   try {
     const date = (req.body?.date || new Date().toISOString().split('T')[0]).trim();
     const d = db();
 
-    let pnlA = req.body?.book_a_pnl_pct != null ? parseFloat(req.body.book_a_pnl_pct) : null;
-    let pnlB = req.body?.book_b_pnl_pct != null ? parseFloat(req.body.book_b_pnl_pct) : null;
+    // Compute live P&L using the same logic as GET /books
+    const [account, alpacaPositions] = await Promise.all([
+      alpaca.getAccount(),
+      alpaca.getPositions(),
+    ]);
+    const totalAccountCash   = parseFloat(account.cash);
+    const totalAccountEquity = parseFloat(account.equity);
+    const stored = d.prepare(`SELECT value FROM settings WHERE key = 'initial_equity_per_book'`).get();
+    const initialEquity = stored ? parseFloat(stored.value) : totalAccountEquity / 2;
+    const priceMap = new Map(alpacaPositions.map(p => [p.symbol, parseFloat(p.current_price)]));
 
-    // Fall back to portfolio snapshots if not manually provided
-    if (pnlA == null || pnlB == null) {
-      const getSnap = (bookId) => d.prepare(`
-        SELECT pnl_pct FROM portfolio_snapshots
-        WHERE book_id = ? AND date(snapped_at) = ?
-        ORDER BY snapped_at DESC LIMIT 1
-      `).get(bookId, date);
-      if (pnlA == null) pnlA = getSnap('index')?.pnl_pct ?? null;
-      if (pnlB == null) pnlB = getSnap('screener')?.pnl_pct ?? null;
+    const books = d.prepare('SELECT * FROM books').all();
+    function getNetSpend(bookId) {
+      const row = d.prepare(`SELECT SUM(CASE WHEN side='buy' THEN total_value ELSE -total_value END) as net FROM trades WHERE book_id = ?`).get(bookId);
+      return Math.max(0, row?.net ?? 0);
+    }
+    let totalRemaining = 0;
+    const remainders = {};
+    for (const b of books) {
+      const r = Math.max(0, b.capital - getNetSpend(b.id));
+      remainders[b.id] = r;
+      totalRemaining += r;
     }
 
-    if (pnlA == null && pnlB == null) {
-      return res.status(404).json({ ok: false, error: `No P&L data found for ${date} — provide values manually.` });
+    function computePnlPct(bookId) {
+      const cashPerBook = totalRemaining > 0
+        ? totalAccountCash * (remainders[bookId] / totalRemaining)
+        : totalAccountCash / 2;
+      const netPositions = d.prepare(`
+        SELECT ticker,
+               SUM(CASE WHEN side='buy' THEN shares ELSE -shares END) as net_shares,
+               SUM(CASE WHEN side='buy' THEN total_value ELSE 0 END) /
+               NULLIF(SUM(CASE WHEN side='buy' THEN shares ELSE 0 END), 0) as avg_cost
+        FROM trades WHERE book_id = ?
+        GROUP BY ticker HAVING net_shares > 0.001
+      `).all(bookId);
+      const invested = netPositions.reduce((sum, p) => sum + p.net_shares * (priceMap.get(p.ticker) ?? p.avg_cost), 0);
+      const total = cashPerBook + invested;
+      return initialEquity > 0 ? ((total - initialEquity) / initialEquity) * 100 : 0;
     }
+
+    const pnlA = computePnlPct('index');
+    const pnlB = computePnlPct('screener');
 
     d.prepare(`
       UPDATE daily_summaries
-      SET book_a_pnl_pct = COALESCE(?, book_a_pnl_pct),
-          book_b_pnl_pct = COALESCE(?, book_b_pnl_pct)
+      SET book_a_pnl_pct = ?, book_b_pnl_pct = ?
       WHERE date = ?
     `).run(pnlA, pnlB, date);
 
     const { exportReflections } = require('../services/export');
     await exportReflections();
 
-    res.json({
-      ok: true,
-      date,
-      book_a_pnl_pct: snapA?.pnl_pct ?? null,
-      book_b_pnl_pct: snapB?.pnl_pct ?? null,
-      message: `P&L patched and reflections re-exported.`,
-    });
+    res.json({ ok: true, date, book_a_pnl_pct: pnlA, book_b_pnl_pct: pnlB, message: `P&L patched and reflections re-exported.` });
   } catch (e) {
     res.status(500).json({ ok: false, error: e.message });
   }
