@@ -263,10 +263,14 @@
       <div class="admin-action">
         <div class="admin-action-info">
           <span class="admin-action-label">Fix Summary P&amp;L</span>
-          <span class="admin-action-desc">Patch P&amp;L from snapshots for date (default: today)</span>
-          <input class="admin-date-input" type="date" id="admin-fix-pnl-date" placeholder="YYYY-MM-DD">
+          <span class="admin-action-desc">Override P&amp;L for a date. Leave values blank to pull from snapshots.</span>
+          <div class="admin-pnl-inputs">
+            <input class="admin-date-input" type="date" id="admin-fix-pnl-date">
+            <input class="admin-date-input" type="number" id="admin-fix-pnl-a" placeholder="Book A %" step="0.01">
+            <input class="admin-date-input" type="number" id="admin-fix-pnl-b" placeholder="Book B %" step="0.01">
+          </div>
         </div>
-        <button class="admin-run-btn" data-endpoint="/admin/fix-summary-pnl" data-body-input="admin-fix-pnl-date">Run</button>
+        <button class="admin-run-btn" data-endpoint="/admin/fix-summary-pnl" data-action="fix-pnl">Run</button>
       </div>
     </div>
     <div class="admin-response" id="admin-response"></div>

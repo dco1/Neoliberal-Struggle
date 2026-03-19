@@ -400,25 +400,31 @@ router.post('/admin/regenerate-summaries', async (req, res) => {
   }
 });
 
-// POST /api/admin/fix-summary-pnl — patch a past day's P&L in daily_summaries from
-// the best portfolio_snapshot for that date, then re-export reflections to GitHub Pages.
-// Body: { date: "2026-03-19" }  (defaults to today if omitted)
+// POST /api/admin/fix-summary-pnl — patch a past day's P&L in daily_summaries.
+// If book_a_pnl_pct / book_b_pnl_pct are provided in the body, use those directly.
+// Otherwise fall back to the best portfolio_snapshot for that date.
+// Body: { date: "2026-03-19", book_a_pnl_pct: 13.76, book_b_pnl_pct: 18.83 }
 router.post('/admin/fix-summary-pnl', async (req, res) => {
   try {
     const date = (req.body?.date || new Date().toISOString().split('T')[0]).trim();
     const d = db();
 
-    const getSnap = (bookId) => d.prepare(`
-      SELECT pnl_pct FROM portfolio_snapshots
-      WHERE book_id = ? AND date(snapped_at) = ?
-      ORDER BY snapped_at DESC LIMIT 1
-    `).get(bookId, date);
+    let pnlA = req.body?.book_a_pnl_pct != null ? parseFloat(req.body.book_a_pnl_pct) : null;
+    let pnlB = req.body?.book_b_pnl_pct != null ? parseFloat(req.body.book_b_pnl_pct) : null;
 
-    const snapA = getSnap('index');
-    const snapB = getSnap('screener');
+    // Fall back to portfolio snapshots if not manually provided
+    if (pnlA == null || pnlB == null) {
+      const getSnap = (bookId) => d.prepare(`
+        SELECT pnl_pct FROM portfolio_snapshots
+        WHERE book_id = ? AND date(snapped_at) = ?
+        ORDER BY snapped_at DESC LIMIT 1
+      `).get(bookId, date);
+      if (pnlA == null) pnlA = getSnap('index')?.pnl_pct ?? null;
+      if (pnlB == null) pnlB = getSnap('screener')?.pnl_pct ?? null;
+    }
 
-    if (!snapA && !snapB) {
-      return res.status(404).json({ ok: false, error: `No portfolio snapshots found for ${date}.` });
+    if (pnlA == null && pnlB == null) {
+      return res.status(404).json({ ok: false, error: `No P&L data found for ${date} — provide values manually.` });
     }
 
     d.prepare(`
@@ -426,7 +432,7 @@ router.post('/admin/fix-summary-pnl', async (req, res) => {
       SET book_a_pnl_pct = COALESCE(?, book_a_pnl_pct),
           book_b_pnl_pct = COALESCE(?, book_b_pnl_pct)
       WHERE date = ?
-    `).run(snapA?.pnl_pct ?? null, snapB?.pnl_pct ?? null, date);
+    `).run(pnlA, pnlB, date);
 
     const { exportReflections } = require('../services/export');
     await exportReflections();

@@ -608,8 +608,14 @@ canvas { display: block; }
   color: var(--text-dim);
 }
 
-.admin-date-input {
+.admin-pnl-inputs {
+  display: flex;
+  gap: 6px;
   margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-date-input {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 5px;
