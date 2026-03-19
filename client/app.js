@@ -37,7 +37,7 @@ const fmt = {
   pct:    v => v == null ? '—' : (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%',
   score:  v => v == null ? '—' : Number(v).toFixed(1),
   date:   s => s ? new Date(s + 'Z').toLocaleString() : '—',
-  dateShort: s => s ? new Date(s).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '—',
+  dateShort: s => s ? new Date(s + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : '—',
 };
 
 function pnlClass(v) {

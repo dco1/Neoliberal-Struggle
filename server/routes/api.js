@@ -400,4 +400,47 @@ router.post('/admin/regenerate-summaries', async (req, res) => {
   }
 });
 
+// POST /api/admin/fix-summary-pnl — patch a past day's P&L in daily_summaries from
+// the best portfolio_snapshot for that date, then re-export reflections to GitHub Pages.
+// Body: { date: "2026-03-19" }  (defaults to today if omitted)
+router.post('/admin/fix-summary-pnl', async (req, res) => {
+  try {
+    const date = (req.body?.date || new Date().toISOString().split('T')[0]).trim();
+    const d = db();
+
+    const getSnap = (bookId) => d.prepare(`
+      SELECT pnl_pct FROM portfolio_snapshots
+      WHERE book_id = ? AND date(snapped_at) = ?
+      ORDER BY snapped_at DESC LIMIT 1
+    `).get(bookId, date);
+
+    const snapA = getSnap('index');
+    const snapB = getSnap('screener');
+
+    if (!snapA && !snapB) {
+      return res.status(404).json({ ok: false, error: `No portfolio snapshots found for ${date}.` });
+    }
+
+    d.prepare(`
+      UPDATE daily_summaries
+      SET book_a_pnl_pct = COALESCE(?, book_a_pnl_pct),
+          book_b_pnl_pct = COALESCE(?, book_b_pnl_pct)
+      WHERE date = ?
+    `).run(snapA?.pnl_pct ?? null, snapB?.pnl_pct ?? null, date);
+
+    const { exportReflections } = require('../services/export');
+    await exportReflections();
+
+    res.json({
+      ok: true,
+      date,
+      book_a_pnl_pct: snapA?.pnl_pct ?? null,
+      book_b_pnl_pct: snapB?.pnl_pct ?? null,
+      message: `P&L patched and reflections re-exported.`,
+    });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message });
+  }
+});
+
 module.exports = router;
