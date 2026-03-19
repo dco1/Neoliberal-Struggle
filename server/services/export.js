@@ -156,7 +156,10 @@ const REFLECTIONS_CSS = `
   .back-link:hover { color: var(--text); }
 
   /* Index */
-  .index-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .index-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .index-title { font-size: 22px; font-weight: 700; margin: 0; }
+  .index-rss { color: var(--text-dim); opacity: 0.45; transition: opacity 0.15s, color 0.15s; display: flex; }
+  .index-rss:hover { opacity: 1; color: #f26522; }
   .index-subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 40px; }
   .index-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
   .index-item { border-top: 1px solid var(--border); }
@@ -342,7 +345,12 @@ function buildIndexPageHtml(summaries) {
     </a>
   </header>
   <main class="page">
-    <h1 class="index-title">Daily Reflections</h1>
+    <div class="index-title-row">
+      <h1 class="index-title">Daily Reflections</h1>
+      <a class="index-rss" href="feed.xml" title="RSS feed">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+      </a>
+    </div>
     <p class="index-subtitle">Each trading day, Book A and Book B write about their day — and about each other.</p>
     <ul class="index-list">${items}</ul>
   </main>
