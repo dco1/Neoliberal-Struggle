@@ -61,7 +61,16 @@
             <value id="index-woke">—</value>
           </div>
         </div>
-        <canvas id="index-chart" height="120"></canvas>
+        <div class="chart-wrap">
+          <div class="chart-ranges" data-book="index">
+            <button class="chart-range active" data-range="1D">1D</button>
+            <button class="chart-range" data-range="1W">1W</button>
+            <button class="chart-range" data-range="1M">1M</button>
+            <button class="chart-range" data-range="1Y">1Y</button>
+            <button class="chart-range" data-range="ALL">ALL</button>
+          </div>
+          <canvas id="index-chart" height="120"></canvas>
+        </div>
         <div class="book-tabs">
           <button class="tab active" data-book="index" data-tab="holdings">Holdings</button>
           <button class="tab" data-book="index" data-tab="trades">Trades</button>
@@ -100,7 +109,16 @@
             <value id="screener-woke">—</value>
           </div>
         </div>
-        <canvas id="screener-chart" height="120"></canvas>
+        <div class="chart-wrap">
+          <div class="chart-ranges" data-book="screener">
+            <button class="chart-range active" data-range="1D">1D</button>
+            <button class="chart-range" data-range="1W">1W</button>
+            <button class="chart-range" data-range="1M">1M</button>
+            <button class="chart-range" data-range="1Y">1Y</button>
+            <button class="chart-range" data-range="ALL">ALL</button>
+          </div>
+          <canvas id="screener-chart" height="120"></canvas>
+        </div>
         <div class="book-tabs">
           <button class="tab active" data-book="screener" data-tab="holdings">Holdings</button>
           <button class="tab" data-book="screener" data-tab="trades">Trades</button>

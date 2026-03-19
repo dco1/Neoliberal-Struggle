@@ -210,7 +210,31 @@ main {
 
 /* ── Chart ───────────────────────────────────────────────────────── */
 
-canvas { margin-bottom: 16px; }
+.chart-wrap { margin-bottom: 16px; }
+
+.chart-ranges {
+  display: flex;
+  gap: 2px;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+
+  & .chart-range {
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+
+    &:hover { color: var(--text); }
+    &.active { background: var(--surface2); color: var(--text); }
+  }
+}
+
+canvas { display: block; }
 
 /* ── Tabs ────────────────────────────────────────────────────────── */
 

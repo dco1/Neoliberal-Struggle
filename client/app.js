@@ -122,58 +122,97 @@ function renderBookSummary(book) {
 
 // --- Charts ---
 
+const chartRange = { index: '1D', screener: '1D' };
+const snapshotCache = { index: [], screener: [] };
+
+const RANGE_MS = { '1D': 86400000, '1W': 604800000, '1M': 2592000000, '1Y': 31536000000, 'ALL': Infinity };
+
+function labelForRange(isoStr, range) {
+  const d = new Date(isoStr.includes('T') ? isoStr : isoStr + 'Z');
+  if (range === '1D') return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  if (range === '1W') return d.toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' });
+  if (range === '1M') return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+  return d.toLocaleDateString([], { month: 'short', year: '2-digit' });
+}
+
+function renderChart(bookId) {
+  const all = snapshotCache[bookId];
+  if (!all.length) return;
+
+  const range = chartRange[bookId];
+  const cutoff = range === 'ALL' ? 0 : Date.now() - RANGE_MS[range];
+  const filtered = all.filter(s => new Date(s.snapped_at.includes('T') ? s.snapped_at : s.snapped_at + 'Z').getTime() >= cutoff);
+  const src = filtered.length ? filtered : all;
+
+  const labels = src.map(s => labelForRange(s.snapped_at, range));
+  const data   = src.map(s => s.total_value);
+  const color  = data[data.length - 1] >= data[0] ? '#3ddc84' : '#ff5f5f';
+
+  const ctx = document.getElementById(`${bookId}-chart`);
+  if (!ctx) return;
+
+  if (charts[bookId]) {
+    charts[bookId].data.labels = labels;
+    charts[bookId].data.datasets[0].data  = data;
+    charts[bookId].data.datasets[0].borderColor     = color;
+    charts[bookId].data.datasets[0].backgroundColor = color + '15';
+    charts[bookId].update('none');
+  } else {
+    charts[bookId] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          data,
+          borderColor: color,
+          borderWidth: 2,
+          pointRadius: 0,
+          fill: true,
+          backgroundColor: color + '15',
+          tension: 0.3,
+        }],
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: {
+            display: true,
+            grid: { display: false },
+            ticks: { color: '#8888a0', font: { size: 10 }, maxTicksLimit: 6, maxRotation: 0 },
+          },
+          y: {
+            display: true,
+            grid: { color: '#2a2a32' },
+            ticks: { color: '#8888a0', font: { size: 10 }, callback: v => '$' + v.toLocaleString() },
+          },
+        },
+      },
+    });
+  }
+}
+
 async function refreshChart(bookId) {
   try {
     const { snapshots } = await apiFetch(`/books/${bookId}`);
-    if (!snapshots.length) return;
-
-    const labels  = snapshots.map(s => new Date(s.snapped_at + 'Z').toLocaleTimeString());
-    const data    = snapshots.map(s => s.total_value);
-    const startVal = data[0];
-    const color   = data[data.length - 1] >= startVal ? '#3ddc84' : '#ff5f5f';
-
-    const ctx = document.getElementById(`${bookId}-chart`);
-    if (!ctx) return;
-
-    if (charts[bookId]) {
-      // Update existing chart in-place to avoid flicker
-      charts[bookId].data.labels = labels;
-      charts[bookId].data.datasets[0].data = data;
-      charts[bookId].data.datasets[0].borderColor = color;
-      charts[bookId].update('none');
-    } else {
-      charts[bookId] = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [{
-            data,
-            borderColor: color,
-            borderWidth: 2,
-            pointRadius: 0,
-            fill: true,
-            backgroundColor: color + '15',
-            tension: 0.3,
-          }],
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: {
-            x: { display: false },
-            y: {
-              display: true,
-              grid: { color: '#2a2a32' },
-              ticks: { color: '#8888a0', font: { size: 10 }, callback: v => '$' + v.toLocaleString() },
-            },
-          },
-        },
-      });
-    }
+    snapshotCache[bookId] = snapshots || [];
+    renderChart(bookId);
   } catch (e) {
     console.warn(`Chart refresh failed for ${bookId}:`, e.message);
   }
 }
+
+// Range button click handler (event delegation)
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.chart-range');
+  if (!btn) return;
+  const bookId = btn.closest('.chart-ranges')?.dataset.book;
+  if (!bookId) return;
+  btn.closest('.chart-ranges').querySelectorAll('.chart-range').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  chartRange[bookId] = btn.dataset.range;
+  renderChart(bookId);
+});
 
 // --- Tabs ---
 
