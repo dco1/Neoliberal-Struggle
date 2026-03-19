@@ -19,6 +19,7 @@
         <span id="ws-indicator" class="ws-indicator" title="Connecting…" data-connected="false"></span>
       </div>
       <button class="settings-btn" popovertarget="settings-popover" popovertargetaction="toggle">⚙</button>
+      <button class="settings-btn admin-btn" popovertarget="admin-popover" popovertargetaction="toggle">🔧</button>
     </div>
   </header>
 
@@ -238,6 +239,37 @@
       <button id="settings-save-btn" class="settings-save-btn">Save</button>
       <span id="settings-save-status" class="settings-save-status"></span>
     </div>
+  </div>
+
+  <div id="admin-popover" popover class="settings-popover admin-popover">
+    <div class="settings-popover-header">
+      <span class="settings-popover-title">🔧 Admin</span>
+    </div>
+    <div class="admin-actions">
+      <div class="admin-action">
+        <div class="admin-action-info">
+          <span class="admin-action-label">Export Scores</span>
+          <span class="admin-action-desc">Push scores.json to GitHub Pages now</span>
+        </div>
+        <button class="admin-run-btn" data-endpoint="/admin/export-scores">Run</button>
+      </div>
+      <div class="admin-action">
+        <div class="admin-action-info">
+          <span class="admin-action-label">Regenerate Summaries</span>
+          <span class="admin-action-desc">Delete today's summary and re-run generation</span>
+        </div>
+        <button class="admin-run-btn" data-endpoint="/admin/regenerate-summaries">Run</button>
+      </div>
+      <div class="admin-action">
+        <div class="admin-action-info">
+          <span class="admin-action-label">Fix Summary P&amp;L</span>
+          <span class="admin-action-desc">Patch P&amp;L from snapshots for date (default: today)</span>
+          <input class="admin-date-input" type="date" id="admin-fix-pnl-date" placeholder="YYYY-MM-DD">
+        </div>
+        <button class="admin-run-btn" data-endpoint="/admin/fix-summary-pnl" data-body-input="admin-fix-pnl-date">Run</button>
+      </div>
+    </div>
+    <div class="admin-response" id="admin-response"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>

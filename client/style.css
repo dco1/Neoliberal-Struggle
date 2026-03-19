@@ -567,6 +567,107 @@ canvas { display: block; }
   }
 }
 
+/* ── Admin popover ───────────────────────────────────────────────── */
+
+.admin-popover {
+  width: 420px;
+}
+
+.admin-actions {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.admin-action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+
+  & + .admin-action {
+    border-top: 1px solid var(--border);
+  }
+}
+
+.admin-action-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.admin-action-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.admin-action-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.admin-date-input {
+  margin-top: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 4px 8px;
+  width: 140px;
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+}
+
+.admin-run-btn {
+  flex-shrink: 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+
+  &:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.admin-response {
+  margin: 0 20px 16px;
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--text-dim);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 120px;
+  overflow-y: auto;
+  display: none;
+
+  &.visible {
+    display: block;
+  }
+}
+
 /* ── Settings popover ────────────────────────────────────────────── */
 
 .settings-popover {

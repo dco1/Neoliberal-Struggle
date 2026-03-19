@@ -733,10 +733,51 @@ function initWebSocket() {
 
 // --- Init ---
 
+function initAdmin() {
+  const responseEl = document.getElementById('admin-response');
+
+  document.getElementById('admin-popover').addEventListener('click', async (e) => {
+    const btn = e.target.closest('.admin-run-btn');
+    if (!btn) return;
+
+    const endpoint = btn.dataset.endpoint;
+    const bodyInputId = btn.dataset.bodyInput;
+    let body = null;
+
+    if (bodyInputId) {
+      const val = document.getElementById(bodyInputId)?.value.trim();
+      if (val) body = { date: val };
+    }
+
+    btn.disabled = true;
+    btn.textContent = '…';
+    responseEl.textContent = '';
+    responseEl.classList.remove('visible');
+
+    try {
+      const res = await fetch(`/api${endpoint}`, {
+        method: 'POST',
+        headers: body ? { 'Content-Type': 'application/json' } : {},
+        body: body ? JSON.stringify(body) : null,
+      });
+      const json = await res.json();
+      responseEl.textContent = JSON.stringify(json, null, 2);
+      responseEl.classList.add('visible');
+    } catch (err) {
+      responseEl.textContent = `Error: ${err.message}`;
+      responseEl.classList.add('visible');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Run';
+    }
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initTrigger();
   initSettings();
+  initAdmin();
 
   // Triple-click the "Daily Reflections" heading to force-show the regenerate button,
   // even if today's summary already exists or the market is open.
