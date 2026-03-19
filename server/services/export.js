@@ -172,6 +172,7 @@ const REFLECTIONS_CSS = `
   .index-pnl span { color: var(--text-dim); }
   .index-pnl strong.pos { color: var(--positive); }
   .index-pnl strong.neg { color: var(--negative); }
+  .alltime { font-size: 11px; color: var(--text-dim); opacity: 0.6; margin-left: 4px; }
 
   /* Day page */
   .day-date { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
@@ -237,10 +238,10 @@ function buildDayPageHtml(s, depth) {
     <a class="back-link" href="${root}reflections/index.html">← All reflections</a>
     <div class="day-date">${fmtDate(s.date)}</div>
     <div class="day-perf">
-      <span>Book A P&amp;L: <strong class="${s.book_a_pnl_pct >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_a_pnl_pct)}</strong></span>
-      <span>Book B P&amp;L: <strong class="${s.book_b_pnl_pct >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_b_pnl_pct)}</strong></span>
-      ${s.book_a_woke_avg != null ? `<span>Avg ethics A: <strong>${Math.round(s.book_a_woke_avg)}</strong></span>` : ''}
-      ${s.book_b_woke_avg != null ? `<span>Avg ethics B: <strong>${Math.round(s.book_b_woke_avg)}</strong></span>` : ''}
+      <span>Book A: <strong class="${(s.book_a_day_pnl_pct ?? s.book_a_pnl_pct) >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_a_day_pnl_pct ?? s.book_a_pnl_pct)} today</strong>${s.book_a_pnl_pct != null ? ` <small class="alltime">${fmtPct(s.book_a_pnl_pct)} all-time</small>` : ''}</span>
+      <span>Book B: <strong class="${(s.book_b_day_pnl_pct ?? s.book_b_pnl_pct) >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_b_day_pnl_pct ?? s.book_b_pnl_pct)} today</strong>${s.book_b_pnl_pct != null ? ` <small class="alltime">${fmtPct(s.book_b_pnl_pct)} all-time</small>` : ''}</span>
+      ${s.book_a_woke_avg != null ? `<span>Ethics avg A: <strong>${Math.round(s.book_a_woke_avg)}</strong></span>` : ''}
+      ${s.book_b_woke_avg != null ? `<span>Ethics avg B: <strong>${Math.round(s.book_b_woke_avg)}</strong></span>` : ''}
     </div>
     <div class="summary-columns">
       <div class="summary-col summary-col-a">
@@ -320,8 +321,8 @@ function buildIndexPageHtml(summaries) {
       <a href="${y}/${m}/${d}/index.html">
         <span class="index-date">${fmtDate(s.date)}</span>
         <span class="index-pnl">
-          <span>Book A: <strong class="${s.book_a_pnl_pct >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_a_pnl_pct)}</strong></span>
-          <span>Book B: <strong class="${s.book_b_pnl_pct >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_b_pnl_pct)}</strong></span>
+          <span>A: <strong class="${(s.book_a_day_pnl_pct ?? s.book_a_pnl_pct) >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_a_day_pnl_pct ?? s.book_a_pnl_pct)}</strong></span>
+          <span>B: <strong class="${(s.book_b_day_pnl_pct ?? s.book_b_pnl_pct) >= 0 ? 'pos' : 'neg'}">${fmtPct(s.book_b_day_pnl_pct ?? s.book_b_pnl_pct)}</strong></span>
         </span>
       </a>
     </li>`;
