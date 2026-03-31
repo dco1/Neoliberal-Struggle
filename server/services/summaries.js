@@ -294,6 +294,8 @@ async function generateDailySummaries() {
         system: [{ type: 'text', text: system }],
         messages: [{ role: 'user', content: userMsg }],
       });
+      
+      console.log(res);
       return parseSummary(res, 'Ollama');
     };
 
