@@ -28,7 +28,7 @@ let ollamaClient = null;
 async function getClient() {
   if (!ollamaClient) {
     ollamaClient = {
-      messages(params) {
+      async messages(params) {
         const body = {
           model: SUMMARY_MODEL,
           stream: false,
