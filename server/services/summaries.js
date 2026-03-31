@@ -1,18 +1,17 @@
 /**
  * End-of-day summary service.
  *
- * At 4:15pm ET on weekdays, generates two summaries via the Anthropic API:
+ * At 4:15pm ET on weekdays, generates two summaries via Ollama:
  *   - Book A reflects on its own day in its earnest, ethics-first voice,
  *     then delivers passive-aggressive commentary on Book B's priorities.
  *   - Book B reflects on its own day in its pragmatic, numbers-focused voice,
  *     then delivers passive-aggressive commentary on Book A's priorities.
  *
- * Model: claude-sonnet-4-6 (voice and nuance matter here; runs once per day so
+ * Model: OLLAMA_MODEL (voice and nuance matter here; runs once per day so
  * cost is not a concern the way per-ticker scoring is).
  *
- * Prompt caching: each book's character voice/system prompt is sent with
- * cache_control so the personality definition is cached between the two
- * daily calls. The day-specific trade data goes in the user message.
+ * System prompt: character voice definition
+ * User message: day-specific trade data
  *
  * Results are saved to the daily_summaries table.
  */
@@ -20,17 +19,42 @@ const { sendNotification } = require('my-little-home-server');
 const { getDb } = require('../db/index');
 const { getMarketNews } = require('./alpaca');
 
-const DEMO_MODE = !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here';
-const SUMMARY_MODEL = 'claude-sonnet-4-6';
+const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+const DEMO_MODE = !process.env.OLLAMA_BASE_URL;
+const SUMMARY_MODEL = process.env.OLLAMA_MODEL || 'llama3.2';
 
-// Lazy Anthropic client — only created on first actual summary call
-let anthropicClient = null;
-function getClient() {
-  if (!anthropicClient) {
-    const Anthropic = require('@anthropic-ai/sdk');
-    anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// Lazy Ollama client — only created on first actual summary call
+let ollamaClient = null;
+async function getClient() {
+  if (!ollamaClient) {
+    ollamaClient = {
+      messages: async (params) => {
+        const body = {
+          model: SUMMARY_MODEL,
+          stream: false,
+          messages: params.messages.map(m => ({ role: m.role, content: m.content })),
+          options: {
+            temperature: 0.7,
+            top_p: 0.9,
+            top_k: 40,
+          },
+        };
+        if (params.system) {
+          body.system = params.system[0]?.text;
+        }
+        if (params.max_tokens) {
+          body.options.num_predict = params.max_tokens;
+        }
+        const res = await fetch(OLLAMA_BASE_URL + '/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        return res.json();
+      },
+    };
   }
-  return anthropicClient;
+  return ollamaClient;
 }
 
 // ─── Cacheable character voices ───────────────────────────────────────────────
@@ -243,31 +267,7 @@ async function generateDailySummaries() {
   // System prompts (character voices) are cached — day data in user messages is not.
   let bookAResult, bookBResult;
   try {
-    console.log(`[summaries] [anthropic] requesting end-of-day summaries — model: ${SUMMARY_MODEL}, both books in parallel`);
-    const [msgA, msgB] = await Promise.all([
-      getClient().messages.create({
-        model: SUMMARY_MODEL,
-        max_tokens: 700,
-        system: [{ type: 'text', text: BOOK_A_SYSTEM, cache_control: { type: 'ephemeral' } }],
-        messages: [{ role: 'user', content: bookAUserMsg }],
-      }),
-      getClient().messages.create({
-        model: SUMMARY_MODEL,
-        max_tokens: 700,
-        system: [{ type: 'text', text: BOOK_B_SYSTEM, cache_control: { type: 'ephemeral' } }],
-        messages: [{ role: 'user', content: bookBUserMsg }],
-      }),
-    ]);
-
-    const fmtUsage = (u) => {
-      const cached  = u.cache_read_input_tokens     || 0;
-      const written = u.cache_creation_input_tokens || 0;
-      return `${u.input_tokens} in / ${u.output_tokens} out` +
-        (cached  > 0 ? ` | cache hit: ${cached} tokens`  : '') +
-        (written > 0 ? ` | cache write: ${written} tokens` : '');
-    };
-    console.log(`[summaries] [anthropic] Book A done — ${fmtUsage(msgA.usage)}`);
-    console.log(`[summaries] [anthropic] Book B done — ${fmtUsage(msgB.usage)}`);
+    console.log(`[summaries] [ollama] requesting end-of-day summaries — model: ${SUMMARY_MODEL}, both books in parallel`);
 
     // Parse a summary response — strip markdown fences, extract the JSON object,
     // and log the raw text on failure so the exact issue is visible in pm2 logs.
@@ -289,8 +289,21 @@ async function generateDailySummaries() {
       }
     };
 
-    bookAResult = parseSummary(msgA.content[0].text, 'Book A');
-    bookBResult = parseSummary(msgB.content[0].text, 'Book B');
+    const callOllama = async (system, userMsg) => {
+      const res = await getClient().messages({
+        system: [{ type: 'text', text: system }],
+        messages: [{ role: 'user', content: userMsg }],
+      });
+      return parseSummary(res.response, 'Ollama');
+    };
+
+    [bookAResult, bookBResult] = await Promise.all([
+      callOllama(BOOK_A_SYSTEM, bookAUserMsg),
+      callOllama(BOOK_B_SYSTEM, bookBUserMsg),
+    ]);
+
+    console.log(`[summaries] [ollama] Book A done`);
+    console.log(`[summaries] [ollama] Book B done`);
 
   } catch (e) {
     console.error('[summaries] Failed to generate summaries:', e.message);
