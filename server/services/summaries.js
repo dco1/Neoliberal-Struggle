@@ -294,7 +294,7 @@ async function generateDailySummaries() {
         system: [{ type: 'text', text: system }],
         messages: [{ role: 'user', content: userMsg }],
       });
-      return parseSummary(res.response, 'Ollama');
+      return parseSummary(res, 'Ollama');
     };
 
     [bookAResult, bookBResult] = await Promise.all([
