@@ -25,7 +25,7 @@ const SUMMARY_MODEL = process.env.OLLAMA_MODEL || 'llama3.2';
 
 // Lazy Ollama client — only created on first actual summary call
 let ollamaClient = null;
-async function getClient() {
+function getClient() {
   if (!ollamaClient) {
     ollamaClient = {
       async messages(params) {
