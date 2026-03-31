@@ -290,12 +290,20 @@ async function generateDailySummaries() {
     };
 
     const callOllama = async (system, userMsg) => {
-      const res = await getClient().messages({
-        system: [{ type: 'text', text: system }],
-        messages: [{ role: 'user', content: userMsg }],
-      });
-      
-      console.log(res);
+      let res;
+      // Wait for model to finish loading (handles cold-start case)
+      let attempt = 0;
+      do {
+        res = await getClient().messages({
+          system: [{ type: 'text', text: system }],
+          messages: [{ role: 'user', content: userMsg }],
+        });
+        if (res.done_reason !== 'load') break;
+        // Model still loading, wait a bit and retry
+        await new Promise(r => setTimeout(r, 2000));
+        attempt++;
+      } while (res.done_reason === 'load' && attempt < 5);
+
       return parseSummary(res, 'Ollama');
     };
 
