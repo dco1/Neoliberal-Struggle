@@ -20,31 +20,36 @@ const SCORING_MODEL = process.env.OLLAMA_MODEL || 'llama3.2';
 
 // Lazy Ollama client — only created on first real scoring call
 let ollamaClient = null;
-async function getClient() {
+function getClient() {
   if (!ollamaClient) {
     ollamaClient = {
-      messages: async (params) => {
+      async messages(params) {
         const body = {
           model: SCORING_MODEL,
           stream: false,
-          messages: params.messages.map(m => ({ role: m.role, content: m.content })),
+          messages: [
+            ...(params.system
+              ? [{ role: 'system', content: params.system[0]?.text }]
+              : []),
+            ...params.messages.map(m => ({
+              role: m.role,
+              content: m.content,
+            })),
+          ],
           options: {
             temperature: 0.1,
             top_p: 0.9,
             top_k: 40,
+            ...(params.max_tokens ? { num_predict: params.max_tokens } : {}),
           },
         };
-        if (params.system) {
-          body.system = params.system[0]?.text;
-        }
-        if (params.max_tokens) {
-          body.options.num_predict = params.max_tokens;
-        }
-        const res = await fetch(OLLAMA_BASE_URL + '/api/generate', {
+
+        const res = await fetch(OLLAMA_BASE_URL + '/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
         });
+
         return res.json();
       },
     };
