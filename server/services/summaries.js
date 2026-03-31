@@ -29,29 +29,34 @@ function getClient() {
   if (!ollamaClient) {
     ollamaClient = {
       async messages(params) {
-        const body = {
-          model: SUMMARY_MODEL,
-          stream: false,
-          messages: params.messages.map(m => ({ role: m.role, content: m.content })),
-          options: {
-            temperature: 0.7,
-            top_p: 0.9,
-            top_k: 40,
-          },
-        };
-        if (params.system) {
-          body.system = params.system[0]?.text;
-        }
-        if (params.max_tokens) {
-          body.options.num_predict = params.max_tokens;
-        }
-        const res = await fetch(OLLAMA_BASE_URL + '/api/chat', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body),
-        });
-        return res.json();
-      },
+		  const body = {
+			model: SUMMARY_MODEL,
+			stream: false,
+			messages: [
+			  ...(params.system
+				? [{ role: 'system', content: params.system[0]?.text }]
+				: []),
+			  ...params.messages.map(m => ({
+				role: m.role,
+				content: m.content,
+			  })),
+			],
+			options: {
+			  temperature: 0.7,
+			  top_p: 0.9,
+			  top_k: 40,
+			  ...(params.max_tokens ? { num_predict: params.max_tokens } : {}),
+			},
+		  };
+		
+		  const res = await fetch(OLLAMA_BASE_URL + '/api/chat', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(body),
+		  });
+		
+		  return res.json();
+		},
     };
   }
   return ollamaClient;
@@ -295,29 +300,26 @@ async function generateDailySummaries() {
     };
 
     const callOllama = async (system, userMsg) => {
-      let res;
-      // Wait for model to finish loading (handles cold-start case)
-      let attempt = 0;
-      do {
-        res = await getClient().messages({
-          system: [{ type: 'text', text: system }],
-          messages: [{ role: 'user', content: userMsg }],
-        });
-        if (res.done_reason !== 'load') break;
-        // Model still loading, wait a bit and retry
-        await new Promise(r => setTimeout(r, 2000));
-        attempt++;
-      } while (res.done_reason === 'load' && attempt < 5);
+	  const res = await getClient().messages({
+		system: [{ type: 'text', text: system }],
+		messages: [{ role: 'user', content: userMsg }],
+	  });
+	
+	  if (res.error) {
+		console.error('[summaries] Ollama error:', res.error);
+		throw new Error(res.error.message || 'Ollama error');
+	  }
+	
+	  const content = res.message?.content;
+	
+	  if (!content) {
+		console.error('[summaries] Empty response:', res);
+		throw new Error('No content from Ollama');
+	  }
+	
+	  return parseSummary(content, 'Ollama');
+	};
 
-      // Handle error responses from Ollama — they return an object like {error: {...}}
-      // instead of a string. Check for this case and log appropriately.
-      if (res && typeof res !== 'string') {
-        console.error(`[summaries] Ollama returned an error response:`, res);
-        throw new Error('Ollama returned an error response.');
-      }
-
-      return parseSummary(res, 'Ollama');
-    };
 
     [bookAResult, bookBResult] = await Promise.all([
       callOllama(BOOK_A_SYSTEM, bookAUserMsg),
