@@ -272,6 +272,11 @@ async function generateDailySummaries() {
     // Parse a summary response — strip markdown fences, extract the JSON object,
     // and log the raw text on failure so the exact issue is visible in pm2 logs.
     const parseSummary = (raw, label) => {
+      // Defensive check: ensure raw is a non-empty string
+      if (typeof raw !== 'string' || !raw) {
+        console.error(`[summaries] ${label} — received invalid response (not a string or empty):`, raw);
+        throw new Error(`Ollama returned an invalid response for ${label}.`);
+      }
       const stripped = raw.replace(/```(?:json)?\s*/gi, '').replace(/```/g, '').trim();
       const match = stripped.match(/\{[\s\S]*\}/);
       if (!match) {
@@ -304,6 +309,13 @@ async function generateDailySummaries() {
         attempt++;
       } while (res.done_reason === 'load' && attempt < 5);
 
+      // Handle error responses from Ollama — they return an object like {error: {...}}
+      // instead of a string. Check for this case and log appropriately.
+      if (res && typeof res !== 'string') {
+        console.error(`[summaries] Ollama returned an error response:`, res);
+        throw new Error('Ollama returned an error response.');
+      }
+
       return parseSummary(res, 'Ollama');
     };
 
@@ -317,6 +329,11 @@ async function generateDailySummaries() {
 
   } catch (e) {
     console.error('[summaries] Failed to generate summaries:', e.message);
+
+    // Also log if this was a parse error from malformed Ollama response
+    if (e.message?.includes?.('replace')) {
+      console.error('[summaries] Ollama returned an invalid response format.');
+    }
     return;
   }
 
