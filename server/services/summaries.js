@@ -45,7 +45,7 @@ function getClient() {
         if (params.max_tokens) {
           body.options.num_predict = params.max_tokens;
         }
-        const res = await fetch(OLLAMA_BASE_URL + '/api/generate', {
+        const res = await fetch(OLLAMA_BASE_URL + '/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
