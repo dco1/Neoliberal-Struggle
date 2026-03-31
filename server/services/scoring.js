@@ -1,12 +1,11 @@
 /**
  * Scoring service.
- * Calls Claude API to produce woke scores and financial scores per ticker.
- * Falls back to deterministic mock scores when ANTHROPIC_API_KEY is not set.
+ * Calls Ollama to produce woke scores and financial scores per ticker.
+ * Falls back to deterministic mock scores when OLLAMA_BASE_URL is not set.
  *
- * Model: claude-haiku-4-5 for all scoring calls (high volume, structured output).
- * Prompt caching: the scoring rubric / system prompt is identical across all tickers
- * and is marked with cache_control so Anthropic caches it server-side. Only the
- * ticker-specific user message changes per call. Cache hits cost 10% of input price.
+ * Model: OLLAMA_MODEL for all scoring calls (high volume, structured output).
+ * System prompt: scoring rubric is identical across all ticker calls.
+ * Only the ticker-specific user message changes per call.
  *
  * Cache TTLs (SQLite):
  *   - Woke scores:      24 hours (configurable via settings)
@@ -15,21 +14,46 @@
 
 const { getDb } = require('../db/index');
 
-const DEMO_MODE = !process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_anthropic_api_key_here';
-const SCORING_MODEL = 'claude-haiku-4-5';
+const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+const DEMO_MODE = !process.env.OLLAMA_BASE_URL;
+const SCORING_MODEL = process.env.OLLAMA_MODEL || 'llama3.2';
 
-// Lazy-init Anthropic client — only instantiated when a real API call is needed
-let anthropicClient = null;
-function getClient() {
-  if (!anthropicClient) {
-    const Anthropic = require('@anthropic-ai/sdk');
-    anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+// Lazy Ollama client — only created on first real scoring call
+let ollamaClient = null;
+async function getClient() {
+  if (!ollamaClient) {
+    ollamaClient = {
+      messages: async (params) => {
+        const body = {
+          model: SCORING_MODEL,
+          stream: false,
+          messages: params.messages.map(m => ({ role: m.role, content: m.content })),
+          options: {
+            temperature: 0.1,
+            top_p: 0.9,
+            top_k: 40,
+          },
+        };
+        if (params.system) {
+          body.system = params.system[0]?.text;
+        }
+        if (params.max_tokens) {
+          body.options.num_predict = params.max_tokens;
+        }
+        const res = await fetch(OLLAMA_BASE_URL + '/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        return res.json();
+      },
+    };
   }
-  return anthropicClient;
+  return ollamaClient;
 }
 
 if (DEMO_MODE) {
-  console.log('[scoring] No Anthropic key — running in demo mode with mock scores.');
+  console.log('[scoring] No Ollama URL — running in demo mode with mock scores.');
 }
 
 // ─── Cacheable system prompts ─────────────────────────────────────────────────
@@ -263,21 +287,12 @@ function saveFinancialScore(db, ticker, score, explanation, metrics) {
 }
 
 /**
- * Log Anthropic API usage including cache performance.
- * cache_creation_input_tokens = tokens written to cache (charged at 1.25x)
- * cache_read_input_tokens      = tokens read from cache (charged at 0.10x)
+ * Log Ollama API usage.
  */
 function logUsage(label, ticker, usage) {
-  const cached  = usage.cache_read_input_tokens      || 0;
-  const written = usage.cache_creation_input_tokens  || 0;
-  const fresh   = usage.input_tokens                 || 0;
-  const out     = usage.output_tokens                || 0;
+  const fresh = usage.total_duration_ms || usage.response_time || 0;
 
-  const cacheNote = cached  > 0 ? ` | cache hit: ${cached} tokens (saved ~${((cached * 0.9) / 1e6 * 1).toFixed(4)}¢)`
-                  : written > 0 ? ` | cache write: ${written} tokens`
-                  : '';
-
-  console.log(`[scoring] [anthropic] ${label} — ticker: ${ticker}, model: ${SCORING_MODEL}, tokens: ${fresh} in / ${out} out${cacheNote}`);
+  console.log(`[scoring] [ollama] ${label} — ticker: ${ticker}, model: ${SCORING_MODEL}, tokens: ${usage.eval_count || 0} / ${usage.context_length || 0}`);
 }
 
 // ─── Woke Score ───────────────────────────────────────────────────────────────
@@ -322,19 +337,18 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
 
   // System prompt is cached — identical rubric across all ticker calls.
   // User message contains ticker-specific context and changes each call.
-  const message = await getClient().messages.create({
-    model: SCORING_MODEL,
-    max_tokens: 500,
-    system: [{ type: 'text', text: WOKE_SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+  const message = await getClient().messages({
+    system: [{ type: 'text', text: WOKE_SYSTEM_PROMPT }],
     messages: [{
       role: 'user',
       content: `Score ${name} (ticker: ${ticker}) on all five ethical dimensions.${newsContext}`,
     }],
+    max_tokens: 500,
   });
 
-  logUsage('woke score', ticker, message.usage);
+  logUsage('woke score', ticker, message.response);
 
-  const raw = message.content[0].text;
+  const raw = message.response.response;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error(`Failed to parse woke score response for ${ticker}`);
 
@@ -383,19 +397,18 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
 
   // System prompt is cached — identical rubric across all ticker calls.
   // User message contains ticker-specific metrics and changes each call.
-  const message = await getClient().messages.create({
-    model: SCORING_MODEL,
-    max_tokens: 300,
-    system: [{ type: 'text', text: FINANCIAL_SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+  const message = await getClient().messages({
+    system: [{ type: 'text', text: FINANCIAL_SYSTEM_PROMPT }],
     messages: [{
       role: 'user',
       content: `Score ${ticker} for financial attractiveness.\n\nCurrent market metrics:\n${JSON.stringify(metrics, null, 2)}${newsContext}`,
     }],
+    max_tokens: 300,
   });
 
-  logUsage('financial score', ticker, message.usage);
+  logUsage('financial score', ticker, message.response);
 
-  const raw = message.content[0].text;
+  const raw = message.response.response;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error(`Failed to parse financial score response for ${ticker}`);
 
