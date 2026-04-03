@@ -1,5 +1,10 @@
 [
   {
+    "date": "2026-04-03",
+    "book_a_pnl_pct": null,
+    "book_b_pnl_pct": null
+  },
+  {
     "date": "2026-04-02",
     "book_a_pnl_pct": -85.96161372364374,
     "book_b_pnl_pct": null
