@@ -253,6 +253,44 @@ function mockFinancialScore(ticker, metrics) {
   };
 }
 
+// ─── News cache (in-flight dedup + short-term cache) ─────────────────────────
+// Both getWokeScore and getFinancialScore need the same headlines for a given
+// ticker. When they run concurrently they would otherwise issue two simultaneous
+// requests to the Alpaca news API, triggering rate-limit errors on the second.
+// This map stores either an in-flight Promise or a resolved { articles, ts }
+// object so the second caller always joins the first fetch.
+
+const _newsCache = new Map(); // ticker → Promise<Article[]> | { articles, ts }
+const NEWS_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+async function fetchNewsForTicker(ticker) {
+  const cached = _newsCache.get(ticker);
+
+  // Already resolved and still fresh — return immediately
+  if (cached && !(cached instanceof Promise) && Date.now() - cached.ts < NEWS_CACHE_TTL_MS) {
+    return cached.articles;
+  }
+
+  // In-flight — join the existing request
+  if (cached instanceof Promise) {
+    return cached;
+  }
+
+  // No cache or stale — start a new fetch and store the Promise for dedup
+  const alpaca = require('./alpaca');
+  console.log(`[scoring] [news] fetching headlines for ${ticker}`);
+  const promise = alpaca.getNews([ticker], 5).then(articles => {
+    _newsCache.set(ticker, { articles, ts: Date.now() });
+    return articles;
+  }).catch(err => {
+    _newsCache.delete(ticker); // don't cache failures
+    throw err;
+  });
+
+  _newsCache.set(ticker, promise);
+  return promise;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function getSetting(key) {
@@ -323,9 +361,7 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
   let newsContext = '';
   if (getSetting('news_enabled') === 'true') {
     try {
-      console.log(`[scoring] [news] fetching headlines for ${ticker}`);
-      const alpaca = require('./alpaca');
-      const articles = await alpaca.getNews([ticker], 5);
+      const articles = await fetchNewsForTicker(ticker);
       if (articles.length > 0) {
         const lines = articles.map(a => `  - ${a.headline} (${a.source})`).join('\n');
         newsContext = `\n\nRecent news (factor into your score if relevant):\n${lines}`;
@@ -385,9 +421,7 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
   let newsContext = '';
   if (getSetting('news_enabled') === 'true') {
     try {
-      console.log(`[scoring] [news] fetching headlines for ${ticker}`);
-      const alpaca = require('./alpaca');
-      const articles = await alpaca.getNews([ticker], 5);
+      const articles = await fetchNewsForTicker(ticker);
       if (articles.length > 0) {
         const lines = articles.map(a => `  - ${a.headline} (${a.source})`).join('\n');
         newsContext = `\n\nRecent news (factor into your score if relevant):\n${lines}`;
