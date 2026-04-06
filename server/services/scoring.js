@@ -36,6 +36,7 @@ function getClient() {
               content: m.content,
             })),
           ],
+          think: false, // disable extended thinking for models like qwen3 that support it
           options: {
             temperature: 0.1,
             top_p: 0.9,
@@ -50,7 +51,18 @@ function getClient() {
           body: JSON.stringify(body),
         });
 
-        return res.json();
+        const data = await res.json();
+        // Normalise to { response: <text>, ...usageFields } so callers
+        // get a consistent shape regardless of Ollama version/model.
+        return {
+          response: {
+            response: data.message?.content ?? '',
+            eval_count: data.eval_count,
+            context_length: data.prompt_eval_count,
+            total_duration_ms: data.total_duration ? Math.round(data.total_duration / 1e6) : 0,
+          },
+          done_reason: data.done_reason,
+        };
       },
     };
   }
@@ -442,7 +454,7 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
       role: 'user',
       content: `Score ${ticker} for financial attractiveness.\n\nCurrent market metrics:\n${JSON.stringify(metrics, null, 2)}${newsContext}`,
     }],
-    max_tokens: 300,
+    max_tokens: 500,
   });
 
   logUsage('financial score', ticker, message.response);
