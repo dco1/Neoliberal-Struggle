@@ -333,8 +333,7 @@ function saveFinancialScore(db, ticker, score, explanation, metrics) {
  * Log Ollama API usage.
  */
 function logUsage(label, ticker, usage) {
-  const fresh = usage.total_duration_ms || usage.response_time || 0;
-
+  if (!usage) return;
   console.log(`[scoring] [ollama] ${label} — ticker: ${ticker}, model: ${SCORING_MODEL}, tokens: ${usage.eval_count || 0} / ${usage.context_length || 0}`);
 }
 
@@ -389,6 +388,7 @@ async function getWokeScore(ticker, companyName = null, forceRefresh = false) {
 
   logUsage('woke score', ticker, message.response);
 
+  if (!message.response) throw new Error(`Ollama returned no response for woke score (${ticker}): ${JSON.stringify(message)}`);
   const raw = message.response.response;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error(`Failed to parse woke score response for ${ticker}`);
@@ -447,6 +447,7 @@ async function getFinancialScore(ticker, metrics, forceRefresh = false) {
 
   logUsage('financial score', ticker, message.response);
 
+  if (!message.response) throw new Error(`Ollama returned no response for financial score (${ticker}): ${JSON.stringify(message)}`);
   const raw = message.response.response;
   const jsonMatch = raw.match(/\{[\s\S]*\}/);
   if (!jsonMatch) throw new Error(`Failed to parse financial score response for ${ticker}`);
