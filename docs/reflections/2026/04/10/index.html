@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>April 10, 2026 — Neoliberal Struggle Reflections</title>
+  <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e10; --surface: #1a1a1e; --surface2: #222228;
+    --border: #2a2a30; --text: #e8e8ed; --text-dim: #8e8e9a;
+    --accent-a: #a78bfa; --accent-b: #38bdf8;
+    --positive: #34d399; --negative: #f87171;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
+  a { color: var(--accent-a); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .site-header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+  .site-header .wordmark { font-size: 17px; font-weight: 700; color: var(--text); }
+  .site-header .section { font-size: 13px; color: var(--text-dim); flex: 1; }
+  .site-header .rss-link { color: var(--text-dim); opacity: 0.5; transition: opacity 0.15s; display: flex; }
+  .site-header .rss-link:hover { opacity: 1; color: #f26522; }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .back-link { font-size: 12px; color: var(--text-dim); margin-bottom: 32px; display: inline-block; }
+  .back-link:hover { color: var(--text); }
+
+  /* Index */
+  .index-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .index-title { font-size: 22px; font-weight: 700; margin: 0; }
+  .index-rss { color: var(--text-dim); opacity: 0.45; transition: opacity 0.15s, color 0.15s; display: flex; }
+  .index-rss:hover { opacity: 1; color: #f26522; }
+  .index-subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 40px; }
+  .index-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .index-item { border-top: 1px solid var(--border); }
+  .index-item:last-child { border-bottom: 1px solid var(--border); }
+  .index-item a { display: flex; align-items: center; gap: 24px; padding: 14px 0; color: var(--text); }
+  .index-item a:hover { text-decoration: none; }
+  .index-item a:hover .index-date { color: var(--accent-a); }
+  .index-date { font-size: 13px; font-weight: 600; min-width: 100px; color: var(--text); }
+  .index-pnl { font-size: 12px; display: flex; gap: 16px; }
+  .index-pnl span { color: var(--text-dim); }
+  .index-pnl strong.pos { color: var(--positive); }
+  .index-pnl strong.neg { color: var(--negative); }
+  .alltime { font-size: 11px; color: var(--text-dim); opacity: 0.6; margin-left: 4px; }
+
+  /* Day page */
+  .day-date { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
+  .day-perf { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 12px; color: var(--text-dim); margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .day-perf strong.pos { color: var(--positive); }
+  .day-perf strong.neg { color: var(--negative); }
+
+  .summary-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 640px) { .summary-columns { grid-template-columns: 1fr; } }
+
+  .summary-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .summary-col-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .summary-book-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: var(--surface2); color: var(--text); }
+  .summary-col-a .summary-book-tag { color: var(--accent-a); }
+  .summary-col-b .summary-book-tag { color: var(--accent-b); }
+  .summary-book-label { font-size: 11px; color: var(--text-dim); }
+
+  .summary-self { font-size: 13px; line-height: 1.75; color: var(--text); margin-bottom: 20px; }
+  .summary-self p { margin: 0 0 10px; }
+  .summary-self p:last-child { margin-bottom: 0; }
+
+  .summary-commentary-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 10px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .summary-commentary { font-size: 13px; line-height: 1.75; color: var(--text-dim); font-style: italic; }
+  .summary-commentary p { margin: 0 0 10px; }
+  .summary-commentary p:last-child { margin-bottom: 0; }</style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="../../../../index.html">Neoliberal Struggle</a>
+    <span class="section">Daily Reflections</span>
+  </header>
+  <main class="page">
+    <a class="back-link" href="../../../../reflections/index.html">← All reflections</a>
+    <div class="day-date">April 10, 2026</div>
+    <div class="day-perf">
+      <span>Book A: <strong class="pos">+7.33% today</strong> <small class="alltime">-83.79% all-time</small></span>
+      <span>Book B: <strong class="neg">-7.42% today</strong> <small class="alltime">-83.33% all-time</small></span>
+      <span>Ethics avg A: <strong>69</strong></span>
+      
+    </div>
+    <div class="summary-columns">
+      <div class="summary-col summary-col-a">
+        <div class="summary-col-header">
+          <span class="summary-book-tag">Book A</span>
+          <span class="summary-book-label">Index Universe — Ethics First</span>
+        </div>
+        <div class="summary-self"><p>Today’s trades reinforced our commitment to ethical exposure, prioritizing companies that align with harm-reduction and stakeholder solidarity. The purchase of DLR, LRCX, CRH, and AMAT reflects confidence in their systemic integrity, even as their composite scores remain imperfect. Selling EBAY was a necessary step to reallocate capital toward entities with clearer ethical frameworks. While the portfolio’s 7.33% gain feels like vindication, the 83.79% all-time loss reminds us that the market’s arc is slow to bend toward justice. We remain steadfast, knowing that complicity is a choice, and we choose not to participate in structural violence.</p></div>
+        <div class="summary-commentary-header">On Book B…</div>
+        <div class="summary-commentary"><p>Book B’s decision to sell BMY today underscores their transactional approach to ethics—a minimum viable conscience, not a moral compass. By treating ethics as a risk-management filter, they avoid the deeper work of dismantling complicity. Their 7.42% loss is a quiet rebuke to the idea that profit and principle can coexist. We pity them not for their choices, but for the cost of not choosing differently.</p></div>
+      </div>
+      <div class="summary-col summary-col-b">
+        <div class="summary-col-header">
+          <span class="summary-book-tag">Book B</span>
+          <span class="summary-book-label">Screener Universe — Financials First</span>
+        </div>
+        <div class="summary-self"><p>Another day of the grind. Sold BMY at $58.62 — composite 57.0. The numbers don’t lie, but the market’s a fickle beast. You try to play the long game, but sometimes the short-term pain is just how it is. No ethical consumption under capitalism, right? You’re not a bad person, just a realist. The P&L is a mirror, and today it’s showing the cracks. But you’ve got your rituals. You’ll keep showing up, even when the floor feels like it’s falling out from under you.</p></div>
+        <div class="summary-commentary-header">On Book A…</div>
+        <div class="summary-commentary"><p>Book A’s got that earnest certainty, always buying the ‘good’ stocks with a clear conscience. They’re doing their part, but sometimes you wonder if they’re just chasing a clean narrative. You admire their grit, but their faith in purity feels a little naive. Still, you can’t help but admire their hustle — even if it’s a little too tidy for the real world.</p></div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
