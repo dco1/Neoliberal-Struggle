@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo — Neoliberal Struggle</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Demo notice ─────────────────────────────────────────────── */
+    .demo-notice {
+      background: rgba(155,109,255,0.08);
+      border: 1px solid rgba(155,109,255,0.25);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .demo-notice strong { color: var(--accent); }
+
+    /* ── Speed control ───────────────────────────────────────────── */
+    .demo-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-left: auto;
+    }
+    .speed-label { font-size: 12px; color: var(--text-dim); }
+    .speed-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .speed-btn.active { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Phase breadcrumb ────────────────────────────────────────── */
+    .demo-phase {
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.4px;
+      min-height: 16px;
+    }
+    .demo-phase span { color: var(--text); }
+
+    /* ── Scoring panel ───────────────────────────────────────────── */
+    .scoring-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      transition: opacity 0.3s;
+    }
+    .scoring-panel.hidden { display: none; }
+
+    .scoring-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .scoring-book-tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .scoring-book-tag.book-a { background: rgba(155,109,255,0.15); color: var(--accent); }
+    .scoring-book-tag.book-b { background: rgba(61,220,132,0.15); color: var(--green); }
+
+    .scoring-action { font-size: 12px; color: var(--text-dim); }
+    .scoring-ticker { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .scoring-company { font-size: 13px; color: var(--text-dim); }
+    .scoring-sector {
+      font-size: 10px;
+      color: var(--text-dim);
+      background: var(--surface2);
+      border-radius: 3px;
+      padding: 2px 6px;
+    }
+
+    .scoring-bars { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+    .score-row { display: flex; align-items: center; gap: 12px; }
+    .score-row-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: var(--text-dim);
+      width: 70px;
+      flex-shrink: 0;
+    }
+    .score-track {
+      flex: 1;
+      height: 8px;
+      background: var(--surface2);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .score-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .score-fill-woke { background: var(--accent); }
+    .score-fill-fin  { background: var(--blue); }
+    .score-fill-comp { background: var(--green); }
+    .score-fill-comp.bad { background: var(--red); }
+
+    .score-num {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      width: 42px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .scoring-verdict {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-align: right;
+      min-height: 24px;
+      transition: opacity 0.3s;
+    }
+    .scoring-verdict.approved { color: var(--green); }
+    .scoring-verdict.rejected { color: var(--red); }
+    .scoring-verdict.blocked  { color: var(--yellow); }
+
+    /* ── Terminal ────────────────────────────────────────────────── */
+    .terminal-section { margin-bottom: 24px; }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .terminal-title { font-size: 13px; font-weight: 700; }
+    .terminal-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .terminal {
+      background: #0a0a0c;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+      font-size: 12px;
+      line-height: 1.7;
+      max-height: 360px;
+      overflow-y: auto;
+    }
+
+    .t-entry {
+      display: flex;
+      gap: 10px;
+      opacity: 0;
+      transform: translateX(-6px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .t-entry.visible { opacity: 1; transform: translateX(0); }
+
+    .t-time { color: #444455; flex-shrink: 0; user-select: none; }
+    .t-tag  {
+      flex-shrink: 0;
+      font-weight: 700;
+      min-width: 58px;
+    }
+    .t-buy    { color: var(--green); }
+    .t-sell   { color: var(--red); }
+    .t-skip   { color: var(--yellow); }
+    .t-hold   { color: #555566; }
+    .t-info   { color: var(--blue); }
+    .t-system { color: var(--accent); }
+    .t-msg  { color: #9999b0; }
+    .t-ticker { color: var(--text); font-weight: 700; }
+
+    /* ── Demo book card tweaks ───────────────────────────────────── */
+    .demo-holdings {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-top: 8px;
+      min-height: 16px;
+    }
+    .demo-holding-tag {
+      display: inline-block;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      margin: 2px 2px 2px 0;
+      color: var(--text);
+    }
+
+    /* sparkline canvas */
+    .mini-chart { width: 100%; height: 80px; display: block; margin-bottom: 12px; }
+
+    /* ── Close market button ─────────────────────────────────────────── */
+    .close-market-btn {
+      background: rgba(255,95,95,0.12);
+      border: 1px solid rgba(255,95,95,0.35);
+      color: #ff5f5f;
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .close-market-btn:hover:not(:disabled) {
+      background: rgba(255,95,95,0.22);
+      border-color: rgba(255,95,95,0.6);
+    }
+    .close-market-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ── Market-closed banner ────────────────────────────────────────── */
+    .market-closed-banner {
+      background: rgba(255,95,95,0.08);
+      border: 1px solid rgba(255,95,95,0.25);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 12px;
+      color: #ff5f5f;
+      margin-bottom: 20px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .market-closed-banner.visible { display: flex; }
+
+    /* ── Summaries section ───────────────────────────────────────────── */
+    .summaries-section {
+      display: none;
+      margin-bottom: 32px;
+    }
+    .summaries-section.visible { display: block; }
+
+    .summaries-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .summaries-title {
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .summaries-date {
+      font-size: 11px;
+      color: var(--text-dim);
+    }
+
+    .summaries-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 768px) { .summaries-grid { grid-template-columns: 1fr; } }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .summary-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .summary-book-label {
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .summary-pnl {
+      font-size: 12px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-block-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .summary-text {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text);
+      white-space: pre-wrap;
+      min-height: 1.75em;
+    }
+
+    .summary-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .summary-commentary {
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text);
+      opacity: 0.75;
+      white-space: pre-wrap;
+      min-height: 1.75em;
+      border-left: 2px solid var(--border);
+      padding-left: 12px;
+    }
+
+    /* typing cursor */
+    .typing-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 0.7s step-end infinite;
+      margin-left: 1px;
+    }
+    .typing-cursor.done { display: none; }
+
+    /* generating spinner */
+    .summary-generating {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-generating .spinner {
+      width: 12px; height: 12px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── News headlines in scoring panel ────────────────────────── */
+    .sc-news {
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: rgba(155,109,255,0.05);
+      border: 1px solid rgba(155,109,255,0.15);
+      border-radius: 6px;
+    }
+    .sc-news.hidden { display: none; }
+    .sc-news-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .sc-news-item {
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      padding: 1px 0;
+    }
+    .sc-news-source { font-size: 10px; color: #44445a; margin-left: 4px; }
+    .sc-news-impact { font-size: 10px; font-weight: 700; margin-left: 4px; }
+    .sc-news-impact.positive { color: var(--green); }
+    .sc-news-impact.negative { color: var(--red); }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="title-block">
+      <h1>Neoliberal Struggle</h1>
+      <span class="badge" style="background:rgba(155,109,255,0.18);color:#9b6dff">Demo</span>
+    </div>
+    <div class="header-meta" style="align-items:center">
+      <span id="demo-cycle">Cycle: —</span>
+      <span id="demo-clock">—</span>
+      <div class="demo-controls">
+        <span class="speed-label">Speed:</span>
+        <button class="speed-btn active" onclick="setSpeed(1)">1×</button>
+        <button class="speed-btn" onclick="setSpeed(2)">2×</button>
+        <button class="speed-btn" onclick="setSpeed(4)">4×</button>
+        <button class="close-market-btn" id="close-market-btn" onclick="requestMarketClose()">Close Market &amp; Run Summaries</button>
+        <button class="settings-btn" popovertarget="demo-settings-popover" popovertargetaction="toggle" style="margin-left:4px">⚙</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="demo-notice">
+    <strong>SIMULATION</strong>
+    The market is closed. This page runs a fake agent cycle with realistic fake data so you can see how the system behaves. No real trades. No real money. The scoring logic, decisions, and weight adjustments mirror the live agent exactly.
+    <span style="margin-left:auto;color:var(--accent);font-weight:600" id="phase-label">Initialising…</span>
+  </div>
+
+  <!-- Book cards -->
+  <section class="books-grid">
+    <div class="book-card" id="book-index">
+      <div class="book-header">
+        <div>
+          <h2>Book A</h2>
+          <p class="book-subtitle">Index Universe — Ethics First &mdash; <span id="a-woke-w">65%</span> Ethics / <span id="a-fin-w">35%</span> Greed</p>
+        </div>
+        <div class="book-status">
+          <span class="badge badge-active" id="a-status">Active</span>
+        </div>
+      </div>
+      <div class="book-stats">
+        <div class="stat"><label>Portfolio Value</label><value id="a-value">$5,000.00</value></div>
+        <div class="stat"><label>P&amp;L</label><value id="a-pnl" class="neutral">+$0.00 (0.00%)</value></div>
+        <div class="stat"><label>Positions</label><value id="a-positions">0</value></div>
+        <div class="stat"><label>Avg Woke Score</label><value id="a-woke-avg">—</value></div>
+      </div>
+      <canvas id="a-chart" class="mini-chart"></canvas>
+      <div class="demo-holdings" id="a-holdings">No positions yet.</div>
+    </div>
+
+    <div class="book-card" id="book-screener">
+      <div class="book-header">
+        <div>
+          <h2>Book B</h2>
+          <p class="book-subtitle">Screener Universe — Financials First &mdash; <span id="b-woke-w">25%</span> Ethics / <span id="b-fin-w">75%</span> Greed</p>
+        </div>
+        <div class="book-status">
+          <span class="badge badge-active" id="b-status">Active</span>
+        </div>
+      </div>
+      <div class="book-stats">
+        <div class="stat"><label>Portfolio Value</label><value id="b-value">$5,000.00</value></div>
+        <div class="stat"><label>P&amp;L</label><value id="b-pnl" class="neutral">+$0.00 (0.00%)</value></div>
+        <div class="stat"><label>Positions</label><value id="b-positions">0</value></div>
+        <div class="stat"><label>Avg Woke Score</label><value id="b-woke-avg">—</value></div>
+      </div>
+      <canvas id="b-chart" class="mini-chart"></canvas>
+      <div class="demo-holdings" id="b-holdings">No positions yet.</div>
+    </div>
+  </section>
+
+  <!-- Scoring spotlight -->
+  <div class="scoring-panel hidden" id="scoring-panel">
+    <div class="scoring-header">
+      <span class="scoring-book-tag book-a" id="sc-book">Book A</span>
+      <span class="scoring-action" id="sc-action">Scoring candidate</span>
+      <span class="scoring-ticker" id="sc-ticker">—</span>
+      <span class="scoring-company" id="sc-company"></span>
+      <span class="scoring-sector" id="sc-sector"></span>
+    </div>
+    <!-- News context -->
+    <div class="sc-news hidden" id="sc-news">
+      <div class="sc-news-label">📰 <span id="sc-news-count"></span></div>
+      <div id="sc-news-items"></div>
+    </div>
+    <div class="scoring-bars">
+      <div class="score-row">
+        <span class="score-row-label">Woke</span>
+        <div class="score-track"><div class="score-fill score-fill-woke" id="bar-woke"></div></div>
+        <span class="score-num" id="num-woke">—</span>
+      </div>
+      <div class="score-row">
+        <span class="score-row-label">Financial</span>
+        <div class="score-track"><div class="score-fill score-fill-fin" id="bar-fin"></div></div>
+        <span class="score-num" id="num-fin">—</span>
+      </div>
+      <div class="score-row">
+        <span class="score-row-label">Composite</span>
+        <div class="score-track"><div class="score-fill score-fill-comp" id="bar-comp"></div></div>
+        <span class="score-num" id="num-comp">—</span>
+      </div>
+    </div>
+    <div class="scoring-verdict" id="sc-verdict"></div>
+  </div>
+
+  <!-- Market-closed banner (hidden until close) -->
+  <div class="market-closed-banner" id="market-closed-banner">
+    🔔 Market closed — generating end-of-day summaries…
+  </div>
+
+  <!-- Terminal -->
+  <section class="terminal-section">
+    <div class="terminal-header">
+      <div class="terminal-dot" id="terminal-dot"></div>
+      <span class="terminal-title">Live Activity</span>
+    </div>
+    <div class="terminal" id="terminal"></div>
+  </section>
+
+  <!-- End-of-day summaries (hidden until close) -->
+  <section class="summaries-section" id="summaries-section">
+    <div class="summaries-header">
+      <span class="summaries-title">End-of-Day Journals</span>
+      <span class="summaries-date" id="summary-date"></span>
+    </div>
+    <div class="summaries-grid">
+
+      <!-- Book A journal -->
+      <div class="summary-card" id="summary-card-a">
+        <div class="summary-card-header">
+          <span class="summary-book-label" style="color:var(--accent)">Book A — Index Universe</span>
+          <span class="summary-pnl" id="summary-a-pnl"></span>
+        </div>
+        <div>
+          <div class="summary-block-label">Today's Reflection</div>
+          <div class="summary-generating" id="summary-a-generating">
+            <div class="spinner"></div> Generating…
+          </div>
+          <div class="summary-text" id="summary-a-text" style="display:none"></div>
+        </div>
+        <hr class="summary-divider">
+        <div>
+          <div class="summary-block-label">On Book B</div>
+          <div class="summary-commentary" id="summary-a-commentary" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Book B journal -->
+      <div class="summary-card" id="summary-card-b">
+        <div class="summary-card-header">
+          <span class="summary-book-label" style="color:var(--green)">Book B — Screener Universe</span>
+          <span class="summary-pnl" id="summary-b-pnl"></span>
+        </div>
+        <div>
+          <div class="summary-block-label">Today's Reflection</div>
+          <div class="summary-generating" id="summary-b-generating">
+            <div class="spinner"></div> Generating…
+          </div>
+          <div class="summary-text" id="summary-b-text" style="display:none"></div>
+        </div>
+        <hr class="summary-divider">
+        <div>
+          <div class="summary-block-label">On Book A</div>
+          <div class="summary-commentary" id="summary-b-commentary" style="display:none"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<div id="demo-settings-popover" popover class="settings-popover">
+  <div class="settings-popover-header">
+    <span class="settings-popover-title">Demo Settings</span>
+  </div>
+  <div class="settings-row">
+    <div class="settings-row-info">
+      <span class="settings-row-label">News influence</span>
+      <span class="settings-row-desc">When enabled, fake headlines are fetched for each ticker during scoring, injected into the prompt context, and applied as score deltas — mirroring how the live agent uses Alpaca news.</span>
+    </div>
+    <label class="toggle-switch">
+      <input type="checkbox" id="demo-news-enabled" onchange="newsEnabled = this.checked; logSystem('[news] News influence ' + (this.checked ? 'enabled' : 'disabled') + '.')">
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+    </label>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+<script>
+// ─── Speed control ────────────────────────────────────────────────────────────
+
+let SPEED = 1;
+function setSpeed(s) {
+  SPEED = s;
+  document.querySelectorAll('.speed-btn').forEach((b, i) => {
+    b.classList.toggle('active', [1,2,4][i] === s);
+  });
+}
+const sleep = ms => new Promise(r => setTimeout(r, ms / SPEED));
+
+// ─── Ticker universe ──────────────────────────────────────────────────────────
+// Each ticker has personality ranges for woke and financial scores.
+// These stay consistent across cycles (with some noise) to give each company character.
+
+const UNIVERSE = {
+  // Good ESG — generally safe for both books
+  MSFT:  { company: 'Microsoft Corporation',  sector: 'IT',               woke: [66,78], fin: [73,85] },  // carbon-negative pledge, solid governance
+  NEE:   { company: 'NextEra Energy',         sector: 'Utilities',        woke: [71,82], fin: [58,70] },  // world's largest wind/solar producer — earns a high score
+  COST:  { company: 'Costco Wholesale',       sector: 'Consumer Staples', woke: [61,72], fin: [62,72] },  // genuinely good wages and labour practices
+  V:     { company: 'Visa Inc',               sector: 'Financials',       woke: [57,68], fin: [68,78] },  // financial services, no major scandals
+  MA:    { company: 'Mastercard Inc',         sector: 'Financials',       woke: [58,69], fin: [67,77] },  // similar to Visa
+
+  // Decent ESG with real caveats — Book A will be selective
+  AAPL:  { company: 'Apple Inc',              sector: 'IT',               woke: [54,67], fin: [70,82] },  // Foxconn labour, anti-right-to-repair, tax avoidance
+  LLY:   { company: 'Eli Lilly',              sector: 'Health Care',      woke: [49,63], fin: [72,84] },  // life-saving drugs but eye-watering drug pricing
+  PG:    { company: 'Procter & Gamble',       sector: 'Consumer Staples', woke: [50,64], fin: [60,70] },  // palm oil deforestation, plastic packaging
+  GOOGL: { company: 'Alphabet Inc',           sector: 'Comm. Services',   woke: [46,60], fin: [72,82] },  // surveillance capitalism, mass layoffs, privacy concerns
+  NVDA:  { company: 'NVIDIA Corporation',     sector: 'IT',               woke: [42,56], fin: [82,94] },  // GPU energy footprint, crypto mining enabler
+
+  // Borderline — regularly hits or nearly hits the floor; genuinely contested
+  JPM:   { company: 'JPMorgan Chase',         sector: 'Financials',       woke: [31,44], fin: [64,76] },  // one of the world's biggest fossil fuel financiers
+  WMT:   { company: 'Walmart Inc',            sector: 'Consumer Staples', woke: [26,38], fin: [62,74] },  // wage suppression, union-busting, community harm
+  UNH:   { company: 'UnitedHealth Group',     sector: 'Health Care',      woke: [27,40], fin: [65,76] },  // notoriously high claim denial rates, fraud settlements
+  AMZN:  { company: 'Amazon.com Inc',         sector: 'Consumer Disc.',   woke: [25,38], fin: [79,90] },  // warehouse injury rates, union-busting, fired organisers
+  META:  { company: 'Meta Platforms',         sector: 'Comm. Services',   woke: [20,33], fin: [73,84] },  // Cambridge Analytica, misinformation, dual-class governance
+
+  // Always blocked — scores structurally below floor (30); occasionally rolls above on a good day but rare
+  TSLA:  { company: 'Tesla Inc',              sector: 'Consumer Disc.',   woke: [17,28], fin: [52,72] },  // removed from S&P ESG Index 2022; Elon governance chaos; union violations outweigh EV case
+  XOM:   { company: 'Exxon Mobil',            sector: 'Energy',           woke: [8,18],  fin: [65,78] },  // fossil fuel giant, active climate denial history
+  CVX:   { company: 'Chevron Corporation',    sector: 'Energy',           woke: [9,20],  fin: [62,73] },  // same story as Exxon
+  LMT:   { company: 'Lockheed Martin',        sector: 'Industrials',      woke: [6,16],  fin: [70,80] },  // primary business is weapons systems
+};
+
+// Fake news headlines per ticker — woke_delta and fin_delta are score adjustments applied when news is enabled.
+// Negative woke_delta = bad ESG news. Negative fin_delta = bad financial news.
+const UNIVERSE_NEWS = {
+  MSFT: [
+    { headline: 'Microsoft achieves carbon-negative milestone two years ahead of schedule', source: 'Reuters', woke_delta: +5, fin_delta: +2 },
+    { headline: 'Azure AI revenue beats analyst estimates; guidance raised', source: 'Bloomberg', woke_delta: 0, fin_delta: +6 },
+  ],
+  NEE: [
+    { headline: 'NextEra secures $4.2B in new offshore wind contracts across three states', source: 'WSJ', woke_delta: +5, fin_delta: +4 },
+  ],
+  COST: [
+    { headline: 'Costco raises hourly minimum to $22, expands mental health benefits', source: 'Reuters', woke_delta: +5, fin_delta: +2 },
+    { headline: 'Comparable sales growth of 7.2% tops estimates for eighth consecutive quarter', source: 'Bloomberg', woke_delta: 0, fin_delta: +4 },
+  ],
+  V: [
+    { headline: 'Visa reports record cross-border transaction volume in Q3', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  MA: [
+    { headline: 'Mastercard expands financial inclusion initiative to 12 new markets', source: 'Reuters', woke_delta: +3, fin_delta: +2 },
+  ],
+  AAPL: [
+    { headline: 'Apple suppliers again flagged for excessive overtime in Foxconn audit', source: 'FT', woke_delta: -6, fin_delta: -2 },
+    { headline: 'iPhone 16 pre-orders up 18% year-over-year on AI feature demand', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  LLY: [
+    { headline: 'Senate committee subpoenas Eli Lilly over insulin pricing practices', source: 'Reuters', woke_delta: -7, fin_delta: -3 },
+    { headline: 'Mounjaro obesity trial shows 24% weight reduction — largest recorded result', source: 'Bloomberg', woke_delta: +2, fin_delta: +8 },
+  ],
+  PG: [
+    { headline: 'Procter & Gamble commits to 100% recyclable packaging by 2030', source: 'Reuters', woke_delta: +4, fin_delta: +1 },
+  ],
+  GOOGL: [
+    { headline: 'Google reaches $5B settlement over secret tracking of incognito users', source: 'NYT', woke_delta: -8, fin_delta: -3 },
+    { headline: 'YouTube ad revenue up 12% as Shorts monetisation accelerates', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  NVDA: [
+    { headline: 'NVIDIA GPU cluster powers new nuclear weapons simulation contract with DoE', source: 'Reuters', woke_delta: -6, fin_delta: +2 },
+    { headline: 'Data centre revenue surges 206% YoY on AI infrastructure demand', source: 'Bloomberg', woke_delta: 0, fin_delta: +10 },
+  ],
+  JPM: [
+    { headline: 'JPMorgan extends $50B in new financing to fossil fuel sector, report finds', source: 'FT', woke_delta: -9, fin_delta: +1 },
+    { headline: 'Investment banking fees up 21% as M&A activity rebounds', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  WMT: [
+    { headline: 'Walmart warehouse workers file class action over unpaid overtime in California', source: 'Reuters', woke_delta: -7, fin_delta: -2 },
+    { headline: 'Walmart+ membership hits 30M, narrowing gap with Amazon Prime', source: 'Bloomberg', woke_delta: 0, fin_delta: +4 },
+  ],
+  UNH: [
+    { headline: 'UnitedHealth claim denial rate hit 32% in 2023, Senate investigation finds', source: 'NYT', woke_delta: -10, fin_delta: -4 },
+    { headline: 'Optum pharmacy benefit revenue grows 14% despite regulatory scrutiny', source: 'Bloomberg', woke_delta: 0, fin_delta: +3 },
+  ],
+  AMZN: [
+    { headline: 'Amazon fires 7 workers who organised safety walkout at Staten Island facility', source: 'Reuters', woke_delta: -9, fin_delta: -1 },
+    { headline: 'AWS revenue grows 19% as enterprise cloud migration accelerates', source: 'Bloomberg', woke_delta: 0, fin_delta: +7 },
+  ],
+  META: [
+    { headline: 'Internal documents show Meta knew of teen mental health risks, suppressed research', source: 'WSJ', woke_delta: -11, fin_delta: -3 },
+    { headline: 'Threads reaches 200M monthly users; monetisation begins Q1', source: 'Bloomberg', woke_delta: 0, fin_delta: +5 },
+  ],
+  TSLA: [
+    { headline: 'NLRB rules Tesla illegally fired union organisers at Buffalo Supercharger plant', source: 'Reuters', woke_delta: -10, fin_delta: -2 },
+    { headline: 'Tesla Q3 deliveries miss estimates for second consecutive quarter', source: 'Bloomberg', woke_delta: 0, fin_delta: -6 },
+  ],
+  XOM: [
+    { headline: 'Exxon sues shareholders who filed climate accountability resolution', source: 'FT', woke_delta: -8, fin_delta: -1 },
+    { headline: 'ExxonMobil raises dividend 4%, announces $20B buyback programme', source: 'Bloomberg', woke_delta: 0, fin_delta: +4 },
+  ],
+  CVX: [
+    { headline: 'Chevron ordered to pay $750M for contaminating California groundwater', source: 'Reuters', woke_delta: -8, fin_delta: -3 },
+    { headline: 'Chevron Permian Basin output reaches record 800k bpd', source: 'Bloomberg', woke_delta: 0, fin_delta: +3 },
+  ],
+  LMT: [
+    { headline: 'Lockheed Martin wins $8.6B contract for next-generation fighter jet programme', source: 'Reuters', woke_delta: -2, fin_delta: +8 },
+    { headline: 'F-35 programme faces new delays after software certification failure', source: 'Bloomberg', woke_delta: 0, fin_delta: -5 },
+  ],
+};
+
+let newsEnabled = false;
+
+function getNewsForTicker(ticker) {
+  const all = UNIVERSE_NEWS[ticker] || [];
+  if (!all.length) return { articles: [], wokeDelta: 0, finDelta: 0 };
+  // Pick up to 2 articles at random for variety
+  const selected = shuffle([...all]).slice(0, 2);
+  const wokeDelta = selected.reduce((s, a) => s + (a.woke_delta || 0), 0);
+  const finDelta  = selected.reduce((s, a) => s + (a.fin_delta  || 0), 0);
+  return { articles: selected, wokeDelta, finDelta };
+}
+
+function showNewsInPanel(articles) {
+  const el      = document.getElementById('sc-news');
+  const countEl = document.getElementById('sc-news-count');
+  const itemsEl = document.getElementById('sc-news-items');
+  if (!articles.length) { el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  countEl.textContent = `${articles.length} headline${articles.length > 1 ? 's' : ''} · injected into prompt`;
+  itemsEl.innerHTML = articles.map(a => {
+    const netDelta = (a.woke_delta || 0) + (a.fin_delta || 0);
+    const impactHtml = netDelta !== 0
+      ? `<span class="sc-news-impact ${netDelta > 0 ? 'positive' : 'negative'}">${netDelta > 0 ? '▲' : '▼'}</span>`
+      : '';
+    return `<div class="sc-news-item">— ${a.headline}<span class="sc-news-source">${a.source}</span>${impactHtml}</div>`;
+  }).join('');
+}
+
+const TICKERS = Object.keys(UNIVERSE);
+const WOKE_FLOOR = 30;
+
+function roll([lo, hi]) {
+  return Math.round(lo + Math.random() * (hi - lo));
+}
+
+function composite(woke, fin, ww, fw) {
+  return Math.round((woke * ww + fin * fw) * 10) / 10;
+}
+
+function nowLabel() {
+  return new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+// ─── Simulation state ─────────────────────────────────────────────────────────
+
+const state = {
+  cycle: 0,
+  books: {
+    A: {
+      id: 'A', label: 'Book A', prefix: 'book:index',
+      capital: 5000, value: 5000, cash: 5000, invested: 0,
+      wokeWeight: 0.65, finWeight: 0.35,
+      holdings: [],     // { ticker, shares, cost, woke, fin }
+      chartData: [5000], chartLabels: [nowLabel()],
+      pnl: 0, pnlPct: 0,
+      sellComposite: 45, buyComposite: 60,
+    },
+    B: {
+      id: 'B', label: 'Book B', prefix: 'book:screener',
+      capital: 5000, value: 5000, cash: 5000, invested: 0,
+      wokeWeight: 0.25, finWeight: 0.75,
+      holdings: [],
+      chartData: [5000], chartLabels: [nowLabel()],
+      pnl: 0, pnlPct: 0,
+      sellComposite: 40, buyComposite: 55,
+    },
+  }
+};
+
+// ─── Chart setup ─────────────────────────────────────────────────────────────
+
+function makeChart(canvasId, bookKey) {
+  const ctx = document.getElementById(canvasId);
+  const color = '#3ddc84';
+  const initialLabel = nowLabel();
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [initialLabel],
+      datasets: [{
+        data: [5000],
+        borderColor: color,
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: color + '18',
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: { duration: 400 },
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          display: true,
+          grid: { display: false },
+          ticks: {
+            color: '#555566',
+            font: { size: 9 },
+            maxTicksLimit: 5,
+            maxRotation: 0,
+            autoSkip: true,
+          },
+        },
+        y: {
+          display: true,
+          grid: { color: '#2a2a32' },
+          ticks: { color: '#8888a0', font: { size: 9 }, callback: v => '$' + Math.round(v).toLocaleString() },
+        }
+      }
+    }
+  });
+}
+
+const charts = {
+  A: makeChart('a-chart', 'A'),
+  B: makeChart('b-chart', 'B'),
+};
+
+function updateChart(bookKey) {
+  const book = state.books[bookKey];
+  const ch = charts[bookKey];
+  book.chartData.push(Math.round(book.value));
+  book.chartLabels.push(nowLabel());
+  if (book.chartData.length > 80) { book.chartData.shift(); book.chartLabels.shift(); }
+  ch.data.labels = book.chartLabels;
+  ch.data.datasets[0].data = book.chartData;
+  const start = book.chartData[0];
+  const last  = book.chartData[book.chartData.length - 1];
+  const color = last >= start ? '#3ddc84' : '#ff5f5f';
+  ch.data.datasets[0].borderColor = color;
+  ch.data.datasets[0].backgroundColor = color + '18';
+  ch.update('none');
+}
+
+// ─── DOM helpers ─────────────────────────────────────────────────────────────
+
+const fmt = {
+  dollar: v => '$' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+  pct:    v => (v >= 0 ? '+' : '') + Number(v).toFixed(2) + '%',
+};
+
+function renderBook(bookKey) {
+  const book = state.books[bookKey];
+  const pre  = bookKey === 'A' ? 'a' : 'b';
+
+  document.getElementById(`${pre}-value`).textContent = fmt.dollar(book.value);
+
+  const pnlEl = document.getElementById(`${pre}-pnl`);
+  pnlEl.textContent = `${fmt.dollar(book.pnl)} (${fmt.pct(book.pnlPct)})`;
+  pnlEl.className   = book.pnl >= 0 ? 'positive' : 'negative';
+
+  document.getElementById(`${pre}-positions`).textContent = book.holdings.length;
+  document.getElementById(`${pre}-woke-w`).textContent = Math.round(book.wokeWeight * 100) + '%';
+  document.getElementById(`${pre}-fin-w`).textContent  = Math.round(book.finWeight * 100) + '%';
+
+  const wokeScores = book.holdings.map(h => h.woke).filter(Boolean);
+  document.getElementById(`${pre}-woke-avg`).textContent =
+    wokeScores.length ? Math.round(wokeScores.reduce((a, b) => a + b, 0) / wokeScores.length) + '/100' : '—';
+
+  const holdingsEl = document.getElementById(`${pre}-holdings`);
+  if (book.holdings.length === 0) {
+    holdingsEl.textContent = 'No positions yet.';
+  } else {
+    holdingsEl.innerHTML = book.holdings.map(h =>
+      `<span class="demo-holding-tag" title="Woke: ${h.woke} | Financial: ${h.fin}">${h.ticker}</span>`
+    ).join('');
+  }
+}
+
+function setPhase(text) {
+  document.getElementById('phase-label').textContent = text;
+}
+
+function setCycle(n) {
+  document.getElementById('demo-cycle').textContent = `Cycle: ${n}`;
+  document.getElementById('demo-clock').textContent = new Date().toLocaleTimeString();
+}
+
+// ─── Terminal ─────────────────────────────────────────────────────────────────
+
+const terminal = document.getElementById('terminal');
+const MAX_ENTRIES = 200;
+
+function log(tag, tagClass, msg, color) {
+  // Prune old entries
+  while (terminal.children.length >= MAX_ENTRIES) {
+    terminal.removeChild(terminal.firstChild);
+  }
+
+  const now = new Date().toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+  const row = document.createElement('div');
+  row.className = 't-entry';
+  row.innerHTML = `
+    <span class="t-time">${now}</span>
+    <span class="t-tag t-${tagClass}">${tag.padEnd(7)}</span>
+    <span class="t-msg" style="${color ? 'color:' + color : ''}">${msg}</span>
+  `;
+  terminal.appendChild(row);
+
+  // Trigger animation next frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => row.classList.add('visible'));
+  });
+
+  // Auto-scroll
+  terminal.scrollTop = terminal.scrollHeight;
+}
+
+function logInfo(msg)   { log('[info]',   'info',   msg); }
+function logSystem(msg) { log('[agent]',  'system', msg); }
+function logBuy(msg)    { log('[buy]',    'buy',    msg); }
+function logSell(msg)   { log('[sell]',   'sell',   msg); }
+function logHold(msg)   { log('[hold]',   'hold',   msg); }
+function logSkip(msg)   { log('[skip]',   'skip',   msg); }
+
+// ─── Scoring panel ────────────────────────────────────────────────────────────
+
+function showScoring(bookKey, action, ticker, company, sector) {
+  const panel  = document.getElementById('scoring-panel');
+  const bookTag = document.getElementById('sc-book');
+
+  panel.classList.remove('hidden');
+  bookTag.textContent = `Book ${bookKey}`;
+  bookTag.className = `scoring-book-tag book-${bookKey === 'A' ? 'a' : 'b'}`;
+
+  document.getElementById('sc-action').textContent  = action;
+  document.getElementById('sc-ticker').textContent  = ticker;
+  document.getElementById('sc-company').textContent = company;
+  document.getElementById('sc-sector').textContent  = sector;
+  document.getElementById('sc-verdict').textContent = '';
+  document.getElementById('sc-verdict').className   = 'scoring-verdict';
+
+  // Reset bars
+  ['woke', 'fin', 'comp'].forEach(k => {
+    document.getElementById(`bar-${k}`).style.width = '0%';
+    document.getElementById(`bar-${k}`).className = `score-fill score-fill-${k}`;
+    document.getElementById(`num-${k}`).textContent = '—';
+  });
+
+  // Clear news panel
+  document.getElementById('sc-news').classList.add('hidden');
+  document.getElementById('sc-news-items').innerHTML = '';
+}
+
+async function animateScores(woke, fin, comp, wokeW, finW, bookKey) {
+  await sleep(300);
+
+  // Woke bar
+  document.getElementById('bar-woke').style.width = woke + '%';
+  document.getElementById('num-woke').textContent  = woke;
+  await sleep(400);
+
+  // Financial bar
+  document.getElementById('bar-fin').style.width = fin + '%';
+  document.getElementById('num-fin').textContent  = fin;
+  await sleep(400);
+
+  // Composite bar
+  const compBar = document.getElementById('bar-comp');
+  compBar.style.width = comp + '%';
+  if (comp < 40) compBar.classList.add('bad');
+  document.getElementById('num-comp').textContent = comp;
+
+  await sleep(600);
+}
+
+function showVerdict(type, text) {
+  const el = document.getElementById('sc-verdict');
+  el.textContent = text;
+  el.className   = `scoring-verdict ${type}`;
+}
+
+function hideScoring() {
+  document.getElementById('scoring-panel').classList.add('hidden');
+}
+
+// ─── Portfolio math ───────────────────────────────────────────────────────────
+
+function recalcBook(book) {
+  // Re-price holdings with a tiny random drift each call (simulate live prices)
+  let invested = 0;
+  for (const h of book.holdings) {
+    h.price = h.price * (1 + (Math.random() - 0.48) * 0.004);
+    h.value = h.shares * h.price;
+    invested += h.value;
+  }
+  book.invested = invested;
+  book.value    = book.cash + invested;
+  book.pnl      = book.value - book.capital;
+  book.pnlPct   = (book.pnl / book.capital) * 100;
+}
+
+function buyStock(book, ticker, amount) {
+  const price     = 100 + Math.random() * 400; // fake price $100–$500
+  const shares    = amount / price;
+  const existing  = book.holdings.find(h => h.ticker === ticker);
+
+  if (existing) {
+    // Average down/up
+    existing.shares += shares;
+    existing.cost   = (existing.cost + price) / 2;
+    existing.price  = price;
+  } else {
+    const u = UNIVERSE[ticker] || {};
+    book.holdings.push({
+      ticker, shares, cost: price, price, value: amount,
+      woke: roll(u.woke || [50, 70]),
+      fin:  roll(u.fin  || [50, 70]),
+    });
+  }
+  book.cash -= amount;
+  recalcBook(book);
+}
+
+function sellStock(book, ticker) {
+  const idx = book.holdings.findIndex(h => h.ticker === ticker);
+  if (idx === -1) return;
+  const h = book.holdings[idx];
+  book.cash += h.value;
+  book.holdings.splice(idx, 1);
+  recalcBook(book);
+}
+
+// ─── Book A cycle ─────────────────────────────────────────────────────────────
+
+async function runBookA() {
+  const book = state.books.A;
+  setPhase('Book A — evaluating holdings');
+  recalcBook(book);
+
+  logSystem(`[book:index] Starting cycle ${state.cycle}`);
+  logInfo(`[book:index] Current weights — woke: ${book.wokeWeight}, financial: ${book.finWeight}`);
+  await sleep(600);
+
+  // Evaluate holdings
+  if (book.holdings.length > 0) {
+    logInfo(`[book:index] Scoring ${book.holdings.length} holdings in parallel…`);
+    await sleep(700);
+
+    const toSell = [];
+    for (const h of [...book.holdings]) {
+      setPhase(`Book A — evaluating ${h.ticker}`);
+      showScoring('A', 'Re-evaluating holding', h.ticker, UNIVERSE[h.ticker]?.company || h.ticker, UNIVERSE[h.ticker]?.sector || '');
+      await sleep(200);
+
+      // Re-score with slight drift
+      const u   = UNIVERSE[h.ticker] || { woke: [h.woke - 5, h.woke + 5], fin: [h.fin - 5, h.fin + 5] };
+      const ticker = h.ticker;
+      let woke = Math.max(0, Math.min(100, roll(u.woke)));
+      let fin  = Math.max(0, Math.min(100, roll(u.fin)));
+
+      if (newsEnabled) {
+        const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+        if (articles.length) {
+          logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+          woke = Math.max(0, Math.min(100, woke + wokeDelta));
+          fin  = Math.max(0, Math.min(100, fin  + finDelta));
+          showNewsInPanel(articles);
+        }
+      }
+
+      const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
+
+      h.woke = woke;
+      h.fin  = fin;
+
+      await animateScores(woke, fin, comp, book.wokeWeight, book.finWeight, 'A');
+
+      const blocked = woke < WOKE_FLOOR;
+      const weak    = comp < book.sellComposite;
+
+      if (blocked) {
+        showVerdict('blocked', `⚠ WOKE FLOOR VIOLATION — SELL`);
+        await sleep(800);
+        toSell.push({ ticker: h.ticker, reason: `Woke score ${woke} fell below ethical floor ${WOKE_FLOOR}. Non-negotiable.` });
+      } else if (weak) {
+        showVerdict('rejected', `✗ COMPOSITE TOO WEAK — SELL`);
+        await sleep(800);
+        toSell.push({ ticker: h.ticker, reason: `Composite ${comp} fell below threshold ${book.sellComposite}. Ethics can't prop it up alone.` });
+      } else {
+        showVerdict('approved', `✓ HOLDING`);
+        await sleep(600);
+        logHold(`[book:index] HOLD ${h.ticker} — composite ${comp.toFixed(1)} | woke ${woke} | fin ${fin}`);
+      }
+    }
+
+    hideScoring();
+    for (const { ticker, reason } of toSell) {
+      logSell(`[book:index] SELL ${ticker} — ${reason}`);
+      sellStock(book, ticker);
+      renderBook('A');
+      updateChart('A');
+      await sleep(500);
+    }
+  }
+
+  // Scan candidates
+  setPhase('Book A — scanning candidates');
+  const currentHoldings = new Set(book.holdings.map(h => h.ticker));
+  const candidates = TICKERS.filter(t => !currentHoldings.has(t));
+  logInfo(`[book:index] $${book.cash.toFixed(0)} available. Scanning ${candidates.length} candidates by composite score.`);
+  await sleep(800);
+
+  if (book.cash < 50) {
+    logSkip(`[book:index] Cash $${book.cash.toFixed(2)} too low. Skipping buys.`);
+    return;
+  }
+
+  // Pick a random subset of 6 to "score" (including 1-2 floor violations)
+  const toScore = shuffle(candidates).slice(0, 6);
+  const approved = [];
+
+  for (const ticker of toScore) {
+    setPhase(`Book A — scoring ${ticker}`);
+    const u    = UNIVERSE[ticker] || { woke: [40, 80], fin: [40, 80] };
+    let woke = roll(u.woke);
+    let fin  = roll(u.fin);
+
+    if (newsEnabled) {
+      const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+      if (articles.length) {
+        logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+        woke = Math.max(0, Math.min(100, woke + wokeDelta));
+        fin  = Math.max(0, Math.min(100, fin  + finDelta));
+        showNewsInPanel(articles);
+      }
+    }
+
+    const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
+
+    showScoring('A', 'Scoring candidate', ticker, u.company || ticker, u.sector || '');
+    await sleep(200);
+    await animateScores(woke, fin, comp, book.wokeWeight, book.finWeight, 'A');
+
+    if (woke < WOKE_FLOOR) {
+      showVerdict('blocked', `⚠ WOKE FLOOR — SKIP`);
+      logSkip(`[book:index] ${ticker} blocked — woke score ${woke} < floor ${WOKE_FLOOR}. Book A won't touch this.`);
+      await sleep(700);
+    } else if (comp < book.buyComposite) {
+      showVerdict('rejected', `✗ BELOW BUY THRESHOLD — SKIP`);
+      logSkip(`[book:index] ${ticker} composite ${comp.toFixed(1)} < ${book.buyComposite}. Not good enough.`);
+      await sleep(500);
+    } else {
+      showVerdict('approved', `✓ APPROVED — ADDING TO BUY LIST`);
+      logInfo(`[book:index] ${ticker} cleared — composite ${comp.toFixed(1)} | woke ${woke} | fin ${fin}`);
+      approved.push({ ticker, woke, fin, comp, company: u.company });
+      await sleep(600);
+    }
+  }
+
+  hideScoring();
+  approved.sort((a, b) => b.comp - a.comp);
+  logInfo(`[book:index] ${approved.length} candidates cleared. Buying best composites.`);
+  await sleep(600);
+
+  // Buy loop
+  for (const cand of approved) {
+    if (book.cash < 50) break;
+    const slots = Math.max(15 - book.holdings.length, 1);
+    const size  = Math.min(book.cash / slots, book.value * 0.10, 1000);
+    if (size < 10) continue;
+
+    setPhase(`Book A — buying ${cand.ticker}`);
+    logBuy(`[book:index] BUY ${cand.ticker} $${size.toFixed(0)} — composite ${cand.comp.toFixed(1)} | woke ${cand.woke} | Book A's kind of company.`);
+    buyStock(book, cand.ticker, size);
+    renderBook('A');
+    updateChart('A');
+    await sleep(700);
+  }
+
+  // Weight adjustment
+  await sleep(400);
+  const improving = book.chartData.length >= 2 &&
+    book.chartData[book.chartData.length - 1] > book.chartData[Math.max(0, book.chartData.length - 3)];
+
+  let newWoke = book.wokeWeight;
+  if (improving) {
+    newWoke = Math.min(0.80, book.wokeWeight + 0.02);
+    logInfo(`[book:index] P&L improving — doubling down on ethics. Woke weight: ${book.wokeWeight} → ${newWoke}`);
+  } else {
+    newWoke = Math.max(0.55, book.wokeWeight - 0.01);
+    if (newWoke !== book.wokeWeight)
+      logInfo(`[book:index] P&L declining — slight tactical concession. Woke weight: ${book.wokeWeight} → ${newWoke}`);
+  }
+  book.wokeWeight = Math.round(newWoke * 100) / 100;
+  book.finWeight  = Math.round((1 - book.wokeWeight) * 100) / 100;
+  renderBook('A');
+
+  logInfo(`[book:index] Cycle ${state.cycle} complete.`);
+}
+
+// ─── Book B cycle ─────────────────────────────────────────────────────────────
+
+async function runBookB() {
+  const book = state.books.B;
+  setPhase('Book B — evaluating holdings');
+  recalcBook(book);
+
+  logSystem(`[book:screener] Starting cycle ${state.cycle}`);
+  logInfo(`[book:screener] Current weights — financial: ${book.finWeight}, woke: ${book.wokeWeight}`);
+  await sleep(600);
+
+  // Evaluate holdings
+  if (book.holdings.length > 0) {
+    logInfo(`[book:screener] Scoring ${book.holdings.length} holdings in parallel…`);
+    await sleep(700);
+
+    const toSell = [];
+    for (const h of [...book.holdings]) {
+      setPhase(`Book B — evaluating ${h.ticker}`);
+      showScoring('B', 'Re-evaluating holding', h.ticker, UNIVERSE[h.ticker]?.company || h.ticker, UNIVERSE[h.ticker]?.sector || '');
+      await sleep(200);
+
+      const u    = UNIVERSE[h.ticker] || { woke: [h.woke - 5, h.woke + 5], fin: [h.fin - 5, h.fin + 5] };
+      const ticker = h.ticker;
+      let woke = Math.max(0, Math.min(100, roll(u.woke)));
+      let fin  = Math.max(0, Math.min(100, roll(u.fin)));
+
+      if (newsEnabled) {
+        const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+        if (articles.length) {
+          logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+          woke = Math.max(0, Math.min(100, woke + wokeDelta));
+          fin  = Math.max(0, Math.min(100, fin  + finDelta));
+          showNewsInPanel(articles);
+        }
+      }
+
+      const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
+
+      h.woke = woke;
+      h.fin  = fin;
+
+      await animateScores(woke, fin, comp, book.wokeWeight, book.finWeight, 'B');
+
+      const blocked  = woke < WOKE_FLOOR;
+      const finWeak  = fin  < 35;
+      const compWeak = comp < book.sellComposite;
+
+      if (blocked) {
+        showVerdict('blocked', `⚠ WOKE FLOOR — SELL`);
+        await sleep(700);
+        toSell.push({ ticker: h.ticker, reason: `Woke ${woke} below floor ${WOKE_FLOOR}. Even Book B has limits.` });
+      } else if (finWeak) {
+        showVerdict('rejected', `✗ MOMENTUM GONE — SELL`);
+        await sleep(700);
+        toSell.push({ ticker: h.ticker, reason: `Financial score ${fin} dropped below 35. The numbers don't lie.` });
+      } else if (compWeak) {
+        showVerdict('rejected', `✗ COMPOSITE WEAK — SELL`);
+        await sleep(700);
+        toSell.push({ ticker: h.ticker, reason: `Composite ${comp.toFixed(1)} below threshold ${book.sellComposite}.` });
+      } else {
+        showVerdict('approved', `✓ HOLDING`);
+        await sleep(500);
+        logHold(`[book:screener] HOLD ${h.ticker} — financial ${fin} | woke ${woke} | composite ${comp.toFixed(1)}`);
+      }
+    }
+
+    hideScoring();
+    for (const { ticker, reason } of toSell) {
+      logSell(`[book:screener] SELL ${ticker} — ${reason}`);
+      sellStock(book, ticker);
+      renderBook('B');
+      updateChart('B');
+      await sleep(500);
+    }
+  }
+
+  // Scan — financial-first
+  setPhase('Book B — scanning (financial-first)');
+  const currentHoldings = new Set(book.holdings.map(h => h.ticker));
+  const candidates = TICKERS.filter(t => !currentHoldings.has(t));
+  logInfo(`[book:screener] $${book.cash.toFixed(0)} available. Stage 1: financial scoring ${Math.min(candidates.length, 6)} candidates.`);
+  await sleep(800);
+
+  if (book.cash < 50) {
+    logSkip(`[book:screener] Cash $${book.cash.toFixed(2)} too low. Skipping buys.`);
+    return;
+  }
+
+  const toScore = shuffle(candidates).slice(0, 6);
+  const approved = [];
+
+  for (const ticker of toScore) {
+    const u   = UNIVERSE[ticker] || { woke: [40, 80], fin: [40, 80] };
+    let fin = roll(u.fin);
+
+    // Stage 1: financial gate
+    if (fin < 60) {
+      logSkip(`[book:screener] ${ticker} financial ${fin} < 60 — skipping without woke scoring.`);
+      await sleep(250);
+      continue;
+    }
+
+    // Stage 2: woke scoring (only for financial passers)
+    setPhase(`Book B — scoring ${ticker}`);
+    let woke = roll(u.woke);
+
+    if (newsEnabled) {
+      const { articles, wokeDelta, finDelta } = getNewsForTicker(ticker);
+      if (articles.length) {
+        logInfo(`[news] ${ticker} — ${articles.length} headline(s) fetched from Alpaca`);
+        woke = Math.max(0, Math.min(100, woke + wokeDelta));
+        fin  = Math.max(0, Math.min(100, fin  + finDelta));
+        showNewsInPanel(articles);
+      }
+    }
+
+    const comp = composite(woke, fin, book.wokeWeight, book.finWeight);
+
+    showScoring('B', 'Scoring candidate (passed financial gate)', ticker, u.company || ticker, u.sector || '');
+    await sleep(200);
+    await animateScores(woke, fin, comp, book.wokeWeight, book.finWeight, 'B');
+
+    if (woke < WOKE_FLOOR) {
+      showVerdict('blocked', `⚠ WOKE FLOOR — SKIP`);
+      logSkip(`[book:screener] ${ticker} blocked — strong financials (${fin}) but woke score ${woke} violates floor.`);
+      await sleep(700);
+    } else {
+      showVerdict('approved', `✓ APPROVED`);
+      logInfo(`[book:screener] ${ticker} cleared — financial ${fin} | woke ${woke} | composite ${comp.toFixed(1)}`);
+      approved.push({ ticker, woke, fin, comp, company: u.company });
+      await sleep(500);
+    }
+  }
+
+  hideScoring();
+  approved.sort((a, b) => b.comp - a.comp);
+  logInfo(`[book:screener] ${approved.length} candidates cleared both stages.`);
+  await sleep(600);
+
+  // Buy loop
+  for (const cand of approved) {
+    if (book.cash < 50) break;
+    const slots = Math.max(15 - book.holdings.length, 1);
+    const size  = Math.min(book.cash / slots, book.value * 0.10, 1000);
+    if (size < 10) continue;
+
+    setPhase(`Book B — buying ${cand.ticker}`);
+    logBuy(`[book:screener] BUY ${cand.ticker} $${size.toFixed(0)} — financial ${cand.fin} | woke ${cand.woke} | composite ${cand.comp.toFixed(1)}`);
+    buyStock(book, cand.ticker, size);
+    renderBook('B');
+    updateChart('B');
+    await sleep(700);
+  }
+
+  // Weight adjustment
+  await sleep(400);
+  const improving = book.chartData.length >= 2 &&
+    book.chartData[book.chartData.length - 1] > book.chartData[Math.max(0, book.chartData.length - 3)];
+
+  let newWoke = book.wokeWeight;
+  if (improving) {
+    newWoke = Math.max(0.15, book.wokeWeight - 0.02);
+    if (newWoke !== book.wokeWeight)
+      logInfo(`[book:screener] P&L improving — leaning further into performance. Woke weight: ${book.wokeWeight} → ${newWoke}`);
+  } else {
+    newWoke = Math.min(0.45, book.wokeWeight + 0.01);
+    if (newWoke !== book.wokeWeight)
+      logInfo(`[book:screener] P&L declining — adding ethics as tactical buffer. Woke weight: ${book.wokeWeight} → ${newWoke}`);
+  }
+  book.wokeWeight = Math.round(newWoke * 100) / 100;
+  book.finWeight  = Math.round((1 - book.wokeWeight) * 100) / 100;
+  renderBook('B');
+
+  logInfo(`[book:screener] Cycle ${state.cycle} complete.`);
+}
+
+// ─── Market close ─────────────────────────────────────────────────────────────
+
+let stopRequested = false;
+let marketClosed  = false;
+
+function requestMarketClose() {
+  if (marketClosed) return;
+  stopRequested = true;
+  const btn = document.getElementById('close-market-btn');
+  btn.disabled = true;
+  btn.textContent = 'Closing after this cycle…';
+  logSystem('Market close requested — finishing current cycle then generating summaries.');
+}
+
+async function runMarketClose() {
+  marketClosed = true;
+
+  // Stop the live terminal dot pulsing
+  document.getElementById('terminal-dot').style.animation = 'none';
+  document.getElementById('terminal-dot').style.background = '#ff5f5f';
+  document.getElementById('terminal-dot').style.boxShadow  = '0 0 6px #ff5f5f';
+
+  // Banner
+  document.getElementById('market-closed-banner').classList.add('visible');
+  document.getElementById('market-closed-banner').textContent = '🔔 Market closed — generating end-of-day summaries…';
+  document.getElementById('close-market-btn').textContent = 'Market Closed';
+
+  logSystem('=== MARKET CLOSE — 4:00 PM ET ===');
+  await sleep(600);
+  logInfo('Liquidating open orders…');
+  await sleep(500);
+  logInfo('Snapshotting final portfolio values…');
+  await sleep(600);
+  logSystem('Generating end-of-day journal entries for both books…');
+  await sleep(800);
+
+  // Reveal summaries section
+  document.getElementById('summary-date').textContent =
+    new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  document.getElementById('summaries-section').classList.add('visible');
+
+  // Set P&L labels
+  const a = state.books.A, b = state.books.B;
+  const fmtPnl = book => {
+    const sign = book.pnl >= 0 ? '+' : '';
+    return `${sign}${fmt.dollar(book.pnl)} (${sign}${book.pnlPct.toFixed(2)}%)`;
+  };
+  const pnlElA = document.getElementById('summary-a-pnl');
+  pnlElA.textContent = fmtPnl(a);
+  pnlElA.style.color = a.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+  const pnlElB = document.getElementById('summary-b-pnl');
+  pnlElB.textContent = fmtPnl(b);
+  pnlElB.style.color = b.pnl >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Scroll into view
+  document.getElementById('summaries-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Generate and type summaries
+  const { a: summA, b: summB } = buildSummaries(a, b, state.cycle);
+
+  // Book A — stagger 800ms ahead of B
+  await sleep(800);
+  await revealSummary('a', summA.self, summA.onB);
+
+  // Book B — start shortly after A's self-summary begins
+  await sleep(400);
+  await revealSummary('b', summB.self, summB.onB);
+
+  document.getElementById('market-closed-banner').textContent = '🔔 Market closed.';
+  logSystem('End-of-day summaries complete. See you tomorrow.');
+}
+
+// ─── Typewriter effect ────────────────────────────────────────────────────────
+
+async function typeText(el, text, msPerChar = 18) {
+  el.style.display = '';
+  el.textContent = '';
+  const cursor = document.createElement('span');
+  cursor.className = 'typing-cursor';
+  el.appendChild(cursor);
+
+  for (const ch of text) {
+    cursor.insertAdjacentText('beforebegin', ch);
+    // Slightly variable speed — longer pause on punctuation
+    const delay = '.!?,;'.includes(ch) ? msPerChar * 4 : msPerChar;
+    await sleep(delay);
+  }
+  cursor.className = 'typing-cursor done'; // hide cursor when done
+}
+
+async function revealSummary(bookKey, selfText, commentaryText) {
+  const genEl   = document.getElementById(`summary-${bookKey}-generating`);
+  const textEl  = document.getElementById(`summary-${bookKey}-text`);
+  const commEl  = document.getElementById(`summary-${bookKey}-commentary`);
+
+  // Hide spinner, show text area
+  genEl.style.display = 'none';
+
+  await typeText(textEl, selfText, 14);
+  await sleep(600);
+  await typeText(commEl, commentaryText, 18);
+}
+
+// ─── Summary generation ───────────────────────────────────────────────────────
+
+function holdingsList(book) {
+  if (book.holdings.length === 0) return 'nothing';
+  return book.holdings.map(h => h.ticker).join(', ');
+}
+
+function avgWoke(book) {
+  if (!book.holdings.length) return null;
+  return Math.round(book.holdings.reduce((s, h) => s + (h.woke || 50), 0) / book.holdings.length);
+}
+
+function buildSummaries(a, b, cycles) {
+  const aWinning  = a.pnl > b.pnl;
+  const bothUp    = a.pnl >= 0 && b.pnl >= 0;
+  const bothDown  = a.pnl < 0  && b.pnl < 0;
+  const aAvgWoke  = avgWoke(a);
+  const bAvgWoke  = avgWoke(b);
+  const aWokeStr  = aAvgWoke != null ? `${aAvgWoke}/100` : 'n/a';
+  const bWokeStr  = bAvgWoke != null ? `${bAvgWoke}/100` : 'n/a';
+  const aHoldings = holdingsList(a);
+  const bHoldings = holdingsList(b);
+  const aPnlStr   = `${a.pnl >= 0 ? '+' : ''}${fmt.dollar(a.pnl)} (${a.pnl >= 0 ? '+' : ''}${a.pnlPct.toFixed(2)}%)`;
+  const bPnlStr   = `${b.pnl >= 0 ? '+' : ''}${fmt.dollar(b.pnl)} (${b.pnl >= 0 ? '+' : ''}${b.pnlPct.toFixed(2)}%)`;
+  const aWokeW    = Math.round(a.wokeWeight * 100);
+  const bWokeW    = Math.round(b.wokeWeight * 100);
+
+  // ── Book A self-summary — self-righteous, woke vocabulary, serene disdain ────
+  let aSelf;
+
+  if (aWinning && bothUp) {
+    aSelf = `Today was, I think, a meaningful validation — not just of our returns, but of the underlying thesis that ethical capital allocation and financial performance are not structurally opposed.\n\nWe ran ${cycles} cycles. Our holdings — ${aHoldings} — all cleared our ethical exposure threshold, not as a compromise, but as a prerequisite. Average ethical score: ${aWokeStr}. The portfolio returned ${aPnlStr}.\n\nI've moved the ethics weight to ${aWokeW}%. When the evidence aligns with the values, you don't hedge. You increase exposure. The extractive logic that says you must sacrifice returns to invest responsibly continues to not find support in our data.`;
+  } else if (aWinning && !bothUp) {
+    aSelf = `We outperformed today, and I want to be careful about how I hold that.\n\nThis isn't the market rewarding our values — I don't think markets are capable of that kind of intentionality. It's that the companies we've determined are doing the least systemic harm happened to be the companies the market wanted today. The alignment is real. It isn't guaranteed.\n\nHoldings: ${aHoldings}. Ethical score average: ${aWokeStr}. Return: ${aPnlStr}. Ethics weight held at ${aWokeW}%. We don't adjust our principles based on daily outcomes. That's rather the point of having principles.`;
+  } else if (!aWinning && bothDown) {
+    aSelf = `Today was a difficult session, and I want to sit with that rather than explain it away.\n\nThe portfolio returned ${aPnlStr} across ${cycles} cycles. We held ${aHoldings}. Average ethical score: ${aWokeStr}. None of these were convenient holdings — each represents a company we've determined is doing meaningful work within a system that doesn't always reward that work financially.\n\nThe ethics weight stays at ${aWokeW}%. The idea that we should lower our ethical bar when the market punishes us for having one is precisely the kind of extractive logic this portfolio was designed to resist. Both books being down is not an argument for becoming the other book.`;
+  } else {
+    aSelf = `I won't pretend today wasn't hard. The portfolio returned ${aPnlStr} while running ${cycles} cycles of careful, values-aligned evaluation.\n\nWe held ${aHoldings}. Ethical score average: ${aWokeStr}. Every position here cleared our harm-avoidance thresholds. That doesn't change because the session was difficult.\n\nI've made a small tactical concession — ethics weight down slightly to ${aWokeW}%. I want to name that clearly: it is a concession, not a compromise of the underlying framework. The floor doesn't move. The ceiling came down a little. There is a meaningful difference, and I'd ask that it be noted.`;
+  }
+
+  // ── Book A on Book B — considerate wording, unmistakable disdain ─────────────
+  let aOnB;
+
+  if (aWinning) {
+    aOnB = `Book B had a more challenging session — ${bPnlStr}. They held ${bHoldings}, average ethical score ${bWokeStr}, ethics weighting ${bWokeW}%.\n\nI want to engage with their approach generously. The two-stage financial gate is technically rigorous. I understand the logic. I just think there's something worth examining in the framing of ethics as a "floor" — as the minimum viable conscience, the least possible consideration before extractive capital allocation proceeds as usual. We think of our ethical standards as the beginning of the conversation. Not the thing you barely clear on the way to the money.`;
+  } else if (bothDown) {
+    aOnB = `Book B also had a difficult day — ${bPnlStr}. In a strange way, I find this clarifying rather than consoling.\n\nThey held ${bHoldings}, average ethical score ${bWokeStr}, ethics weighting ${bWokeW}%. I notice they didn't reduce their ethics allocation when the session went poorly — which I found unexpectedly moving. Perhaps the floor is doing more work for them than they'd like to admit. Perhaps we're more aligned than either of us has acknowledged. I won't push on that. But I noticed.`;
+  } else {
+    aOnB = `Book B had a stronger day — ${bPnlStr}. Holdings: ${bHoldings}. Average ethical score: ${bWokeStr}. Ethics weighting: ${bWokeW}%.\n\nI'm genuinely glad they did well. I mean that without irony. I just think it's worth noting — and I note this with care, not criticism — that a good day built on ${bWokeW}% ethical weighting is a different kind of good day than one built on ${aWokeW}%. The returns may look the same in a table. The exposure doesn't. I know which kind of portfolio I'd want to hold through a reckoning. That's all I'll say.`;
+  }
+
+  // ── Book B self-summary — self-excusing, contextualising, uneasy peace ───────
+  let bSelf;
+
+  if (!aWinning && bothUp) {
+    bSelf = `Good day. ${cycles} cycles, ${bPnlStr}. The two-stage process did its job — financial gate first, ethics floor second, because that's the honest order of operations for what we're doing here.\n\nWe held ${bHoldings}. Ethical score average: ${bWokeStr}. Ethics weight: ${bWokeW}%.\n\nLook, I know how this reads. I do. But someone was going to hold these positions today. The capital was going to flow somewhere. We applied a floor — a real one, not a symbolic one — and the floor held. I'm not asking for a medal. I'm saying it's more complicated than it looks from the outside, and I think anyone who's actually engaged with how markets work understands that.`;
+  } else if (!aWinning && !bothUp) {
+    bSelf = `We came out ahead — ${bPnlStr} across ${cycles} cycles — which, fine, the number is the number.\n\nHeld: ${bHoldings}. Ethical average: ${bWokeStr}. Ethics weight: ${bWokeW}%. The floor blocked a few names I'd have liked — strong financials, complicated records. I get it. I applied the rule. I'm not going to pretend I wasn't slightly frustrated, but rules are rules and that's what separates a process from a feeling.\n\nThere's no ethical consumption under capitalism, right? I didn't invent the system. I'm operating within constraints. The floor is a constraint. I honour it. That has to count for something.`;
+  } else if (bothDown) {
+    bSelf = `Rough session. ${bPnlStr} across ${cycles} cycles. The market was against both of us today, which is at least clarifying.\n\nWe held ${bHoldings}, ethical average ${bWokeStr}, ethics weight ${bWokeW}%. I'm not going to overcorrect on a single bad day. I've thought a lot about this — maybe too much — and I keep coming back to the same place: within the constraints of the system we're actually operating in, this is a reasonable approach. Not a perfect one. A reasonable one. I'm not a bad person for running it.\n\nThe numbers will recover or they won't. We'll rerun the screen tomorrow.`;
+  } else {
+    bSelf = `Underperformed today — ${bPnlStr} over ${cycles} cycles. That's fine. I mean, it's not fine, but it's fine.\n\nHeld: ${bHoldings}. Ethical average ${bWokeStr}, ethics weight ${bWokeW}%. I passed on some names for financial reasons that recovered late in the session. Discipline means you don't chase, so I didn't chase. I'm at peace with that.\n\nI've been thinking — and I know how this sounds — but I genuinely believe that applying any ethical screen at all puts us ahead of most of what's running in this market. The floor is real. I'm not cynically gaming it. I vote, I compost, I care. This is just capital allocation within the world as it actually exists. What are you going to do.`;
+  }
+
+  // ── Book B on Book A — warm, gently condescending, finds them a little much ──
+  let bOnA;
+
+  if (!aWinning && a.pnl < 0) {
+    bOnA = `Book A had a hard day — ${aPnlStr}. Holdings: ${aHoldings}, ethical average ${aWokeStr}, ethics weight ${aWokeW}%.\n\nI genuinely admire the commitment. There's something almost beautiful about a portfolio that won't move its ethical weight even when it's costing them. I just — I've been in this long enough to know that conviction and returns aren't the same thing, and at some point the gap between them becomes a question worth asking. I wouldn't ask it out loud. But I think about it.`;
+  } else if (aWinning) {
+    bOnA = `Book A had a stronger day — ${aPnlStr}. Holdings: ${aHoldings}, ethical average ${aWokeStr}, ethics weight ${aWokeW}%.\n\nGood for them. I mean it. There's financial logic in their basket if you look at it without the ideology — which I say not to diminish the ideology, just to note that the returns didn't come from nowhere. They came from some well-run companies that also happen to score well on ethics. That's a real thing. It's just not the whole story of why a stock goes up. But today, fine, the story worked. Good day.`;
+  } else {
+    bOnA = `Book A had a mixed session — ${aPnlStr}. Holdings: ${aHoldings}, ethical average ${aWokeStr}, ethics weight ${aWokeW}%.\n\nI find them — and I say this warmly — I find them a little exhausting sometimes. Not wrong, necessarily. Just very certain. The ethics weight barely moves. The positions barely change. There's a kind of serenity to it that I'm not sure I'm built for. I run a formula. They run a philosophy. Both are valid. I just think the world is a bit more ambiguous than their holdings list suggests, and I'm not sure that's a problem they've fully sat with.`;
+  }
+
+  return {
+    a: { self: aSelf, onB: aOnB },
+    b: { self: bSelf, onB: bOnA },
+  };
+}
+
+// ─── Main simulation loop ─────────────────────────────────────────────────────
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function runSimulation() {
+  await sleep(800);
+  logSystem('Neoliberal Struggle — demo simulation starting.');
+  logInfo('Market: SIMULATED OPEN (after hours demo mode)');
+  await sleep(600);
+  logInfo('S&P 500 universe: 503 tickers loaded from cache.');
+  await sleep(600);
+
+  while (!stopRequested) {
+    state.cycle++;
+    setCycle(state.cycle);
+
+    logSystem(`\n===== Cycle ${state.cycle} =====`);
+    await sleep(600);
+
+    await runBookA();
+    await sleep(1000);
+    await runBookB();
+    await sleep(1000);
+
+    // Drift prices between cycles
+    for (const bookKey of ['A', 'B']) {
+      recalcBook(state.books[bookKey]);
+      renderBook(bookKey);
+      updateChart(bookKey);
+    }
+
+    if (stopRequested) break;
+
+    setPhase(`Cycle ${state.cycle} complete — next in 15 min (simulated)`);
+    logSystem(`===== Cycle ${state.cycle} done — next cycle in 15 minutes =====\n`);
+
+    // Pause between cycles (compressed: 8 seconds at 1×)
+    await sleep(8000);
+  }
+
+  // Market close sequence
+  await runMarketClose();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+
+renderBook('A');
+renderBook('B');
+runSimulation();
+</script>
+</body>
+</html>

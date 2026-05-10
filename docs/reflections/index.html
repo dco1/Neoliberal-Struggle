@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reflections — Neoliberal Struggle</title>
+  <link rel="alternate" type="application/rss+xml" title="Neoliberal Struggle — Daily Reflections" href="feed.xml">
+  <style>*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0e10; --surface: #1a1a1e; --surface2: #222228;
+    --border: #2a2a30; --text: #e8e8ed; --text-dim: #8e8e9a;
+    --accent-a: #a78bfa; --accent-b: #38bdf8;
+    --positive: #34d399; --negative: #f87171;
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 14px; line-height: 1.6; }
+  a { color: var(--accent-a); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .site-header { padding: 20px 32px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 16px; }
+  .site-header .wordmark { font-size: 17px; font-weight: 700; color: var(--text); }
+  .site-header .section { font-size: 13px; color: var(--text-dim); flex: 1; }
+  .site-header .rss-link { color: var(--text-dim); opacity: 0.5; transition: opacity 0.15s; display: flex; }
+  .site-header .rss-link:hover { opacity: 1; color: #f26522; }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  .back-link { font-size: 12px; color: var(--text-dim); margin-bottom: 32px; display: inline-block; }
+  .back-link:hover { color: var(--text); }
+
+  /* Index */
+  .index-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .index-title { font-size: 22px; font-weight: 700; margin: 0; }
+  .index-rss { color: var(--text-dim); opacity: 0.45; transition: opacity 0.15s, color 0.15s; display: flex; }
+  .index-rss:hover { opacity: 1; color: #f26522; }
+  .index-subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 40px; }
+  .index-list { list-style: none; display: flex; flex-direction: column; gap: 0; }
+  .index-item { border-top: 1px solid var(--border); }
+  .index-item:last-child { border-bottom: 1px solid var(--border); }
+  .index-item a { display: flex; align-items: center; gap: 24px; padding: 14px 0; color: var(--text); }
+  .index-item a:hover { text-decoration: none; }
+  .index-item a:hover .index-date { color: var(--accent-a); }
+  .index-date { font-size: 13px; font-weight: 600; min-width: 100px; color: var(--text); }
+  .index-pnl { font-size: 12px; display: flex; gap: 16px; }
+  .index-pnl span { color: var(--text-dim); }
+  .index-pnl strong.pos { color: var(--positive); }
+  .index-pnl strong.neg { color: var(--negative); }
+  .alltime { font-size: 11px; color: var(--text-dim); opacity: 0.6; margin-left: 4px; }
+
+  /* Day page */
+  .day-date { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 8px; }
+  .day-perf { display: flex; flex-wrap: wrap; gap: 8px 20px; font-size: 12px; color: var(--text-dim); margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .day-perf strong.pos { color: var(--positive); }
+  .day-perf strong.neg { color: var(--negative); }
+
+  .summary-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 640px) { .summary-columns { grid-template-columns: 1fr; } }
+
+  .summary-col { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .summary-col-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+  .summary-book-tag { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; background: var(--surface2); color: var(--text); }
+  .summary-col-a .summary-book-tag { color: var(--accent-a); }
+  .summary-col-b .summary-book-tag { color: var(--accent-b); }
+  .summary-book-label { font-size: 11px; color: var(--text-dim); }
+
+  .summary-self { font-size: 13px; line-height: 1.75; color: var(--text); margin-bottom: 20px; }
+  .summary-self p { margin: 0 0 10px; }
+  .summary-self p:last-child { margin-bottom: 0; }
+
+  .summary-commentary-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 10px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .summary-commentary { font-size: 13px; line-height: 1.75; color: var(--text-dim); font-style: italic; }
+  .summary-commentary p { margin: 0 0 10px; }
+  .summary-commentary p:last-child { margin-bottom: 0; }</style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="../index.html">Neoliberal Struggle</a>
+    <span class="section">Daily Reflections</span>
+    <a class="rss-link" href="feed.xml" title="RSS feed">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+    </a>
+  </header>
+  <main class="page">
+    <div class="index-title-row">
+      <h1 class="index-title">Daily Reflections</h1>
+      <a class="index-rss" href="feed.xml" title="RSS feed">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+      </a>
+    </div>
+    <p class="index-subtitle">Each trading day, Book A and Book B write about their day — and about each other.</p>
+    <ul class="index-list">
+    <li class="index-item">
+      <a href="2026/05/08/index.html">
+        <span class="index-date">May 8, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-2.78%</strong></span>
+          <span>B: <strong class="pos">+1.77%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/05/07/index.html">
+        <span class="index-date">May 7, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+1.45%</strong></span>
+          <span>B: <strong class="neg">-10.64%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/05/06/index.html">
+        <span class="index-date">May 6, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-0.93%</strong></span>
+          <span>B: <strong class="pos">+2.98%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/05/05/index.html">
+        <span class="index-date">May 5, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+10.04%</strong></span>
+          <span>B: <strong class="neg">-7.33%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/05/04/index.html">
+        <span class="index-date">May 4, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-12.04%</strong></span>
+          <span>B: <strong class="pos">+5.32%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/05/01/index.html">
+        <span class="index-date">May 1, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-1.51%</strong></span>
+          <span>B: <strong class="neg">-3.63%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/30/index.html">
+        <span class="index-date">April 30, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+7.98%</strong></span>
+          <span>B: <strong class="neg">-4.04%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/29/index.html">
+        <span class="index-date">April 29, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+0.40%</strong></span>
+          <span>B: <strong class="pos">+3.89%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/28/index.html">
+        <span class="index-date">April 28, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+5.82%</strong></span>
+          <span>B: <strong class="neg">-3.04%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/27/index.html">
+        <span class="index-date">April 27, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-5.65%</strong></span>
+          <span>B: <strong class="pos">+6.31%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/24/index.html">
+        <span class="index-date">April 24, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-3.78%</strong></span>
+          <span>B: <strong class="neg">-7.40%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/23/index.html">
+        <span class="index-date">April 23, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+5.00%</strong></span>
+          <span>B: <strong class="pos">+0.79%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/22/index.html">
+        <span class="index-date">April 22, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+8.53%</strong></span>
+          <span>B: <strong class="neg">-7.15%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/21/index.html">
+        <span class="index-date">April 21, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-8.91%</strong></span>
+          <span>B: <strong class="pos">+7.59%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/20/index.html">
+        <span class="index-date">April 20, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+5.80%</strong></span>
+          <span>B: <strong class="neg">-2.77%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/17/index.html">
+        <span class="index-date">April 17, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-13.95%</strong></span>
+          <span>B: <strong class="pos">+7.36%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/16/index.html">
+        <span class="index-date">April 16, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-2.05%</strong></span>
+          <span>B: <strong class="pos">+11.96%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/15/index.html">
+        <span class="index-date">April 15, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+0.23%</strong></span>
+          <span>B: <strong class="pos">+2.06%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/14/index.html">
+        <span class="index-date">April 14, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-1.64%</strong></span>
+          <span>B: <strong class="pos">+2.26%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/13/index.html">
+        <span class="index-date">April 13, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+8.98%</strong></span>
+          <span>B: <strong class="neg">-0.63%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/10/index.html">
+        <span class="index-date">April 10, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+7.33%</strong></span>
+          <span>B: <strong class="neg">-7.42%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/09/index.html">
+        <span class="index-date">April 9, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-0.65%</strong></span>
+          <span>B: <strong class="neg">-2.04%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/08/index.html">
+        <span class="index-date">April 8, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-6.81%</strong></span>
+          <span>B: <strong class="pos">+10.91%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/07/index.html">
+        <span class="index-date">April 7, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+4.65%</strong></span>
+          <span>B: <strong class="pos">+0.07%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/06/index.html">
+        <span class="index-date">April 6, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+5.39%</strong></span>
+          <span>B: <strong class="pos">+5.87%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/03/index.html">
+        <span class="index-date">April 3, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">n/a</strong></span>
+          <span>B: <strong class="pos">n/a</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/02/index.html">
+        <span class="index-date">April 2, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+0.77%</strong></span>
+          <span>B: <strong class="pos">n/a</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/04/01/index.html">
+        <span class="index-date">April 1, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+0.01%</strong></span>
+          <span>B: <strong class="pos">n/a</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/31/index.html">
+        <span class="index-date">March 31, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-4.18%</strong></span>
+          <span>B: <strong class="neg">-0.70%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/30/index.html">
+        <span class="index-date">March 30, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+0.33%</strong></span>
+          <span>B: <strong class="pos">+8.01%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/27/index.html">
+        <span class="index-date">March 27, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-1.96%</strong></span>
+          <span>B: <strong class="neg">-0.88%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/26/index.html">
+        <span class="index-date">March 26, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+16.84%</strong></span>
+          <span>B: <strong class="neg">-2.81%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/25/index.html">
+        <span class="index-date">March 25, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-0.84%</strong></span>
+          <span>B: <strong class="pos">+0.05%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/24/index.html">
+        <span class="index-date">March 24, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-0.58%</strong></span>
+          <span>B: <strong class="pos">+3.87%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/23/index.html">
+        <span class="index-date">March 23, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+8.71%</strong></span>
+          <span>B: <strong class="neg">-5.51%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/20/index.html">
+        <span class="index-date">March 20, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+1.92%</strong></span>
+          <span>B: <strong class="pos">+11.83%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/19/index.html">
+        <span class="index-date">March 19, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="pos">+66.26%</strong></span>
+          <span>B: <strong class="neg">-7.71%</strong></span>
+        </span>
+      </a>
+    </li>
+    <li class="index-item">
+      <a href="2026/03/18/index.html">
+        <span class="index-date">March 18, 2026</span>
+        <span class="index-pnl">
+          <span>A: <strong class="neg">-92.79%</strong></span>
+          <span>B: <strong class="neg">-87.35%</strong></span>
+        </span>
+      </a>
+    </li></ul>
+  </main>
+</body>
+</html>

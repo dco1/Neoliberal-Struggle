@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neoliberal Struggle</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="title-block">
+        <h1>Neoliberal Struggle</h1>
+        <span id="market-status" class="badge badge-closed">Market Closed</span>
+      </div>
+      <div class="header-meta">
+        <span id="cycle-count">Cycle: —</span>
+        <span id="last-updated">—</span>
+        <span id="ws-indicator" class="ws-indicator" title="Connecting…" data-connected="false"></span>
+      </div>
+      <button class="settings-btn" popovertarget="settings-popover" popovertargetaction="toggle">⚙</button>
+      <button class="settings-btn admin-btn" popovertarget="admin-popover" popovertargetaction="toggle">🔧</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Market-closed banner (hidden while market is open) -->
+    <div class="market-closed-banner" id="market-closed-banner" style="display:none">
+      🔔 Market closed.
+    </div>
+
+    <!-- Books Grid -->
+    <section class="books-grid">
+
+      <!-- Book A -->
+      <div class="book-card" id="book-index">
+        <div class="book-header">
+          <div>
+            <h2>Book A</h2>
+            <p class="book-subtitle">Index Universe — Ethics First &mdash; <span id="index-woke-weight">—</span> Ethics / <span id="index-fin-weight">—</span> Greed</p>
+          </div>
+          <div class="book-status">
+            <span class="badge badge-active">Active</span>
+          </div>
+        </div>
+
+        <div class="book-stats">
+          <div class="stat">
+            <label>Portfolio Value</label>
+            <value id="index-value">—</value>
+          </div>
+          <div class="stat">
+            <label>P&amp;L <span id="index-pnl-range" class="pnl-range-label">ALL</span></label>
+            <value id="index-pnl" class="neutral">—</value>
+          </div>
+          <div class="stat">
+            <label>Positions</label>
+            <value id="index-positions">—</value>
+          </div>
+          <div class="stat">
+            <label>Avg Woke Score</label>
+            <value id="index-woke">—</value>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-ranges" data-book="index">
+            <button class="chart-range active" data-range="1D">1D</button>
+            <button class="chart-range" data-range="1W">1W</button>
+            <button class="chart-range" data-range="1M">1M</button>
+            <button class="chart-range" data-range="1Y">1Y</button>
+            <button class="chart-range" data-range="ALL">ALL</button>
+          </div>
+          <canvas id="index-chart" height="120"></canvas>
+        </div>
+        <div class="book-tabs">
+          <button class="tab active" data-book="index" data-tab="holdings">Holdings</button>
+          <button class="tab" data-book="index" data-tab="trades">Trades</button>
+          <button class="tab" data-book="index" data-tab="log">Agent Log</button>
+        </div>
+        <div class="tab-content" id="index-tab-content"></div>
+      </div>
+
+      <!-- Book B -->
+      <div class="book-card" id="book-screener">
+        <div class="book-header">
+          <div>
+            <h2>Book B</h2>
+            <p class="book-subtitle">Screener Universe — Financials First &mdash; <span id="screener-woke-weight">—</span> Ethics / <span id="screener-fin-weight">—</span> Greed</p>
+          </div>
+          <div class="book-status">
+            <span class="badge badge-active">Active</span>
+          </div>
+        </div>
+
+        <div class="book-stats">
+          <div class="stat">
+            <label>Portfolio Value</label>
+            <value id="screener-value">—</value>
+          </div>
+          <div class="stat">
+            <label>P&amp;L <span id="screener-pnl-range" class="pnl-range-label">ALL</span></label>
+            <value id="screener-pnl" class="neutral">—</value>
+          </div>
+          <div class="stat">
+            <label>Positions</label>
+            <value id="screener-positions">—</value>
+          </div>
+          <div class="stat">
+            <label>Avg Woke Score</label>
+            <value id="screener-woke">—</value>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-ranges" data-book="screener">
+            <button class="chart-range active" data-range="1D">1D</button>
+            <button class="chart-range" data-range="1W">1W</button>
+            <button class="chart-range" data-range="1M">1M</button>
+            <button class="chart-range" data-range="1Y">1Y</button>
+            <button class="chart-range" data-range="ALL">ALL</button>
+          </div>
+          <canvas id="screener-chart" height="120"></canvas>
+        </div>
+        <div class="book-tabs">
+          <button class="tab active" data-book="screener" data-tab="holdings">Holdings</button>
+          <button class="tab" data-book="screener" data-tab="trades">Trades</button>
+          <button class="tab" data-book="screener" data-tab="log">Agent Log</button>
+        </div>
+        <div class="tab-content" id="screener-tab-content"></div>
+      </div>
+
+    </section>
+
+    <!-- Daily Summaries (blog-style, two columns) -->
+    <section class="summaries-section">
+      <h3 class="summaries-title">Daily Reflections</h3>
+      <p class="summaries-subtitle">Each book reflects on its own day — and has thoughts about the other.</p>
+      <div id="summaries-list">
+        <div class="summaries-empty">No summaries yet. Check back after market close.</div>
+      </div>
+    </section>
+
+    <!-- Manual trigger -->
+    <section class="dev-controls">
+      <button id="trigger-cycle" class="btn-trigger">Trigger Agent Cycle Now</button>
+      <span id="trigger-status"></span>
+    </section>
+  </main>
+
+  <div id="settings-popover" popover class="settings-popover">
+    <div class="settings-popover-header">
+      <span class="settings-popover-title">Settings</span>
+    </div>
+
+    <div class="settings-group">
+      <span class="settings-group-label">News</span>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Allow news to influence trading</span>
+          <span class="settings-row-desc">Fetches recent Alpaca headlines for each ticker and injects them into scoring prompts. Woke and financial scores will reflect current news context.</span>
+        </div>
+        <div class="settings-control">
+          <label class="toggle-switch">
+            <input type="checkbox" id="setting-news-enabled">
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <span class="settings-group-label">Trading</span>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Woke floor</span>
+          <span class="settings-row-desc">Minimum ethics score a stock must have to be considered for purchase.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-woke-floor" class="settings-number" min="0" max="100" step="1">
+          <span class="settings-number-unit">/ 100</span>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Max position size</span>
+          <span class="settings-row-desc">Maximum share of a book's capital in a single position.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-max-position-pct" class="settings-number" min="1" max="50" step="1">
+          <span class="settings-number-unit">%</span>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Max trade size</span>
+          <span class="settings-row-desc">Hard dollar cap per individual trade order.</span>
+        </div>
+        <div class="settings-control">
+          <span class="settings-number-unit">$</span>
+          <input type="number" id="setting-max-trade-size" class="settings-number" min="100" max="100000" step="100">
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Trade cooldown</span>
+          <span class="settings-row-desc">Minutes before the same ticker can be traded again by the same book.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-trade-cooldown" class="settings-number" min="0" max="1440" step="5">
+          <span class="settings-number-unit">min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <span class="settings-group-label">Score caching</span>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Ethics score TTL</span>
+          <span class="settings-row-desc">How many hours a woke score is cached before re-scoring.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-woke-ttl" class="settings-number" min="1" max="168" step="1">
+          <span class="settings-number-unit">hr</span>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <span class="settings-row-label">Financial score TTL</span>
+          <span class="settings-row-desc">How many minutes a financial score is cached before re-scoring.</span>
+        </div>
+        <div class="settings-control">
+          <input type="number" id="setting-fin-ttl" class="settings-number" min="5" max="1440" step="5">
+          <span class="settings-number-unit">min</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-save-row">
+      <button id="settings-save-btn" class="settings-save-btn">Save</button>
+      <span id="settings-save-status" class="settings-save-status"></span>
+    </div>
+  </div>
+
+  <div id="admin-popover" popover class="settings-popover admin-popover">
+    <div class="settings-popover-header">
+      <span class="settings-popover-title">🔧 Admin</span>
+    </div>
+    <div class="admin-actions">
+      <div class="admin-action">
+        <div class="admin-action-info">
+          <span class="admin-action-label">Export Scores</span>
+          <span class="admin-action-desc">Push scores.json to GitHub Pages now</span>
+        </div>
+        <button class="admin-run-btn" data-endpoint="/admin/export-scores">Run</button>
+      </div>
+      <div class="admin-action">
+        <div class="admin-action-info">
+          <span class="admin-action-label">Regenerate Summaries</span>
+          <span class="admin-action-desc">Delete today's summary and re-run generation</span>
+        </div>
+        <button class="admin-run-btn" data-endpoint="/admin/regenerate-summaries">Run</button>
+      </div>
+      <div class="admin-action">
+        <div class="admin-action-info">
+          <span class="admin-action-label">Fix Summary P&amp;L</span>
+          <span class="admin-action-desc">Recompute P&amp;L from live Alpaca data and patch the reflection</span>
+          <input class="admin-date-input" type="date" id="admin-fix-pnl-date">
+        </div>
+        <button class="admin-run-btn" data-endpoint="/admin/fix-summary-pnl" data-action="fix-pnl">Run</button>
+      </div>
+    </div>
+    <div class="admin-response" id="admin-response"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
