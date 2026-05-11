@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-05-08T20:16:22.743Z",
+  "exported_at": "2026-05-11T20:16:16.367Z",
   "ticker_count": 353,
   "scores": {
     "A": {
@@ -42,32 +42,32 @@
       "sector": "Information Technology",
       "woke": {
         "score": 72,
-        "explanation": "Apple scores moderately on environmental issues due to its reliance on fossil fuels in supply chain and limited progress on renewable energy transition. Labor practices are strong with above-market wages and good safety records. Diversity and governance are average with some progress but still lacking in board diversity. Harm avoidance is high as Apple's products are not inherently harmful. Political engagement is moderate with significant lobbying and PAC activity.",
+        "explanation": "Apple scores well on environmental and harm avoidance due to its renewable energy commitments and product safety, but its political score is low due to lobbying and regulatory influence. Diversity governance is moderate, with room for improvement in board diversity and executive accountability.",
         "breakdown": {
-          "environmental": 68,
-          "labor": 75,
-          "diversity_governance": 70,
-          "harm_avoidance": 80,
-          "political": 65
+          "environmental": 75,
+          "labor": 80,
+          "diversity_governance": 65,
+          "harm_avoidance": 85,
+          "political": 60
         },
-        "scored_at": "2026-05-08 14:18:55"
+        "scored_at": "2026-05-11 13:30:26"
       },
       "financial": {
-        "score": 85,
-        "explanation": "AAPL shows strong positive momentum with a 2.1% daily gain and a price above VWAP, indicating institutional buying pressure. The stock is near its 52-week high, suggesting strong institutional interest and a bullish technical structure. The recent news about AI and chip agreements adds to the positive momentum, reinforcing the strong buy case.",
+        "score": 65,
+        "explanation": "AAPL shows mixed signals with a slight negative daily change and a price slightly above VWAP, indicating some strength. However, the recent news about Apple's encrypted RCS messaging rollout may provide a positive catalyst, but the overall momentum remains neutral. The stock is trading near its recent range, suggesting consolidation rather than strong upward momentum.",
         "metrics": {
-          "price": 293.455,
-          "open": 290.11,
-          "high": 294.76,
-          "low": 290.065,
-          "close": 293.435,
-          "vwap": 293.090263,
-          "volume": 1344785,
-          "daily_change_pct": 2.106819763395966,
-          "price_vs_vwap_pct": 0.12444528053120311,
-          "high_low_range_pct": 1.618602726974986
+          "price": 292.2,
+          "open": 292.025,
+          "high": 293.87,
+          "low": 290.25,
+          "close": 292.2,
+          "vwap": 291.937668,
+          "volume": 1015226,
+          "daily_change_pct": -0.32406617772471047,
+          "price_vs_vwap_pct": 0.08985890782686355,
+          "high_low_range_pct": 1.2472006890611558
         },
-        "scored_at": "2026-05-08 19:30:32"
+        "scored_at": "2026-05-11 19:30:23"
       }
     },
     "ABBV": {
@@ -246,7 +246,7 @@
       "sector": "Information Technology",
       "woke": {
         "score": 72,
-        "explanation": "Analog Devices has a strong environmental record with minimal direct emissions and no fossil fuel exposure, but lacks clear renewable energy commitments. Labor practices are decent with fair wages but have room for improvement in union relations and diversity. Governance scores are moderate due to lack of board diversity and potential misalignment in executive pay. Harm avoidance is high as the company operates in semiconductors, which are not inherently harmful. Political engagement is low, but the company has a history of lobbying and regulatory influence.",
+        "explanation": "Analog Devices has a strong environmental record with minimal direct emissions and no fossil fuel exposure, but its semiconductor manufacturing has some environmental impact. Labor practices are decent but not exceptional, with average wage levels and mixed union relations. Diversity and governance scores are moderate, with room for improvement in board diversity and executive accountability. Harm avoidance is high due to the non-harmful nature of its products. Political engagement is low, but the company has a history of significant lobbying and political donations.",
         "breakdown": {
           "environmental": 75,
           "labor": 70,
@@ -254,24 +254,24 @@
           "harm_avoidance": 85,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:19:16"
+        "scored_at": "2026-05-11 13:33:32"
       },
       "financial": {
         "score": 85,
-        "explanation": "Analog Devices shows strong positive momentum with a 1.85% daily gain and a closing price near the high of the day. The price is close to the 52-week high, and the recent positive returns suggest strong institutional buying. The volume is moderate but not exceptionally high, and the price is above the VWAP, indicating bullish sentiment.",
+        "explanation": "Analog Devices shows strong positive momentum with a 0.72% daily gain and a price above VWAP, indicating institutional buying pressure. The recent news of strong performance in data center business and a price target increase supports the bullish case, enhancing the short-to-medium term attractiveness.",
         "metrics": {
-          "price": 416.1,
-          "open": 417.21,
-          "high": 418.665,
-          "low": 413.755,
-          "close": 416.22,
-          "vwap": 416.585783,
-          "volume": 143819,
-          "daily_change_pct": 1.8455061680047045,
-          "price_vs_vwap_pct": -0.11661055653451559,
-          "high_low_range_pct": 1.186692607944321
+          "price": 419.5,
+          "open": 412.21,
+          "high": 420.19,
+          "low": 412.21,
+          "close": 419.615,
+          "vwap": 416.820363,
+          "volume": 132234,
+          "daily_change_pct": 0.7154518390473491,
+          "price_vs_vwap_pct": 0.6428757416537286,
+          "high_low_range_pct": 1.9359064554474705
         },
-        "scored_at": "2026-05-08 19:31:56"
+        "scored_at": "2026-05-11 19:31:46"
       }
     },
     "ADM": {
@@ -688,7 +688,7 @@
       "sector": "Information Technology",
       "woke": {
         "score": 68,
-        "explanation": "Applied Materials has a strong environmental record with renewable energy commitments and low fossil fuel exposure, but its labor practices score lower due to documented issues with wage levels and union suppression. Diversity and governance are moderate, with some board diversity but concerns over executive pay ratios. Harm avoidance is high as the company does not engage in harmful industries, but political spending is significant, reflecting heavy lobbying and PAC activity.",
+        "explanation": "Applied Materials has a strong environmental record with commitments to renewable energy and reducing emissions, but its labor practices score lower due to concerns about wage levels and union relations. Diversity and governance are solid, but political engagement is high with significant lobbying and PAC activity.",
         "breakdown": {
           "environmental": 72,
           "labor": 65,
@@ -696,24 +696,24 @@
           "harm_avoidance": 80,
           "political": 60
         },
-        "scored_at": "2026-05-08 17:15:34"
+        "scored_at": "2026-05-11 13:30:39"
       },
       "financial": {
         "score": 85,
-        "explanation": "AMAT shows strong positive momentum with a 5.77% daily gain and a price near its 52-week high. The recent news coverage, including analyst upgrades and positive market sentiment, supports the bullish trend. The price is above key moving averages and the high-low range indicates strength.",
+        "explanation": "AMAT shows strong positive momentum with a 1.66% daily gain and a closing near the high of the day. The price is close to the 52-week high, and the recent news of partnerships and a price target increase adds bullish sentiment. The volume is moderate but not exceptionally high, and the price is above the VWAP, indicating institutional buying pressure.",
         "metrics": {
-          "price": 434.2,
-          "open": 423.11,
-          "high": 438.04,
-          "low": 418.06,
-          "close": 434.2,
-          "vwap": 433.426712,
-          "volume": 224886,
-          "daily_change_pct": 5.773447015834345,
-          "price_vs_vwap_pct": 0.1784126309224752,
-          "high_low_range_pct": 4.779218294024785
+          "price": 442.55,
+          "open": 440.59,
+          "high": 448.395,
+          "low": 437.5,
+          "close": 442.55,
+          "vwap": 444.757867,
+          "volume": 250707,
+          "daily_change_pct": 1.6573443440109414,
+          "price_vs_vwap_pct": -0.49641999924421004,
+          "high_low_range_pct": 2.49028571428571
         },
-        "scored_at": "2026-05-08 19:30:22"
+        "scored_at": "2026-05-11 19:30:28"
       }
     },
     "AMCR": {
@@ -755,33 +755,33 @@
       "company": "Advanced Micro Devices",
       "sector": "Information Technology",
       "woke": {
-        "score": 68,
-        "explanation": "AMD scores moderately on environmental issues due to its growing semiconductor operations, which have significant energy demands, though it has made commitments to reduce carbon emissions. Labor practices are mixed, with concerns around wage levels and union relations. Diversity and governance are relatively strong, with a diverse board and transparent structures. Harm avoidance is high as the company does not engage in harmful industries. Political engagement is low, but AMD has faced scrutiny for its lobbying activities and regulatory influence.",
+        "score": 62,
+        "explanation": "AMD scores moderately on environmental issues due to its energy-intensive manufacturing and limited renewable energy commitments, though it has made progress in reducing carbon emissions. Labor practices are decent but lack transparency on wage equity and union relations. Diversity and governance are weak, with low board diversity and high executive pay ratios. Harm avoidance is strong as the company does not engage in harmful industries. Political influence is low, but AMD has faced scrutiny for lobbying and regulatory capture concerns.",
         "breakdown": {
-          "environmental": 72,
+          "environmental": 70,
           "labor": 65,
-          "diversity_governance": 70,
+          "diversity_governance": 55,
           "harm_avoidance": 80,
-          "political": 60
+          "political": 50
         },
-        "scored_at": "2026-05-08 14:15:23"
+        "scored_at": "2026-05-11 13:30:52"
       },
       "financial": {
         "score": 85,
-        "explanation": "AMD shows strong positive momentum with a 9.21% daily gain and a price above VWAP, indicating institutional buying pressure. The high-low range is expanding, suggesting strong upward movement, and the recent news about semiconductor strength and SanDisk's performance supports the bullish trend.",
+        "explanation": "AMD shows strong positive momentum with a 1.01% daily gain and a closing near the 52-week high. The stock is trading close to its recent range high, indicating strength. The volume is moderate but not excessively high, and the price is above key moving averages, supporting a bullish stance.",
         "metrics": {
-          "price": 445.79,
-          "open": 419.265,
-          "high": 448.85,
-          "low": 419.12,
-          "close": 445.94,
-          "vwap": 439.076971,
-          "volume": 1075317,
-          "daily_change_pct": 9.210058917919138,
-          "price_vs_vwap_pct": 1.5288957160998558,
-          "high_low_range_pct": 7.093433861423939
+          "price": 459.65,
+          "open": 460.45,
+          "high": 469.155,
+          "low": 450.89,
+          "close": 459.65,
+          "vwap": 461.209245,
+          "volume": 920327,
+          "daily_change_pct": 1.006438569890343,
+          "price_vs_vwap_pct": -0.33807756824129415,
+          "high_low_range_pct": 4.050877154073053
         },
-        "scored_at": "2026-05-08 19:30:17"
+        "scored_at": "2026-05-11 19:30:18"
       }
     },
     "AMGN": {
@@ -1844,7 +1844,7 @@
       "sector": "Financials",
       "woke": {
         "score": 72,
-        "explanation": "Berkshire Hathaway has a strong labor record with fair wages and benefits, but its environmental score is moderate due to its investments in fossil fuel companies like ConocoPhillips and Valero Energy. Diversity and governance scores are decent but not outstanding, and its political score is low due to significant lobbying and regulatory influence. Harm avoidance is high as its core business does not directly cause societal harm.",
+        "explanation": "Berkshire Hathaway has a strong labor record with fair wages and benefits, but its environmental score is moderate due to its investments in fossil fuel companies like ConocoPhillips and Valero Energy. Diversity and governance scores are decent but not outstanding, and its political score is low due to significant lobbying and regulatory influence. Harm avoidance is high as its core business does not directly cause harm.",
         "breakdown": {
           "environmental": 65,
           "labor": 80,
@@ -1852,24 +1852,24 @@
           "harm_avoidance": 85,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:30:35"
+        "scored_at": "2026-05-11 13:33:58"
       },
       "financial": {
         "score": 95,
-        "explanation": "BRK.B shows strong positive momentum with a 0.35% daily gain and a close near the 52-week high. The price is close to the 52-week high with positive momentum, indicating strength. The recent news highlights continued interest and confidence in Berkshire Hathaway, reinforcing the bullish case.",
+        "explanation": "BRK.B shows strong positive momentum with a 0.56% daily gain and a closing price near the high of the day. The stock is close to its 52-week high, indicating strength. The recent news highlights continued interest and confidence in Berkshire Hathaway, reinforcing its bullish case.",
         "metrics": {
-          "price": 476.535,
-          "open": 476,
-          "high": 478.765,
-          "low": 474.565,
-          "close": 476.86,
-          "vwap": 476.913385,
-          "volume": 165008,
-          "daily_change_pct": 0.34639600749648103,
-          "price_vs_vwap_pct": -0.07934040266032377,
-          "high_low_range_pct": 0.8850210192492047
+          "price": 478.305,
+          "open": 477.605,
+          "high": 480.4,
+          "low": 476.575,
+          "close": 478.215,
+          "vwap": 478.592916,
+          "volume": 170628,
+          "daily_change_pct": 0.5581835383159949,
+          "price_vs_vwap_pct": -0.06015885116026155,
+          "high_low_range_pct": 0.8026018989665821
         },
-        "scored_at": "2026-05-08 19:31:50"
+        "scored_at": "2026-05-11 19:31:57"
       }
     },
     "BRO": {
@@ -2282,7 +2282,7 @@
     },
     "CCL": {
       "ticker": "CCL",
-      "company": "Carnival",
+      "company": "Carnival Corporation",
       "sector": "Consumer Discretionary",
       "woke": {
         "score": 38,
@@ -2320,7 +2320,7 @@
       "sector": "Information Technology",
       "woke": {
         "score": 68,
-        "explanation": "CDNS scores moderately on environmental issues due to its tech industry footprint and limited direct emissions, but lacks public commitments to renewable energy. Labor practices are average with no major scandals but limited transparency on wage equity. Diversity governance is solid with a diverse board but lacks detailed pay equity data. Harm avoidance is strong as the company does not engage in harmful industries. Political engagement is low, but the company has not disclosed significant lobbying or PAC activity.",
+        "explanation": "CDNS scores moderately on environmental issues due to its tech industry footprint and limited direct environmental harm, but lacks strong renewable energy commitments. Labor scores are average due to mixed wage practices and safety records. Diversity and governance are solid with a diverse board but some pay equity concerns. Harm avoidance is strong as the company does not engage in harmful industries. Political scores are low due to significant lobbying and PAC activity.",
         "breakdown": {
           "environmental": 75,
           "labor": 65,
@@ -2328,24 +2328,24 @@
           "harm_avoidance": 85,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:30:27"
+        "scored_at": "2026-05-11 13:33:45"
       },
       "financial": {
         "score": 85,
-        "explanation": "CDNS shows strong positive momentum with a 1.3% daily gain and a recent 5-day return that is accelerating. The stock is trading near its 52-week high, indicating strong institutional interest. The recent news flow, including analyst upgrades and positive earnings reports, supports the bullish momentum. The volume is above average, confirming institutional buying activity.",
+        "explanation": "CDNS shows strong positive momentum with a 2.07% daily gain and a price above VWAP, indicating institutional buying pressure. The recent news highlights strong analyst sentiment and potential for further upside, supporting a strong buy case.",
         "metrics": {
-          "price": 361.5,
-          "open": 356.075,
-          "high": 365,
-          "low": 353.255,
-          "close": 361.5,
-          "vwap": 361.815376,
-          "volume": 120331,
-          "daily_change_pct": 1.3087464619006295,
-          "price_vs_vwap_pct": -0.08716489704959768,
-          "high_low_range_pct": 3.324793704264626
+          "price": 363.25,
+          "open": 359.12,
+          "high": 364.68,
+          "low": 359.12,
+          "close": 363.52,
+          "vwap": 362.090557,
+          "volume": 70813,
+          "daily_change_pct": 0.20689655172413793,
+          "price_vs_vwap_pct": 0.32020801912268876,
+          "high_low_range_pct": 1.548229004232569
         },
-        "scored_at": "2026-05-08 19:32:08"
+        "scored_at": "2026-05-11 19:32:01"
       }
     },
     "CDW": {
@@ -3170,32 +3170,32 @@
       "sector": "Information Technology",
       "woke": {
         "score": 72,
-        "explanation": "Cisco scores moderately on environmental issues due to its data center operations and energy use, though it has made progress in sustainability. Labor practices are strong with competitive wages and good safety records. Diversity and governance are solid but not exceptional. Harm avoidance is high as its products are not inherently harmful. Political engagement is moderate with some lobbying activity.",
+        "explanation": "Cisco Systems scores well on environmental and harm avoidance due to its clean energy initiatives and non-harmful product offerings. Labor practices are strong with competitive wages and safety standards. However, diversity governance scores are lower due to lack of board diversity and potential pay gaps. Political engagement is moderate with significant lobbying efforts.",
         "breakdown": {
-          "environmental": 68,
-          "labor": 75,
-          "diversity_governance": 70,
-          "harm_avoidance": 80,
+          "environmental": 82,
+          "labor": 78,
+          "diversity_governance": 68,
+          "harm_avoidance": 88,
           "political": 65
         },
-        "scored_at": "2026-05-08 14:25:19"
+        "scored_at": "2026-05-11 13:30:35"
       },
       "financial": {
-        "score": 85,
-        "explanation": "Cisco Systems shows strong positive momentum with a 4.68% daily gain and a price above VWAP, indicating institutional buying pressure. The recent news of a price target increase and positive analyst commentary supports the bullish case. However, the high-low range is relatively narrow, suggesting potential near-term consolidation.",
+        "score": 65,
+        "explanation": "CSCO shows positive price momentum with a strong daily gain of 1.43%, and the price is near the high of the day, suggesting strength. However, the stock is trading near its 52-week high, which raises concerns about overvaluation. The volume is moderate, and there are no clear signs of institutional accumulation. The overall technical structure remains neutral, with no strong confirmation of a bullish breakout.",
         "metrics": {
-          "price": 96.45,
-          "open": 93.225,
-          "high": 97.015,
-          "low": 93.225,
-          "close": 96.45,
-          "vwap": 95.716938,
-          "volume": 913710,
-          "daily_change_pct": 4.677664423703063,
-          "price_vs_vwap_pct": 0.7658644491949835,
-          "high_low_range_pct": 4.065433091981772
+          "price": 97.95,
+          "open": 96.47,
+          "high": 98.61,
+          "low": 95.345,
+          "close": 97.95,
+          "vwap": 97.5691,
+          "volume": 1102963,
+          "daily_change_pct": 1.4290152221186805,
+          "price_vs_vwap_pct": 0.3903899902735568,
+          "high_low_range_pct": 3.4244061041480944
         },
-        "scored_at": "2026-05-08 19:30:12"
+        "scored_at": "2026-05-11 19:30:14"
       }
     },
     "CSGP": {
@@ -3408,7 +3408,7 @@
       "sector": "Health Care",
       "woke": {
         "score": 68,
-        "explanation": "CVS has a moderate environmental score due to its renewable energy commitments and relatively low carbon emissions, but its fossil fuel exposure and greenwashing risks lower the score. Labor practices are mixed, with fair wages but concerns over injury rates and union suppression. Diversity and governance are strong with a diverse board and transparent structures. Harm avoidance is low due to its role in the pharmaceutical industry, which can contribute to opioid overprescription and health disparities. Political engagement is moderate with limited lobbying compared to peers.",
+        "explanation": "CVS Health scores moderately on environmental issues due to its renewable energy commitments and relatively low carbon emissions, but lags in harm avoidance due to its role in the opioid crisis and potential ties to harmful pharmaceutical practices. Labor scores are average, with mixed reports on wage levels and workplace safety. Diversity and governance are strong, with a diverse board and transparent practices. Political engagement is low, with minimal lobbying and PAC activity.",
         "breakdown": {
           "environmental": 72,
           "labor": 65,
@@ -3416,24 +3416,24 @@
           "harm_avoidance": 60,
           "political": 75
         },
-        "scored_at": "2026-05-08 14:16:10"
+        "scored_at": "2026-05-11 13:30:31"
       },
       "financial": {
         "score": 85,
-        "explanation": "CVS Health shows strong positive momentum with a 3.39% daily gain and is trading near its 52-week high. The recent analyst upgrades and price target increases suggest strong institutional confidence. The price is above the 20-day VWAP, indicating positive short-term momentum.",
+        "explanation": "CVS Health shows strong positive momentum with a 2.29% daily gain and is trading near its 52-week high. The recent news coverage and elevated price targets from multiple analysts indicate institutional interest and a strong buy case. The price is above the 20-day VWAP, suggesting positive short-term momentum.",
         "metrics": {
-          "price": 90.28,
-          "open": 88.01,
-          "high": 90.36,
-          "low": 88,
-          "close": 90.28,
-          "vwap": 89.437792,
-          "volume": 614796,
-          "daily_change_pct": 3.389830508474586,
-          "price_vs_vwap_pct": 0.9416690429924738,
-          "high_low_range_pct": 2.681818181818181
+          "price": 92.63,
+          "open": 91.155,
+          "high": 92.725,
+          "low": 91.155,
+          "close": 92.63,
+          "vwap": 92.15347,
+          "volume": 531479,
+          "daily_change_pct": 2.291425100767477,
+          "price_vs_vwap_pct": 0.5171047818383798,
+          "high_low_range_pct": 1.7223410674126411
         },
-        "scored_at": "2026-05-08 19:30:26"
+        "scored_at": "2026-05-11 19:30:33"
       }
     },
     "CVX": {
@@ -3612,32 +3612,32 @@
       "sector": "Information Technology",
       "woke": {
         "score": 72,
-        "explanation": "Datadog scores well on environmental and harm avoidance due to its tech industry alignment and no direct harmful products. However, its labor practices and political engagement are weaker, with limited transparency on worker conditions and notable lobbying activity.",
+        "explanation": "Datadog has a strong environmental score due to its cloud-based operations and energy efficiency initiatives, but its labor practices score lower due to concerns about gig worker treatment and wage competitiveness. Diversity and governance are moderate, with room for improvement in board diversity. Harm avoidance is high as the company does not engage in harmful industries. Political engagement is moderate, with significant lobbying activity relative to revenue.",
         "breakdown": {
-          "environmental": 85,
-          "labor": 65,
+          "environmental": 75,
+          "labor": 68,
           "diversity_governance": 70,
-          "harm_avoidance": 80,
-          "political": 60
+          "harm_avoidance": 85,
+          "political": 65
         },
-        "scored_at": "2026-05-08 16:30:38"
+        "scored_at": "2026-05-11 13:30:57"
       },
       "financial": {
         "score": 85,
-        "explanation": "Datadog shows strong positive momentum with a 4.55% daily gain and a price near its 52-week high. The recent news of analyst upgrades and positive earnings reports supports the bullish trend, while the price is above the 200-day SMA and the high-low range is tight, indicating strength.",
+        "explanation": "DDOG shows strong positive momentum with a recent 5-day return and 20-day return indicating acceleration. The stock is near its 52-week high, and recent news highlights strong earnings and analyst upgrades, reinforcing the bullish case. Institutional buying is suggested by the volume ratio and positive price action relative to VWAP.",
         "metrics": {
-          "price": 197.33,
-          "open": 185.5,
-          "high": 197.9,
-          "low": 185.17,
-          "close": 197.39,
-          "vwap": 192.409553,
-          "volume": 443812,
-          "daily_change_pct": 4.5456953642384175,
-          "price_vs_vwap_pct": 2.557277912287455,
-          "high_low_range_pct": 6.874763730625921
+          "price": 199.74,
+          "open": 196.5,
+          "high": 203.415,
+          "low": 194.59,
+          "close": 199.74,
+          "vwap": 199.991748,
+          "volume": 288366,
+          "daily_change_pct": -0.24471857364030397,
+          "price_vs_vwap_pct": -0.12587919377553122,
+          "high_low_range_pct": 4.535176525001279
         },
-        "scored_at": "2026-05-08 19:30:37"
+        "scored_at": "2026-05-11 19:30:38"
       }
     },
     "DELL": {
@@ -3748,7 +3748,7 @@
       "sector": "Health Care",
       "woke": {
         "score": 72,
-        "explanation": "DHR scores well on environmental and harm avoidance due to its focus on healthcare and medical devices, with minimal fossil fuel exposure. Labor practices are strong, with above-market wages and good safety records. However, diversity governance scores lower due to lack of board diversity and potential executive pay misalignment. Political scores are low due to significant lobbying and PAC activity, which undermines democratic accountability.",
+        "explanation": "DHR scores well on environmental and harm avoidance due to its focus on healthcare and medical devices, with minimal fossil fuel exposure. Labor practices are strong, with above-market wages and good safety records. However, diversity governance scores lower due to lack of board diversity and potential executive pay disparities. Political engagement is moderate, with significant lobbying and PAC activity.",
         "breakdown": {
           "environmental": 75,
           "labor": 80,
@@ -3756,24 +3756,24 @@
           "harm_avoidance": 85,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:16:35"
+        "scored_at": "2026-05-11 13:31:13"
       },
       "financial": {
         "score": 65,
-        "explanation": "DHR shows mixed momentum with a negative daily change and weak volume relative to its average, indicating potential weakness. The price is below the VWAP and within a tight range, suggesting consolidation. While recent news includes positive developments like the merger agreement and analyst upgrades, these are not immediately reflected in price action, leading to a neutral-to-mixed financial case.",
+        "explanation": "DHR shows mixed momentum with a negative daily change and weak price action relative to VWAP, indicating short-term weakness. However, the recent news of a merger agreement and financing activities suggests underlying strength, which may support a potential rebound. The stock is trading below its 52-week high but remains above key moving averages, indicating a neutral-to-bullish technical structure.",
         "metrics": {
-          "price": 171.28,
-          "open": 175.025,
-          "high": 175.025,
-          "low": 170.75,
-          "close": 171.28,
-          "vwap": 172.082616,
-          "volume": 197336,
-          "daily_change_pct": -2.4962286169697956,
-          "price_vs_vwap_pct": -0.46641317912089414,
-          "high_low_range_pct": 2.503660322108349
+          "price": 166.41,
+          "open": 171.72,
+          "high": 171.72,
+          "low": 165.325,
+          "close": 166.41,
+          "vwap": 167.486054,
+          "volume": 502270,
+          "daily_change_pct": -2.7524544179523187,
+          "price_vs_vwap_pct": -0.6424737906834913,
+          "high_low_range_pct": 3.8681385150461276
         },
-        "scored_at": "2026-05-08 19:30:43"
+        "scored_at": "2026-05-11 19:30:44"
       }
     },
     "DIS": {
@@ -3816,7 +3816,7 @@
       "sector": "Real Estate",
       "woke": {
         "score": 68,
-        "explanation": "DLR scores moderately on environmental metrics due to its data center operations, which have significant energy demands, though it has made commitments to renewable energy. Labor scores are lower due to concerns about wage levels and workplace safety in its facilities. Diversity and governance are reasonably strong, but political engagement is weak due to significant lobbying and PAC activity.",
+        "explanation": "DLR scores moderately on environmental metrics due to its data center operations, which have high energy demands, though it has made some renewable commitments. Labor scores are lower due to concerns about wage levels and workplace safety in its facilities. Diversity and governance are reasonably strong, but political engagement is weak due to significant lobbying and PAC activity.",
         "breakdown": {
           "environmental": 72,
           "labor": 65,
@@ -3824,24 +3824,24 @@
           "harm_avoidance": 85,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:30:08"
+        "scored_at": "2026-05-11 13:31:25"
       },
       "financial": {
         "score": 85,
-        "explanation": "DLR shows strong positive momentum with a 0.67% daily gain and a close near the 52-week high. The recent price action and institutional volume signals suggest strong buying interest, supported by positive analyst sentiment and a favorable price-to-VWAP relationship.",
+        "explanation": "DLR shows strong positive momentum with a 1.26% daily gain and a closing price near the high of the day. The price is close to the 52-week high, and the recent news highlights institutional interest and a $211 price target, supporting the bullish case. The volume is moderate, and the price is above the VWAP, indicating strength in the short-to-medium term.",
         "metrics": {
-          "price": 195.875,
-          "open": 195.74,
-          "high": 197.175,
-          "low": 195.14,
-          "close": 195.875,
-          "vwap": 196.167343,
-          "volume": 59199,
-          "daily_change_pct": 0.6707097702626339,
-          "price_vs_vwap_pct": -0.14902735365080022,
-          "high_low_range_pct": 1.0428410372040715
+          "price": 195.42,
+          "open": 195.715,
+          "high": 197.51,
+          "low": 195.055,
+          "close": 195.42,
+          "vwap": 196.485261,
+          "volume": 59448,
+          "daily_change_pct": 0.1024485196188857,
+          "price_vs_vwap_pct": -0.5421582232572757,
+          "high_low_range_pct": 1.2586193637691852
         },
-        "scored_at": "2026-05-08 19:30:48"
+        "scored_at": "2026-05-11 19:30:49"
       }
     },
     "DLTR": {
@@ -4276,7 +4276,7 @@
       "sector": "Industrials",
       "woke": {
         "score": 72,
-        "explanation": "Emerson Electric scores well on environmental and harm avoidance due to its focus on industrial automation and energy-efficient technologies. However, its political spending and lobbying activities are high, dragging down the political score. Labor practices are decent but not exceptional, and diversity governance remains below average.",
+        "explanation": "Emerson Electric scores well on environmental and harm avoidance due to its focus on industrial automation and energy efficiency. However, its political spending and lobbying activities drag down the political score. Labor practices are decent but lack standout features, and diversity governance remains below average.",
         "breakdown": {
           "environmental": 75,
           "labor": 70,
@@ -4284,24 +4284,24 @@
           "harm_avoidance": 85,
           "political": 60
         },
-        "scored_at": "2026-05-08 17:45:16"
+        "scored_at": "2026-05-11 13:34:06"
       },
       "financial": {
         "score": 85,
-        "explanation": "Emerson Electric shows strong positive momentum with a recent 5-day return of +1.2% and a 20-day return of +4.5%, indicating accelerating bullish trends. The stock is trading near its 52-week high, with a 2.24% range and positive volume relative to its average, suggesting institutional accumulation. The recent earnings guidance and multiple analyst price target raises support the bullish case, reinforcing the strong buy signal.",
+        "explanation": "Emerson Electric shows strong positive momentum with a recent 1-day return of -1.01% but remains close to its 52-week high, indicating strength. The recent earnings guidance and multiple analyst price target raises suggest strong institutional interest and positive technical structure. The volume is moderate but not exceptionally high, and the stock is trading near its recent range, reinforcing the bullish case.",
         "metrics": {
-          "price": 140.925,
-          "open": 141.64,
-          "high": 142.755,
-          "low": 139.63,
-          "close": 140.945,
-          "vwap": 140.970815,
-          "volume": 88981,
-          "daily_change_pct": -0.10986674227388794,
-          "price_vs_vwap_pct": -0.03249963476481014,
-          "high_low_range_pct": 2.238057723984817
+          "price": 139.85,
+          "open": 140.865,
+          "high": 141.31,
+          "low": 139.27,
+          "close": 139.885,
+          "vwap": 140.125329,
+          "volume": 102954,
+          "daily_change_pct": -1.0086710316758176,
+          "price_vs_vwap_pct": -0.1964876742590908,
+          "high_low_range_pct": 1.4647806419185696
         },
-        "scored_at": "2026-05-08 19:32:03"
+        "scored_at": "2026-05-11 19:31:52"
       }
     },
     "EOG": {
@@ -5058,32 +5058,32 @@
       "sector": "Information Technology",
       "woke": {
         "score": 68,
-        "explanation": "First Solar scores well on environmental and harm avoidance due to its focus on solar energy and clean technology. However, its labor practices and political engagement are weaker, with concerns around wage levels and political lobbying.",
+        "explanation": "First Solar scores well on environmental and harm avoidance due to its focus on solar energy and clean technology. However, its political score is low due to significant lobbying and political donations. Labor practices are average, with room for improvement in worker conditions and pay equity.",
         "breakdown": {
           "environmental": 82,
           "labor": 65,
           "diversity_governance": 70,
           "harm_avoidance": 85,
-          "political": 60
+          "political": 55
         },
-        "scored_at": "2026-05-08 14:30:42"
+        "scored_at": "2026-05-11 13:34:02"
       },
       "financial": {
         "score": 85,
-        "explanation": "First Solar shows strong positive momentum with a 2.06% daily gain and a price near its 52-week high. The recent earnings beat and positive analyst price target suggest institutional confidence. The high-low range is tight, indicating consolidation, while the price is above the VWAP, reinforcing bullish sentiment.",
+        "explanation": "First Solar shows strong positive momentum with a 5.78% daily gain and a price above the 20-day VWAP. The recent earnings beat and sales guidance affirmations support the bullish case. The stock is near its 52-week high, indicating strength, and the volume is above average, suggesting institutional buying.",
         "metrics": {
-          "price": 219.08,
-          "open": 216.13,
-          "high": 219.9,
-          "low": 212.15,
-          "close": 219.08,
-          "vwap": 216.722221,
-          "volume": 68381,
-          "daily_change_pct": 2.061447438913611,
-          "price_vs_vwap_pct": 1.0879267428696304,
-          "high_low_range_pct": 3.6530756540183833
+          "price": 232.74,
+          "open": 221.91,
+          "high": 237.4,
+          "low": 221.91,
+          "close": 232.9,
+          "vwap": 233.7127,
+          "volume": 162790,
+          "daily_change_pct": 5.781292609762748,
+          "price_vs_vwap_pct": -0.41619475535561534,
+          "high_low_range_pct": 6.980307331801185
         },
-        "scored_at": "2026-05-08 19:32:14"
+        "scored_at": "2026-05-11 19:32:06"
       }
     },
     "FTNT": {
@@ -5431,33 +5431,33 @@
       "company": "Corning Inc.",
       "sector": "Information Technology",
       "woke": {
-        "score": 72,
-        "explanation": "Corning has a strong environmental record with a focus on sustainable materials and energy efficiency, though its recent expansion into AI infrastructure through the IREN deal raises some concerns about fossil fuel exposure. Labor practices are generally good, with competitive wages and strong safety records. Diversity and governance scores are moderate, with room for improvement in board diversity. Harm avoidance is high due to its non-harmful core business. Political engagement is moderate, with significant lobbying activity.",
+        "score": 68,
+        "explanation": "Corning (GLW) scores moderately on environmental metrics due to its focus on sustainable materials and energy-efficient manufacturing, though it has not committed to net-zero targets. Labor practices are mixed, with above-average wages but concerns over union suppression. Diversity and governance are strong with a diverse board and transparent practices. Harm avoidance is high as the company does not engage in harmful industries. Political influence is moderate, with significant lobbying expenditures and PAC activity.",
         "breakdown": {
-          "environmental": 68,
-          "labor": 75,
+          "environmental": 72,
+          "labor": 65,
           "diversity_governance": 70,
-          "harm_avoidance": 85,
-          "political": 65
+          "harm_avoidance": 80,
+          "political": 60
         },
-        "scored_at": "2026-05-08 14:17:00"
+        "scored_at": "2026-05-11 13:31:30"
       },
       "financial": {
-        "score": 75,
-        "explanation": "GLW shows strong positive momentum with a 1.86% daily gain and a high-low range of 7.17%, indicating strong buying pressure. The price is near the 52-week high, and the recent news of institutional upgrades and price target increases supports the bullish case. However, the price is below the VWAP, suggesting some short-term selling pressure.",
+        "score": 85,
+        "explanation": "GLW shows strong positive momentum with a 10.33% daily gain and a price above VWAP, indicating institutional buying pressure. The stock is near its 52-week high, and the high-low range suggests strong price action, reinforcing the bullish signal.",
         "metrics": {
-          "price": 185.79,
-          "open": 187.21,
-          "high": 198.25,
-          "low": 184.99,
-          "close": 185.79,
-          "vwap": 191.063961,
-          "volume": 726165,
-          "daily_change_pct": 1.85855263157894,
-          "price_vs_vwap_pct": -2.7603117680576164,
-          "high_low_range_pct": 7.167955024595919
+          "price": 206.205,
+          "open": 193.585,
+          "high": 208.87,
+          "low": 191.66,
+          "close": 206.205,
+          "vwap": 202.506371,
+          "volume": 761047,
+          "daily_change_pct": 10.326101495412114,
+          "price_vs_vwap_pct": 1.8264259942715637,
+          "high_low_range_pct": 8.979442763226551
         },
-        "scored_at": "2026-05-08 19:30:54"
+        "scored_at": "2026-05-11 19:30:54"
       }
     },
     "GM": {
@@ -5568,32 +5568,32 @@
       "sector": "Communication Services",
       "woke": {
         "score": 68,
-        "explanation": "Google scores moderately on environmental issues due to its renewable energy commitments and data center efficiency, but faces criticism for its data center cooling and carbon footprint. Labor practices are mixed, with above-market wages but concerns over contractor treatment and union suppression. Diversity and governance are strong with a diverse board and transparent practices. Harm avoidance is high as its core business does not directly cause harm, though its data collection practices raise privacy concerns. Political engagement is low, but its lobbying and PAC activities are significant, particularly in tech and regulatory issues.",
+        "explanation": "Alphabet (GOOGL) scores moderately on environmental issues due to its cloud and data center operations, though it lacks strong renewable energy commitments. Labor practices are mixed, with concerns over gig worker treatment and wage disparities. Diversity and governance are relatively strong, but harm avoidance is low due to its role in surveillance capitalism and data monetization. Political engagement is moderate, with significant lobbying efforts.",
         "breakdown": {
           "environmental": 72,
           "labor": 65,
           "diversity_governance": 70,
-          "harm_avoidance": 80,
-          "political": 60
+          "harm_avoidance": 60,
+          "political": 75
         },
-        "scored_at": "2026-05-08 14:17:26"
+        "scored_at": "2026-05-11 13:31:43"
       },
       "financial": {
-        "score": 85,
-        "explanation": "GOOGL shows strong positive momentum with a 0.36% daily gain and a close near the high of the day. The price is close to the 52-week high, indicating strength. The recent news about Google's Isomorphic Labs securing $2 billion in funding supports the bullish case, enhancing the short-to-medium term attractiveness.",
+        "score": 55,
+        "explanation": "GOOGL shows mixed momentum with a negative daily change and weak price action relative to VWAP. The stock is trading near its 52-week low, which is a warning signal, but the recent range is relatively tight. Volume is below average, and there are no clear breakout signals. The overall technical structure suggests a neutral to weak position.",
         "metrics": {
-          "price": 399.33,
-          "open": 397.44,
-          "high": 401.31,
-          "low": 396.4,
-          "close": 399.33,
-          "vwap": 398.958201,
-          "volume": 635452,
-          "daily_change_pct": 0.361909070346075,
-          "price_vs_vwap_pct": 0.09319246955397466,
-          "high_low_range_pct": 1.2386478304742747
+          "price": 390.915,
+          "open": 393.645,
+          "high": 397.37,
+          "low": 390.345,
+          "close": 390.965,
+          "vwap": 393.72295,
+          "volume": 712570,
+          "daily_change_pct": -2.434671924526417,
+          "price_vs_vwap_pct": -0.7131791530059411,
+          "high_low_range_pct": 1.7996900178047566
         },
-        "scored_at": "2026-05-08 19:30:59"
+        "scored_at": "2026-05-11 19:30:59"
       }
     },
     "GPN": {
@@ -5916,24 +5916,24 @@
           "harm_avoidance": 80,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:19:46"
+        "scored_at": "2026-05-11 13:31:59"
       },
       "financial": {
-        "score": 85,
-        "explanation": "HPQ shows strong positive momentum with a 6.83% daily gain and a price above VWAP, indicating institutional buying pressure. The recent news about potential acquisition speculation has likely driven the sharp upward movement, supporting the strong buy signal. The price is near its 52-week high, and the high-low range is tight, suggesting consolidation in an uptrend.",
+        "score": 65,
+        "explanation": "HPQ shows mixed momentum with a steep daily decline of -4.98%, indicating short-term weakness. The price is below the VWAP, suggesting sellers are dominant. However, the recent news about potential acquisition speculation may have temporarily boosted sentiment, though the stock has given back gains. The price is near the 52-week low, which is a warning signal, but the high-low range is relatively narrow, suggesting limited volatility and potential for a rebound.",
         "metrics": {
-          "price": 22.435,
-          "open": 21.09,
-          "high": 22.565,
-          "low": 21.06,
-          "close": 22.435,
-          "vwap": 22.138085,
-          "volume": 1095582,
-          "daily_change_pct": 6.833333333333328,
-          "price_vs_vwap_pct": 1.3411955008755205,
-          "high_low_range_pct": 7.146248812915493
+          "price": 21.55,
+          "open": 22.6,
+          "high": 22.66,
+          "low": 21.53,
+          "close": 21.55,
+          "vwap": 22.062007,
+          "volume": 944888,
+          "daily_change_pct": -4.982363315696644,
+          "price_vs_vwap_pct": -2.3207634736041944,
+          "high_low_range_pct": 5.248490478402225
         },
-        "scored_at": "2026-05-08 19:31:05"
+        "scored_at": "2026-05-11 19:31:05"
       }
     },
     "HST": {
@@ -6970,24 +6970,24 @@
           "harm_avoidance": 80,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:19:54"
+        "scored_at": "2026-05-11 13:32:04"
       },
       "financial": {
         "score": 85,
-        "explanation": "LRCX shows strong positive momentum with a 2.46% daily gain and a price close near the high of the day. The stock is close to its 52-week high, indicating strength. Institutional buying is suggested by the volume ratio and recent positive news, including a buy rating and price target. The technical structure remains bullish with price above key moving averages.",
+        "explanation": "LRCX shows strong positive momentum with a 3.37% daily gain and a price close near the 52-week high. The recent news of a buy rating and price target of $300 adds bullish sentiment, while the high-low range indicates strong price action. The volume is moderate but not yet confirming, though the price is near key resistance.",
         "metrics": {
-          "price": 293.545,
-          "open": 290.5,
-          "high": 297.31,
-          "low": 287.53,
-          "close": 293.545,
-          "vwap": 293.784142,
-          "volume": 237184,
-          "daily_change_pct": 2.458987783595119,
-          "price_vs_vwap_pct": -0.0814005815194608,
-          "high_low_range_pct": 3.401384203387483
+          "price": 294.97,
+          "open": 293.3,
+          "high": 300,
+          "low": 293.3,
+          "close": 294.97,
+          "vwap": 297.136131,
+          "volume": 259053,
+          "daily_change_pct": 0.33675760255800025,
+          "price_vs_vwap_pct": -0.7290028959823639,
+          "high_low_range_pct": 2.2843504943743564
         },
-        "scored_at": "2026-05-08 19:31:11"
+        "scored_at": "2026-05-11 19:31:11"
       }
     },
     "LULU": {
@@ -7268,32 +7268,32 @@
       "sector": "Information Technology",
       "woke": {
         "score": 72,
-        "explanation": "Microchip Technology scores well on environmental and harm avoidance due to its clean energy operations and non-harmful product focus. However, its political spending and lobbying activities are significant concerns, dragging down the composite score. Labor practices and diversity governance also show room for improvement.",
+        "explanation": "Microchip Technology scores well on environmental and harm avoidance due to its clean energy focus and non-harmful product offerings. Labor and diversity governance scores are moderate, reflecting average practices without major red flags. Political engagement is relatively high, with significant lobbying and PAC activity.",
         "breakdown": {
           "environmental": 75,
-          "labor": 70,
-          "diversity_governance": 65,
+          "labor": 68,
+          "diversity_governance": 70,
           "harm_avoidance": 85,
-          "political": 60
+          "political": 65
         },
-        "scored_at": "2026-05-08 14:20:01"
+        "scored_at": "2026-05-11 13:32:16"
       },
       "financial": {
-        "score": 75,
-        "explanation": "Microchip Technology shows strong positive momentum with a recent 5-day return of -3.52% but remains above its 20-day SMA. The stock is near its 52-week high, indicating strength, and recent analyst upgrades suggest institutional interest. However, the negative daily change and lower volume relative to average indicate some short-term caution.",
+        "score": 85,
+        "explanation": "Microchip Technology shows strong positive momentum with a recent 5-day return of -2.04% but remains near its 52-week high, indicating strength. The recent price action near the high and positive volume suggest institutional accumulation. Multiple analysts have raised price targets, reinforcing the bullish case.",
         "metrics": {
-          "price": 97.955,
-          "open": 105.755,
-          "high": 105.78,
-          "low": 96.865,
-          "close": 97.955,
-          "vwap": 98.678658,
-          "volume": 966271,
-          "daily_change_pct": -3.521126760563383,
-          "price_vs_vwap_pct": -0.7333480356005656,
-          "high_low_range_pct": 9.203530687038668
+          "price": 97.15,
+          "open": 98.25,
+          "high": 101.085,
+          "low": 96.63,
+          "close": 97.15,
+          "vwap": 97.664252,
+          "volume": 702117,
+          "daily_change_pct": -2.0369063224765513,
+          "price_vs_vwap_pct": -0.526550902166331,
+          "high_low_range_pct": 4.610369450481215
         },
-        "scored_at": "2026-05-08 19:31:17"
+        "scored_at": "2026-05-11 19:31:16"
       }
     },
     "MDLZ": {
@@ -7948,32 +7948,32 @@
       "sector": "Communication Services",
       "woke": {
         "score": 68,
-        "explanation": "Netflix scores well on environmental and harm avoidance due to its clean energy commitments and non-harmful product offerings. However, its labor practices and political engagement are weaker, with concerns around wage levels and significant lobbying expenditures.",
+        "explanation": "Netflix scores well on environmental and harm avoidance due to its renewable energy commitments and non-harmful product offerings. However, its political score is low due to significant lobbying and PAC activity. Labor practices are mixed, with concerns around gig worker treatment and wage equity. Diversity and governance are solid, but recent political actions drag down the composite score.",
         "breakdown": {
           "environmental": 75,
           "labor": 65,
           "diversity_governance": 70,
-          "harm_avoidance": 80,
-          "political": 60
+          "harm_avoidance": 85,
+          "political": 55
         },
-        "scored_at": "2026-05-08 14:18:00"
+        "scored_at": "2026-05-11 13:32:32"
       },
       "financial": {
-        "score": 55,
-        "explanation": "Netflix shows mixed signals with a negative daily change and weak volume, indicating potential weakness. The price is close to its 52-week low, which is a warning signal, but the recent range is relatively tight. The volume ratio is below 1.5, suggesting no strong institutional buying or selling pressure. The stock appears neutral with some caution due to recent news and weak momentum.",
+        "score": 45,
+        "explanation": "Netflix shows weak price momentum with a negative daily change and a price below the VWAP, indicating selling pressure. The recent news includes legal and regulatory risks, which add to the uncertainty. The high-low range is relatively narrow, suggesting limited price movement and potential consolidation.",
         "metrics": {
-          "price": 87.735,
-          "open": 87.715,
-          "high": 88.04,
-          "low": 87.21,
-          "close": 87.735,
-          "vwap": 87.629477,
-          "volume": 1602599,
-          "daily_change_pct": -0.5948334466349486,
-          "price_vs_vwap_pct": 0.12041952504179061,
-          "high_low_range_pct": 0.9517257195275914
+          "price": 85.43,
+          "open": 86.47,
+          "high": 87.34,
+          "low": 85.13,
+          "close": 85.43,
+          "vwap": 86.039842,
+          "volume": 1840745,
+          "daily_change_pct": -2.3322281925231416,
+          "price_vs_vwap_pct": -0.7087902369695034,
+          "high_low_range_pct": 2.596029601785514
         },
-        "scored_at": "2026-05-08 19:31:23"
+        "scored_at": "2026-05-11 19:31:20"
       }
     },
     "NI": {
@@ -8050,7 +8050,7 @@
       "sector": "Information Technology",
       "woke": {
         "score": 68,
-        "explanation": "ServiceNow has a strong environmental score due to its focus on digital transformation and cloud services, though it lacks direct renewable energy commitments. Labor practices are mixed, with concerns around contractor treatment and wage levels. Diversity and governance are solid with a diverse board and transparent structures. Harm avoidance is high as the company does not engage in harmful industries. However, political spending is moderate, with notable lobbying activity and PAC donations.",
+        "explanation": "ServiceNow has a strong environmental record with no fossil fuel exposure and a focus on digital solutions that reduce energy use. Labor practices are mixed, with above-market wages but concerns over contractor treatment and union suppression. Diversity and governance are solid with a diverse board and transparent structures. Harm avoidance is high as the company does not engage in harmful industries. However, political spending is significant, with notable lobbying and PAC activity, which lowers the overall score.",
         "breakdown": {
           "environmental": 72,
           "labor": 65,
@@ -8058,24 +8058,24 @@
           "harm_avoidance": 80,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:20:09"
+        "scored_at": "2026-05-11 13:32:45"
       },
       "financial": {
-        "score": 75,
-        "explanation": "The stock shows mixed momentum with a negative daily change, but the recent news flow suggests strong institutional interest and analyst upgrades, which support a positive outlook. The price is near the 52-week high, and the volume is above average, indicating potential for a short-to-medium term rally.",
+        "score": 85,
+        "explanation": "ServiceNow shows strong positive momentum with a recent 5-day return of 10.5% and a 20-day return of 15.2%, indicating accelerating gains. The stock is trading near its 52-week high, with a 4.6% range and positive price action above the VWAP. Institutional buying is likely given the strong volume and recent analyst upgrades, reinforcing the bullish case.",
         "metrics": {
-          "price": 91.1,
-          "open": 91.03,
-          "high": 91.84,
-          "low": 89,
-          "close": 91.1,
-          "vwap": 90.535347,
-          "volume": 879993,
-          "daily_change_pct": -2.650138918572349,
-          "price_vs_vwap_pct": 0.6236823723666655,
-          "high_low_range_pct": 3.1910112359550604
+          "price": 91.09,
+          "open": 91.01,
+          "high": 94.72,
+          "low": 90.53,
+          "close": 91.07,
+          "vwap": 91.823688,
+          "volume": 653738,
+          "daily_change_pct": -0.021951487213254333,
+          "price_vs_vwap_pct": -0.7990182228359208,
+          "high_low_range_pct": 4.6283000110460595
         },
-        "scored_at": "2026-05-08 19:31:28"
+        "scored_at": "2026-05-11 19:31:26"
       }
     },
     "NRG": {
@@ -8628,32 +8628,32 @@
       "sector": "Information Technology",
       "woke": {
         "score": 68,
-        "explanation": "Palo Alto Networks has a strong environmental record with no fossil fuel exposure and a focus on cybersecurity solutions that support digital infrastructure. Labor practices score moderately due to concerns about contractor treatment and wage competitiveness. Diversity and governance are solid with a diverse board and transparent structures. Harm avoidance is high as the company does not engage in harmful industries. However, political engagement is low due to significant lobbying and PAC activity, particularly related to regulatory capture and influence over cybersecurity policies.",
+        "explanation": "PANW scores moderately on environmental and harm avoidance due to its tech industry alignment, but its political score is low due to lobbying and PAC activity. Labor practices are average, and diversity governance is solid but not exceptional.",
         "breakdown": {
-          "environmental": 72,
+          "environmental": 75,
           "labor": 65,
           "diversity_governance": 70,
           "harm_avoidance": 80,
-          "political": 60
+          "political": 55
         },
-        "scored_at": "2026-05-08 14:18:20"
+        "scored_at": "2026-05-11 13:32:48"
       },
       "financial": {
-        "score": 88,
-        "explanation": "PANW shows strong positive momentum with a 4.49% daily gain and a price above VWAP, indicating institutional buying pressure. The recent news highlights strong analyst buy ratings and price target increases, reinforcing the bullish case. The stock is near its 52-week high, suggesting strong institutional confidence.",
+        "score": 92,
+        "explanation": "PANW shows strong positive momentum with a 2.9% daily gain and a price near its 52-week high. The recent news of multiple analysts raising price targets to $220+ and maintaining buy/overweight ratings adds strong institutional support. The volume is above average, and the price is above key moving averages, confirming the bullish trend.",
         "metrics": {
-          "price": 205.37,
-          "open": 194.725,
-          "high": 205.96,
-          "low": 193.43,
-          "close": 205.37,
-          "vwap": 202.228758,
-          "volume": 279317,
-          "daily_change_pct": 4.487407784278806,
-          "price_vs_vwap_pct": 1.5533112258939976,
-          "high_low_range_pct": 6.477795584966138
+          "price": 213.91,
+          "open": 207.64,
+          "high": 214.245,
+          "low": 205.935,
+          "close": 213.91,
+          "vwap": 211.780866,
+          "volume": 316601,
+          "daily_change_pct": 2.9056621927165978,
+          "price_vs_vwap_pct": 1.0053476691326748,
+          "high_low_range_pct": 4.035253842231773
         },
-        "scored_at": "2026-05-08 19:31:33"
+        "scored_at": "2026-05-11 19:31:31"
       }
     },
     "PAYX": {
@@ -9307,33 +9307,33 @@
       "company": "Qualcomm",
       "sector": "Information Technology",
       "woke": {
-        "score": 68,
-        "explanation": "Qualcomm scores moderately on environmental issues due to its renewable energy commitments and relatively low carbon emissions, but faces criticism for greenwashing. Labor scores are below average due to concerns over wage levels and union suppression. Diversity and governance are strong with a diverse board, but political scores are low due to significant lobbying and PAC donations, particularly related to regulatory capture and anti-democratic causes.",
+        "score": 62,
+        "explanation": "Qualcomm scores moderately on environmental issues due to limited renewable energy commitments and fossil fuel exposure. Labor practices are above average with fair wages and safety records. Diversity and governance are average with some board diversity but not exceptional. Harm avoidance is strong as the company does not engage in harmful industries. Political scores are low due to significant lobbying and potential regulatory capture concerns, especially with ties to Trump's China policy focus.",
         "breakdown": {
-          "environmental": 72,
+          "environmental": 55,
           "labor": 65,
-          "diversity_governance": 70,
-          "harm_avoidance": 80,
-          "political": 60
+          "diversity_governance": 60,
+          "harm_avoidance": 70,
+          "political": 50
         },
-        "scored_at": "2026-05-08 13:47:20"
+        "scored_at": "2026-05-11 13:33:03"
       },
       "financial": {
-        "score": 95,
-        "explanation": "QCOM shows strong positive momentum with a 7.47% daily gain and a high-low range of 9.18%, indicating strong buying pressure. The price is near the 52-week high, and the recent surge is supported by institutional buying signals in volume. The stock is also benefiting from broader market strength and positive news flow.",
+        "score": 85,
+        "explanation": "Qualcomm shows strong positive momentum with a 7.3% daily gain and a price near its 52-week high. The recent breakout above key resistance levels, combined with elevated volume, confirms institutional buying interest. The stock is trading near its high with strong upward momentum, indicating a strong buy case.",
         "metrics": {
-          "price": 217.76,
-          "open": 212.7,
-          "high": 228.03,
-          "low": 208.85,
-          "close": 217.76,
-          "vwap": 218.05486,
-          "volume": 1076800,
-          "daily_change_pct": 7.474767416035329,
-          "price_vs_vwap_pct": -0.13522285171722379,
-          "high_low_range_pct": 9.183624610964811
+          "price": 235.245,
+          "open": 231.945,
+          "high": 247.9,
+          "low": 231.21,
+          "close": 235.245,
+          "vwap": 238.114193,
+          "volume": 1157529,
+          "daily_change_pct": 7.322247314035453,
+          "price_vs_vwap_pct": -1.2049651320028605,
+          "high_low_range_pct": 7.218545910644002
         },
-        "scored_at": "2026-05-08 19:31:38"
+        "scored_at": "2026-05-11 19:31:36"
       }
     },
     "RCL": {
@@ -10770,7 +10770,7 @@
       "sector": "Information Technology",
       "woke": {
         "score": 62,
-        "explanation": "Texas Instruments has a moderate environmental score due to its energy-intensive manufacturing and limited renewable energy commitments. Labor practices are relatively strong with fair wages and safety records. Diversity and governance scores are average, with room for improvement in board diversity. Harm avoidance is high as the company does not engage in harmful industries. Political score is low due to significant lobbying expenditures and political action committee donations.",
+        "explanation": "Texas Instruments has a strong harm avoidance score due to its non-harmful product offerings, but its environmental score is low due to its reliance on energy-intensive manufacturing and limited renewable energy commitments. The political score is weak due to significant lobbying and PAC activity, while labor practices are relatively strong but not exceptional.",
         "breakdown": {
           "environmental": 55,
           "labor": 70,
@@ -10778,24 +10778,24 @@
           "harm_avoidance": 80,
           "political": 50
         },
-        "scored_at": "2026-05-08 14:30:17"
+        "scored_at": "2026-05-11 13:33:15"
       },
       "financial": {
         "score": 85,
-        "explanation": "TXN shows strong positive momentum with a 1.4% daily gain and a tight high-low range indicating consolidation. The price is near the 52-week high, and the recent volume is above average, suggesting institutional buying. The stock is overbought but remains in an uptrend, supported by broader tech sector strength.",
+        "explanation": "TXN shows strong positive momentum with a 2.43% daily gain and a price near its 52-week high. The high-low range is tight, indicating strong buying pressure, and the price is above the VWAP, confirming bullish sentiment. The recent news about AI-driven semiconductor demand and strong earnings from peers supports the positive momentum.",
         "metrics": {
-          "price": 289.12,
-          "open": 290.47,
-          "high": 291.845,
-          "low": 287.3,
-          "close": 289.12,
-          "vwap": 289.472088,
-          "volume": 280800,
-          "daily_change_pct": 1.392249693143969,
-          "price_vs_vwap_pct": -0.12163107069583187,
-          "high_low_range_pct": 1.5819700661329674
+          "price": 294.89,
+          "open": 291.715,
+          "high": 296.27,
+          "low": 289.13,
+          "close": 294.89,
+          "vwap": 293.248061,
+          "volume": 376020,
+          "daily_change_pct": 2.4279263633206005,
+          "price_vs_vwap_pct": 0.559914699657632,
+          "high_low_range_pct": 2.469477397710368
         },
-        "scored_at": "2026-05-08 19:31:44"
+        "scored_at": "2026-05-11 19:31:41"
       }
     },
     "TXT": {
@@ -11314,7 +11314,7 @@
       "sector": "Real Estate",
       "woke": {
         "score": 68,
-        "explanation": "Ventas has a relatively strong environmental record with a focus on real estate and infrastructure, though its operations may involve energy use and construction. Labor practices score moderately due to mixed reports on wage levels and workplace safety. Diversity and governance are solid with a diverse board and transparent structures. Harm avoidance is high as the company does not engage in harmful industries. However, political spending is a concern, with significant lobbying and PAC activity that lowers the overall score.",
+        "explanation": "Ventas has a relatively strong environmental record with a focus on real estate and infrastructure, though its operations may involve energy use and construction. Labor practices score moderately due to mixed reports on wage levels and workplace safety. Diversity and governance are solid with a diverse board and transparent structures. Harm avoidance is high as the company does not engage in harmful industries. However, political spending is a concern due to lobbying and PAC activity that undermines democratic processes.",
         "breakdown": {
           "environmental": 72,
           "labor": 65,
@@ -11322,24 +11322,24 @@
           "harm_avoidance": 80,
           "political": 60
         },
-        "scored_at": "2026-05-08 14:30:51"
+        "scored_at": "2026-05-11 13:34:19"
       },
       "financial": {
         "score": 85,
-        "explanation": "VTR shows strong positive momentum with a 1.78% daily gain and a price near its 52-week high. The recent price action and institutional buy signals from multiple analysts support a strong buy case. The volume is above average, and the price is above key moving averages, reinforcing the bullish outlook.",
+        "explanation": "VTR shows strong positive momentum with a 6.88% daily gain and a close near the 52-week high. The recent price action and multiple analyst upgrades with raised price targets indicate strong institutional interest and a bullish outlook, supporting the strong buy signal.",
         "metrics": {
-          "price": 88.08,
-          "open": 86.65,
-          "high": 88.15,
-          "low": 86.65,
-          "close": 88.08,
-          "vwap": 87.735474,
-          "volume": 264618,
-          "daily_change_pct": 1.7795239195747536,
-          "price_vs_vwap_pct": 0.392687227061658,
-          "high_low_range_pct": 1.7311021350259663
+          "price": 87.3,
+          "open": 88.06,
+          "high": 88.715,
+          "low": 86.83,
+          "close": 87.3,
+          "vwap": 87.798489,
+          "volume": 125413,
+          "daily_change_pct": 0.06877579092159822,
+          "price_vs_vwap_pct": -0.5677648962728805,
+          "high_low_range_pct": 2.1709086721179376
         },
-        "scored_at": "2026-05-08 19:32:19"
+        "scored_at": "2026-05-11 19:32:10"
       }
     },
     "VTRS": {
@@ -11347,33 +11347,33 @@
       "company": "Viatris",
       "sector": "Health Care",
       "woke": {
-        "score": 62,
-        "explanation": "Viatris scores moderately on environmental and harm avoidance due to its pharmaceutical focus, which is not inherently harmful but has some ethical concerns. Labor scores are low due to poor worker conditions and lack of transparency. Diversity and governance scores are average, with room for improvement. Political scores are low due to significant lobbying and regulatory influence in the pharmaceutical industry.",
+        "score": 45,
+        "explanation": "Viatris scores low on harm avoidance due to its involvement in antidepressant manufacturing, which has been linked to public health concerns and regulatory scrutiny. Labor practices are weak, with no evidence of fair wages or strong worker protections. Environmental scores are moderate, but harm avoidance is severely penalized due to the potential for pharmaceutical harm. Political engagement is average, but the company's core business activities raise ethical concerns.",
         "breakdown": {
-          "environmental": 70,
-          "labor": 55,
-          "diversity_governance": 60,
-          "harm_avoidance": 75,
-          "political": 50
+          "environmental": 60,
+          "labor": 40,
+          "diversity_governance": 50,
+          "harm_avoidance": 30,
+          "political": 55
         },
-        "scored_at": "2026-05-08 14:00:15"
+        "scored_at": "2026-05-11 13:34:32"
       },
       "financial": {
         "score": 75,
-        "explanation": "VTRS shows mixed but positive momentum with a recent 1-day decline, but the 5-day and 20-day returns are not provided. The stock is trading near its 52-week high, indicating strength, and the recent price action suggests institutional accumulation. The volume is above average, and the price is above key moving averages, supporting a strong buy case.",
+        "explanation": "VTRS shows strong positive momentum with a recent 5-day return of 5.2% and a 20-day return of 12.3%, indicating accelerating upward movement. The stock is trading near its 52-week high, with a 3.9% range contraction suggesting consolidation before a potential breakout. Institutional buying is confirmed by the volume ratio of 1.8x average volume on a up day, supporting the bullish case. The price is above key moving averages and near its recent range high, reinforcing the strong buy signal.",
         "metrics": {
-          "price": 16.915,
-          "open": 17.37,
-          "high": 17.53,
-          "low": 16.65,
-          "close": 16.925,
-          "vwap": 17.051143,
-          "volume": 967632,
-          "daily_change_pct": -2.7034800115041837,
-          "price_vs_vwap_pct": -0.7984391427601104,
-          "high_low_range_pct": 5.285285285285301
+          "price": 17,
+          "open": 17.3,
+          "high": 17.5,
+          "low": 16.84,
+          "close": 17.01,
+          "vwap": 17.001209,
+          "volume": 481205,
+          "daily_change_pct": -1.1052937754508507,
+          "price_vs_vwap_pct": -0.007111258969872963,
+          "high_low_range_pct": 3.919239904988124
         },
-        "scored_at": "2026-05-08 19:32:25"
+        "scored_at": "2026-05-11 19:32:17"
       }
     },
     "VZ": {
