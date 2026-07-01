@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-06-30T20:15:00.791Z",
+  "exported_at": "2026-07-01T20:15:00.558Z",
   "ticker_count": 378,
   "scores": {
     "A": {
@@ -6158,7 +6158,7 @@
     },
     "HON": {
       "ticker": "HON",
-      "company": "Honeywell",
+      "company": "Honeywell Technologies",
       "sector": "Industrials",
       "woke": {
         "score": 62,
