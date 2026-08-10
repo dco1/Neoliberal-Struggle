@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-08-07T20:15:00.828Z",
+  "exported_at": "2026-08-10T20:15:01.376Z",
   "ticker_count": 378,
   "scores": {
     "A": {
@@ -1127,7 +1127,7 @@
     "APP": {
       "ticker": "APP",
       "company": "AppLovin",
-      "sector": "Information Technology",
+      "sector": "Communication Services",
       "woke": {
         "score": 45,
         "explanation": "AppLovin scores low on environmental metrics due to its reliance on data processing and cloud infrastructure, which has a significant carbon footprint. Labor practices are average but lack transparency on wage equity and worker conditions. Diversity and governance scores are moderate, but the company has faced scrutiny over executive pay ratios. Harm avoidance is slightly above average due to its non-physical harm products, but political engagement is low, with limited public records on lobbying or PAC activity.",
@@ -3813,7 +3813,7 @@
     "DD": {
       "ticker": "DD",
       "company": "DuPont",
-      "sector": "Materials",
+      "sector": "Industrials",
       "woke": {
         "score": 45,
         "explanation": "DuPont has a poor environmental score due to its historical ties to toxic chemicals and ongoing issues with pollution. Its harm avoidance score is low due to its legacy in producing harmful chemicals and potential involvement in environmental harm. Labor practices are mediocre with no major red flags, but diversity governance is average with no significant issues. Political engagement is moderate, but overall the company scores low due to its environmental and harm avoidance record.",
