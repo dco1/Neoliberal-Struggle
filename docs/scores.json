@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-08-11T20:15:01.545Z",
+  "exported_at": "2026-08-12T20:15:00.780Z",
   "ticker_count": 378,
   "scores": {
     "A": {
@@ -9082,7 +9082,7 @@
     },
     "ORLY": {
       "ticker": "ORLY",
-      "company": "O’Reilly Automotive",
+      "company": "O'Reilly Automotive",
       "sector": "Consumer Discretionary",
       "woke": {
         "score": 68,
@@ -10068,7 +10068,7 @@
     },
     "RMD": {
       "ticker": "RMD",
-      "company": "ResMed",
+      "company": "ResMed|",
       "sector": "Health Care",
       "woke": {
         "score": 72,
