@@ -1,5 +1,5 @@
 {
-  "exported_at": "2026-10-21T20:15:01.526Z",
+  "exported_at": "2026-10-22T20:15:01.440Z",
   "ticker_count": 378,
   "scores": {
     "A": {
@@ -10068,7 +10068,7 @@
     },
     "RMD": {
       "ticker": "RMD",
-      "company": "ResMed|",
+      "company": "ResMed",
       "sector": "Health Care",
       "woke": {
         "score": 72,
